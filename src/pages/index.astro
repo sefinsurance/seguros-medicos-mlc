@@ -1,50 +1,154 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+const year = new Date().getFullYear();
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seguros Médicos | MLC Insurance</title>
+    <meta
+      name="description"
+      content="Verifique si califica para un seguro médico con subsidio. Rápido, gratis y sin compromiso."
+    />
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      :root {
+        --primary:#1F5E8C;
+        --navy:#0E3A5D;
+        --sky:#6FAED4;
+        --bg:#E6EEF4;
+        --cta:#F2C94C;
+      }
+      body { margin:0; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; color:#1A1A1A; }
+      header { background:var(--primary); color:white; padding:1.5rem; }
+      section { padding:4rem 1.5rem; max-width:1100px; margin:auto; }
+      .hero { display:grid; gap:2rem; align-items:center; }
+      .hero img { max-width:100%; border-radius:16px; }
+      .btn {
+        background:var(--cta);
+        color:var(--navy);
+        padding:1rem 1.5rem;
+        border-radius:12px;
+        border:none;
+        font-size:1rem;
+        cursor:pointer;
+        font-weight:600;
+      }
+      .btn-primary { background:var(--cta); }
+      .cards { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+      .card { background:white; padding:2rem; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
+      footer { background:var(--navy); color:white; padding:2rem; text-align:center; }
+      /* Modal */
+      .modal {
+        position:fixed; inset:0; background:rgba(0,0,0,.6);
+        display:none; align-items:center; justify-content:center;
+      }
+      .modal.active { display:flex; }
+      .modal-content {
+        background:white; padding:2rem; border-radius:16px;
+        width:100%; max-width:420px;
+      }
+      form input, form button {
+        width:100%; padding:.75rem; margin-top:.75rem;
+        border-radius:8px; border:1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HERO -->
+    <header>
+      <section class="hero">
+        <div>
+          <h1>¿Califica para un seguro médico con subsidio?</h1>
+          <p>
+            Millones de personas califican para cobertura médica a bajo costo.
+            Verificar es gratis y toma menos de 2 minutos.
+          </p>
+          <button class="btn btn-primary" onclick="openModal()">
+            Ver si califico
+          </button>
+        </div>
+        <img src="/images/hero-family.webp" alt="Familia protegida" />
+      </section>
+    </header>
+
+    <!-- BENEFITS -->
+    <section>
+      <h2>¿Por qué elegirnos?</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>✔ Rápido y sencillo</h3>
+          <p>Sin papeleo innecesario ni llamadas largas.</p>
+        </div>
+        <div class="card">
+          <h3>✔ 100% Gratis</h3>
+          <p>La consulta no tiene ningún costo para usted.</p>
+        </div>
+        <div class="card">
+          <h3>✔ Atención en Español</h3>
+          <p>Le atendemos con claridad y confianza.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM FORM -->
+    <section style="background:var(--bg)">
+      <h2>Verifique si califica hoy</h2>
+      <form onsubmit="submitForm(event)">
+        <input name="firstName" placeholder="Nombre" required />
+        <input name="lastName" placeholder="Apellido" required />
+        <input name="phone" placeholder="Teléfono" required />
+        <input name="email" placeholder="Email (opcional)" />
+        <button class="btn">Enviar</button>
+      </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© {year} MLC Insurance · Todos los derechos reservados</p>
+    </footer>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h3>Verificar elegibilidad</h3>
+        <form onsubmit="submitForm(event)">
+          <input name="firstName" placeholder="Nombre" required />
+          <input name="lastName" placeholder="Apellido" required />
+          <input name="phone" placeholder="Teléfono" required />
+          <input name="email" placeholder="Email (opcional)" />
+          <button class="btn">Enviar</button>
+        </form>
+        <button onclick="closeModal()" style="margin-top:1rem;">Cerrar</button>
+      </div>
+    </div>
+
+    <script>
+      function openModal(){ document.getElementById("modal").classList.add("active"); }
+      function closeModal(){ document.getElementById("modal").classList.remove("active"); }
+
+      async function submitForm(e){
+        e.preventDefault();
+        const form = e.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        const res = await fetch("/api/lead", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if(res.ok){
+          alert("Gracias. Pronto nos comunicaremos con usted.");
+          form.reset();
+          closeModal();
+        } else {
+          alert("Ocurrió un error. Intente nuevamente.");
+        }
+      }
+    </script>
+  </body>
 </html>
