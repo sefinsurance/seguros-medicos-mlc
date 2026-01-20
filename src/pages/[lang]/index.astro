@@ -1,0 +1,58 @@
+---
+import { es } from "../../i18n/es";
+import { en } from "../../i18n/en";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+const t = lang === "en" ? en : es;
+
+const otherLang = lang === "en" ? "es" : "en";
+const switchHref = `/${otherLang}/`;
+---
+<html lang={lang}>
+  <body>
+    <header style="display:flex;justify-content:space-between;align-items:center;padding:16px 24px;">
+      <nav style="display:flex;gap:14px;">
+        <a href={`/${lang}/`}>{t.nav.home}</a>
+        <a href={`/${lang}/aca`}>{t.nav.aca}</a>
+        <a href={`/${lang}/medicare`}>{t.nav.medicare}</a>
+        <a href={`/${lang}/life`}>{t.nav.life}</a>
+      </nav>
+      <a href={switchHref}>{lang === "en" ? "ES" : "EN"}</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>{t.hero.h1}</h1>
+        <p>{t.hero.p}</p>
+        <button onclick="openModal()">{t.hero.cta}</button>
+      </section>
+
+      <section>
+        <h2>{t.services.title}</h2>
+        <div class="grid">
+          {t.services.cards.map((c) => (
+            <a class="card" href={`/${lang}/${c.slug}`}>
+              <h3>{c.title}</h3><p>{c.desc}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- reuse your existing modal + bottom form here -->
+    </main>
+
+    <script>
+      function openModal(){ /* your existing modal logic */ }
+    </script>
+  </body>
+</html>
+
+<style>
+.hero{background:#1f6a86;color:#fff;padding:64px 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#fff;padding:18px;border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.06);color:#111;text-decoration:none}
+</style>
