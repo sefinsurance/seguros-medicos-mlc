@@ -2,13 +2,13 @@
 const { title, desc, href } = Astro.props;
 ---
 <a class="cardx" href={href}>
-  <h3>{title}</h3>
-  <p>{desc}</p>
+  <div class="t">{title}</div>
+  <div class="d">{desc}</div>
 </a>
 
 <style>
 .cardx{display:block;padding:18px;border-radius:var(--r-lg);background:var(--surface);
 box-shadow:var(--shadow2);text-decoration:none;min-width:0}
-h3{margin:0 0 8px;font-size:18px}
-p{margin:0;color:var(--text2);line-height:1.6}
+.t{font-weight:900;margin-bottom:8px}
+.d{color:var(--text2);line-height:1.6}
 </style>

@@ -1,0 +1,60 @@
+---
+import TopNav from "./TopNav.astro";
+import Footer from "./Footer.astro";
+import ModalForm from "../ui/ModalForm.astro";
+const { lang, labels, title } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <style is:global>
+      @import "../styles/tokens.css";
+      @import "../styles/landing.css";
+    </style>
+  </head>
+  <body>
+    <TopNav lang={lang} labels={labels} />
+    <main><slot /></main>
+    <Footer lang={lang} labels={labels} />
+    <ModalForm labels={labels} />
+    <script>
+      window.__openLeadModal = () => {
+        const m = document.getElementById("leadModal");
+        if(!m) return;
+        m.classList.add("active");
+        m.setAttribute("aria-hidden","false");
+      };
+      window.__closeLeadModal = () => {
+        const m = document.getElementById("leadModal");
+        if(!m) return;
+        m.classList.remove("active");
+        m.setAttribute("aria-hidden","true");
+      };
+      window.__submitLeadForm = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.consent = true; // checkbox required, so we treat as true
+        try{
+          const res = await fetch("/api/lead", {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify(data)
+          });
+          if(res.ok){
+            alert("{labels.form.success}");
+            form.reset();
+            window.__closeLeadModal();
+          }else{
+            alert("{labels.form.error}");
+          }
+        }catch(err){
+          alert("{labels.form.error}");
+        }
+      };
+    </script>
+  </body>
+</html>

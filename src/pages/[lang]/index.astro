@@ -1,25 +1,34 @@
-
 ---
+import SiteShell from "../../components/layout/SiteShell.astro";
 import Banner from "../../components/ui/Banner.astro";
+import Card from "../../components/ui/Card.astro";
+import Faq from "../../components/ui/Faq.astro";
+
 export async function getStaticPaths(){
   return [{params:{lang:"es"}},{params:{lang:"en"}}];
 }
 const { lang } = Astro.params;
-const common = lang==="en"
-  ? (await import("../../i18n/en/common")).common
-  : (await import("../../i18n/es/common")).common;
+
+const labels = lang==="en" ? (await import("../../i18n/en/common")).labels : (await import("../../i18n/es/common")).labels;
+const home = lang==="en" ? (await import("../../i18n/en/home")).home : (await import("../../i18n/es/home")).home;
 ---
-<html lang={lang}>
-<head>
-  <style is:global>
-    @import "../../styles/tokens.css";
-    @import "../../styles/landing.css";
-  </style>
-</head>
-<body>
-  <Banner eyebrow="MLC Insurance" title={lang==="en"?"Health Coverage Made Simple":"Seguro médico sin complicaciones"}
-    body={lang==="en"?"Free eligibility check in minutes.":"Verificación gratuita en minutos."}>
-    <a href="#form">{common.cta.qualify}</a>
+<SiteShell lang={lang} labels={labels} title={lang==="en"?"MLC Insurance | Health coverage":"MLC Insurance | Seguro médico"}>
+  <Banner eyebrow={home.hero.eyebrow} title={home.hero.title} body={home.hero.body}>
+    <button class="btn primary" type="button" onclick="window.__openLeadModal()">{home.hero.cta}</button>
+    <a class="btn ghost" href={`/${lang}/compare`}>{labels.nav.compare}</a>
   </Banner>
-</body>
-</html>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="h2" style="margin:0 0 10px">{home.services.title}</h2>
+      <p class="p" style="margin:0 0 16px">{home.services.subtitle}</p>
+      <div class="grid grid-3">
+        {home.services.cards.map((c)=>(
+          <Card href={`/${lang}/${c.slug}`} title={c.title} desc={c.desc} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Faq title={home.faqTitle} items={home.faqs} />
+</SiteShell>
