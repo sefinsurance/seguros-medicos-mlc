@@ -8,9 +8,9 @@ const switchHref = `/${other}${path || "/"}`;
 <header class="topbar">
   <div class="container">
     <div class="topbar-inner">
-      <div class="brand">MLC Insurance</div>
+      <a class="brand" href={`/${lang}/`}>MLC Insurance</a>
       <nav class="nav" aria-label="Primary">
-        <a href={`/${lang}/#home`}>{t.nav.home}</a>
+        <a href={`/${lang}/`}>{t.nav.home}</a>
         <a href={`/${lang}/#services`}>{t.nav.services}</a>
         <a href={`/${lang}/#faq`}>{t.nav.faq}</a>
         <a class="langbtn" href={switchHref}>{other.toUpperCase()}</a>

@@ -1,6 +1,7 @@
 
 ---
-const accept = Astro.request.headers.get("accept-language") || "";
-const prefersEs = /^es\b/i.test(accept) || /,\s*es\b/i.test(accept);
-return Astro.redirect(prefersEs ? "/es/" : "/en/", 302);
+import Page from "./[lang]/index.astro";
+// Prefer Spanish as default on / (no redirect text). Users can switch via button.
+const lang = "es";
 ---
+<Page lang={lang} />

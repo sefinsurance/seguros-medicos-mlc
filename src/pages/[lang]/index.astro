@@ -8,7 +8,10 @@ import Card from "../../components/ui/Card.astro";
 import Faq from "../../components/ui/Faq.astro";
 
 export async function getStaticPaths(){ return [{params:{lang:"es"}},{params:{lang:"en"}}]; }
-const { lang } = Astro.params;
+
+const propLang = Astro.props?.lang;
+const paramLang = Astro.params?.lang;
+const lang = propLang ?? paramLang ?? "es";
 
 const t = lang === "en"
   ? (await import("../../i18n/en/home")).home
@@ -35,7 +38,10 @@ const t = lang === "en"
   <Section id="services" title={t.services.title} subtitle={t.services.subtitle}>
     <div class="grid grid-3">
       {t.services.cards.map((c)=>(
-        <Card href={`/${lang}/${c.slug}`} title={c.title} desc={c.desc} />
+        <a class="card" href={`/${lang}/${c.slug}`}>
+          <h3>{c.title}</h3>
+          <p>{c.desc}</p>
+        </a>
       ))}
     </div>
   </Section>
