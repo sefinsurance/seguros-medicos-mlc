@@ -1,25 +1,6 @@
+
 ---
-const defaultLang = "es";
+const accept = Astro.request.headers.get("accept-language") || "";
+const prefersEs = /^es\b/i.test(accept) || /,\s*es\b/i.test(accept);
+return Astro.redirect(prefersEs ? "/es/" : "/en/", 302);
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Redirecting…</title>
-    <meta http-equiv="refresh" content={`2;url=/${defaultLang}/`} />
-  </head>
-  <body style="font-family:system-ui;padding:24px">
-    <p>Redirecting…</p>
-    <p><a href="/es/">Español</a> · <a href="/en/">English</a></p>
-    <script>
-      (function () {
-        try {
-          const lang = (navigator.language || "").toLowerCase();
-          const target = lang.startsWith("en") ? "/en/" : "/es/";
-          if (location.pathname === "/") location.replace(target);
-        } catch (e) {}
-      })();
-    </script>
-  </body>
-</html>
