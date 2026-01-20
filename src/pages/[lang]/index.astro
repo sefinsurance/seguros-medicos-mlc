@@ -1,38 +1,25 @@
+
 ---
-import Section from "../../components/ui/Section.astro";
 import Banner from "../../components/ui/Banner.astro";
-import Button from "../../components/ui/Button.astro";
-import Card from "../../components/ui/Card.astro";
-
-export async function getStaticPaths(){ return [{params:{lang:"es"}},{params:{lang:"en"}}]; }
-
+export async function getStaticPaths(){
+  return [{params:{lang:"es"}},{params:{lang:"en"}}];
+}
 const { lang } = Astro.params;
-
-const common = lang==="en" ? (await import("../../i18n/en/common")).common : (await import("../../i18n/es/common")).common;
-const home = lang==="en" ? (await import("../../i18n/en/home")).home : (await import("../../i18n/es/home")).home;
+const common = lang==="en"
+  ? (await import("../../i18n/en/common")).common
+  : (await import("../../i18n/es/common")).common;
 ---
-
 <html lang={lang}>
-  <head>
-    <style is:global>
-      @import "../../styles/tokens.css";
-      @import "../../styles/global.css";
-    </style>
-  </head>
-  <body>
-    <Section tone="dark">
-      <Banner eyebrow={home.hero.eyebrow} title={home.hero.title} body={home.hero.body}>
-        <Button variant="primary" href={`/${lang}/#form`}>{common.cta.qualify}</Button>
-        <Button variant="ghost" href={lang==="en"?"/es/":"/en/"}>{lang==="en"?"ES":"EN"}</Button>
-      </Banner>
-    </Section>
-
-    <Section title={home.services.title} subtitle={home.services.subtitle}>
-      <div class="grid grid-3">
-        {home.services.cards.map((c)=>(
-          <Card href={`/${lang}/${c.slug}`} title={c.title} desc={c.desc} />
-        ))}
-      </div>
-    </Section>
-  </body>
+<head>
+  <style is:global>
+    @import "../../styles/tokens.css";
+    @import "../../styles/landing.css";
+  </style>
+</head>
+<body>
+  <Banner eyebrow="MLC Insurance" title={lang==="en"?"Health Coverage Made Simple":"Seguro médico sin complicaciones"}
+    body={lang==="en"?"Free eligibility check in minutes.":"Verificación gratuita en minutos."}>
+    <a href="#form">{common.cta.qualify}</a>
+  </Banner>
+</body>
 </html>
