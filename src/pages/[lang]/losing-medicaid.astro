@@ -13,21 +13,28 @@ const home =
     ? (await import("../../i18n/en/home")).home
     : (await import("../../i18n/es/home")).home;
 
-const page =
+// Load page copy defensively. Supports multiple export styles:
+// - export const losingMedicaid = {...}
+// - export const ["losing-medicaid"] = {...} (rare)
+// - export default {...}
+const mod =
   lang === "en"
-    ? (await import("../../i18n/en/losing-medicaid")).["losing-medicaid"]
-    : (await import("../../i18n/es/losing-medicaid")).["losing-medicaid"];
+    ? await import("../../i18n/en/losing-medicaid")
+    : await import("../../i18n/es/losing-medicaid");
 
-const points = Array.isArray(page?.points) ? page.points : [];
-const faqItems = Array.isArray(page?.faq) ? page.faq : [];
+const page =
+  mod.losingMedicaid ?? mod["losing-medicaid"] ?? mod.default ?? {};
+
+const points = Array.isArray(page.points) ? page.points : [];
+const faqItems = Array.isArray(page.faq) ? page.faq : [];
 ---
 
 <PageShell
   lang={lang}
   t={home}
-  kicker={page?.kicker ?? (lang === "en" ? "Losing Medicaid" : "Perdiendo Medicaid")}
-  title={page?.title ?? (lang === "en" ? "Losing Medicaid: what to do next" : "Perdiendo Medicaid: qué hacer ahora")}
-  desc={page?.desc ?? (lang === "en" ? "If you lost Medicaid, we can help you understand your next best options." : "Si perdiste Medicaid, te ayudamos a entender tus mejores opciones.")}
+  kicker={page.kicker ?? (lang === "en" ? "Losing Medicaid" : "Perdiendo Medicaid")}
+  title={page.title ?? (lang === "en" ? "Losing Medicaid: what to do next" : "Perdiendo Medicaid: qué hacer ahora")}
+  desc={page.desc ?? (lang === "en" ? "If you lost Medicaid, we can help you understand your next best options." : "Si perdiste Medicaid, te ayudamos a entender tus mejores opciones.")}
   ctaHref={`/${lang}/#form`}
   ctaText={lang === "en" ? "Check eligibility" : "Verificar elegibilidad"}
 >
