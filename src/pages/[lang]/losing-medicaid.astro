@@ -13,6 +13,10 @@ const home = lang === "en"
 const page = lang === "en"
   ? (await import("../../i18n/en/losing-medicaid")).losing-medicaid
   : (await import("../../i18n/es/losing-medicaid")).losing-medicaid;
+
+// Defensive defaults so missing keys in i18n don't break builds
+const points = Array.isArray(page?.points) ? page.points : [];
+const faqItems = Array.isArray(page?.faq) ? page.faq : [];
 ---
 
 <PageShell
@@ -26,9 +30,9 @@ const page = lang === "en"
 >
   <h2 class="title">{lang==="en" ? "Common situations" : "Situaciones comunes"}</h2>
   <ul style="margin:10px 0 18px; color:var(--text2); line-height:1.8">
-    {page.points.map((p)=>(<li>{p}</li>))}
+    {points.map((p)=>(<li>{p}</li>))}
   </ul>
 
   <h2 class="title">{lang==="en" ? "Frequently asked questions" : "Preguntas frecuentes"}</h2>
-  <Faq items={page.faq} />
+  <Faq items={faqItems} />
 </PageShell>
