@@ -1,3 +1,4 @@
+
 ---
 const { eyebrow, title, body } = Astro.props;
 ---
@@ -9,13 +10,12 @@ const { eyebrow, title, body } = Astro.props;
     <div class="actions"><slot /></div>
   </div>
 </div>
-
 <style>
 .banner{background:linear-gradient(180deg,var(--brand),var(--brand2));
-border-radius:22px; box-shadow:var(--shadow); padding:var(--space-6) var(--space-4)}
-.copy{max-width:720px; min-width:0} /* min-width:0 keeps wrapping safe in flex/grid */
+border-radius:22px;box-shadow:var(--shadow);padding:var(--space-6) var(--space-4)}
+.copy{max-width:720px;min-width:0}
 .eyebrow{letter-spacing:.12em;text-transform:uppercase;font-weight:800;font-size:12px;opacity:.9}
-.title{color:#fff; margin-top:10px}
-.body{margin-top:12px; color:rgba(255,255,255,.92); line-height:1.65; font-size:clamp(16px,1.2vw,18px)}
-.actions{margin-top:18px; display:flex; gap:12px; flex-wrap:wrap}
+.title{color:#fff;margin-top:10px}
+.body{margin-top:12px;color:rgba(255,255,255,.92);line-height:1.65}
+.actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
 </style>
