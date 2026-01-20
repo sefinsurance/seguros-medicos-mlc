@@ -3,10 +3,10 @@
 const { items=[] } = Astro.props;
 ---
 <div class="faq">
-  {items.map((x)=>(
+  {items.map((it)=>(
     <details>
-      <summary>{x.q}</summary>
-      <div class="a">{x.a}</div>
+      <summary>{it.q}</summary>
+      <div class="a">{it.a}</div>
     </details>
   ))}
 </div>

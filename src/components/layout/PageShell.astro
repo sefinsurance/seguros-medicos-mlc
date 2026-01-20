@@ -1,0 +1,32 @@
+
+---
+import SiteShell from "./SiteShell.astro";
+import TopNav from "./TopNav.astro";
+const { lang="es", t, kicker, title, desc, ctaHref, ctaText } = Astro.props;
+---
+
+<SiteShell lang={lang} title={title ?? "Obamacare Local | MLC Insurance"}>
+  <TopNav lang={lang} t={t} />
+
+  <main class="pagewrap">
+    <div class="container">
+      <div class="pagehead">
+        <div class="breadcrumb">
+          <a href={`/${lang}/`}>{t.nav.home}</a> <span aria-hidden="true">›</span> <span>{kicker}</span>
+        </div>
+        <div class="kicker">{kicker}</div>
+        <h1>{title}</h1>
+        {desc && <p>{desc}</p>}
+        {ctaHref && ctaText && (
+          <div class="pageactions">
+            <a class="btn primary" href={ctaHref}>{ctaText}</a>
+            <a class="btn light" href={`/${lang}/#services`}>{lang==="en" ? "Back to coverage" : "Volver a coberturas"}</a>
+          </div>
+        )}
+      </div>
+
+      <div style="height:18px"></div>
+      <slot />
+    </div>
+  </main>
+</SiteShell>
