@@ -1,0 +1,27 @@
+---
+const { lang, labels } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="foot">
+  <div class="container">
+    <div class="cols">
+      <div>
+        <div class="brand">MLC Insurance</div>
+        <div class="small">{labels.footer.tagline}</div>
+      </div>
+      <div class="small">
+        <a href={`/${lang}/`}>{labels.nav.home}</a> ·
+        <a href={`/${lang}/compare`}>{labels.nav.compare}</a>
+      </div>
+    </div>
+    <div class="small">© {year} MLC Insurance</div>
+  </div>
+</footer>
+
+<style>
+.foot{padding:28px 0;background:#0b2230;color:#e6eef4;margin-top:40px}
+.cols{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;align-items:flex-start}
+.brand{font-weight:900}
+.small{opacity:.9;line-height:1.6}
+.small a{color:#e6eef4}
+</style>

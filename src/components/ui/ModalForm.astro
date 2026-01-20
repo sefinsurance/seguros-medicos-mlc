@@ -1,0 +1,35 @@
+---
+const { labels } = Astro.props;
+---
+<div class="modal" id="leadModal" aria-hidden="true">
+  <div class="box" role="dialog" aria-modal="true" aria-label="Lead form">
+    <div class="head">
+      <div class="ht">{labels.form.title}</div>
+      <button class="x" type="button" onclick="window.__closeLeadModal()">×</button>
+    </div>
+    <form id="leadForm" onsubmit="window.__submitLeadForm(event)">
+      <input name="firstName" placeholder={labels.form.firstName} required />
+      <input name="lastName" placeholder={labels.form.lastName} required />
+      <input name="phone" placeholder={labels.form.phone} required />
+      <input name="email" placeholder={labels.form.email} />
+      <label class="consent">
+        <input type="checkbox" name="consent" required />
+        <span>{labels.form.consent}</span>
+      </label>
+      <button class="btn primary" type="submit">{labels.form.submit}</button>
+      <div class="small">{labels.form.disclaimer}</div>
+    </form>
+  </div>
+</div>
+
+<style>
+.modal{position:fixed;inset:0;background:rgba(2,8,23,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.active{display:flex}
+.box{width:100%;max-width:420px;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:16px}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ht{font-weight:900}
+.x{border:0;background:transparent;font-size:28px;cursor:pointer;line-height:1}
+form input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(15,23,42,.15);margin:10px 0}
+.consent{display:flex;gap:10px;align-items:flex-start;margin:6px 0 12px}
+.small{margin-top:10px;font-size:12px;color:rgba(15,23,42,.7);line-height:1.45}
+</style>

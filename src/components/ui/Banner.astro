@@ -1,21 +1,17 @@
-
 ---
 const { eyebrow, title, body } = Astro.props;
 ---
-<div class="banner">
-  <div class="copy">
-    {eyebrow && <div class="eyebrow">{eyebrow}</div>}
-    <div class="title h1">{title}</div>
-    {body && <div class="body">{body}</div>}
-    <div class="actions"><slot /></div>
+<section class="section dark">
+  <div class="container">
+    <div class="kicker">
+      {eyebrow && <div class="pill">{eyebrow}</div>}
+      <h1 class="h1" style="margin:12px 0 10px">{title}</h1>
+      {body && <p class="p" style="margin:0 0 18px">{body}</p>}
+      <div class="actions"><slot /></div>
+    </div>
   </div>
-</div>
+</section>
+
 <style>
-.banner{background:linear-gradient(180deg,var(--brand),var(--brand2));
-border-radius:22px;box-shadow:var(--shadow);padding:var(--space-6) var(--space-4)}
-.copy{max-width:720px;min-width:0}
-.eyebrow{letter-spacing:.12em;text-transform:uppercase;font-weight:800;font-size:12px;opacity:.9}
-.title{color:#fff;margin-top:10px}
-.body{margin-top:12px;color:rgba(255,255,255,.92);line-height:1.65}
-.actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
 </style>
