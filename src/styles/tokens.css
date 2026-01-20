@@ -1,0 +1,19 @@
+:root{
+  --bg:#0b2230;
+  --surface:#ffffff;
+  --muted:#f4f7fb;
+  --text:#0f172a;
+  --text2:#334155;
+  --brand:#1f6a86;
+  --brand2:#0e4e66;
+  --accent:#f2c94c;
+
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --shadow:0 14px 35px rgba(2,8,23,.10);
+  --shadow2:0 10px 22px rgba(2,8,23,.08);
+
+  --space-1:8px; --space-2:12px; --space-3:16px;
+  --space-4:24px; --space-5:32px; --space-6:48px;
+
+  --max:1100px;
+}
