@@ -1,29 +1,34 @@
 ---
-import SiteShell from "../../components/layout/SiteShell.astro";
-import Banner from "../../components/ui/Banner.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import Faq from "../../components/ui/Faq.astro";
 
-export async function getStaticPaths(){
-  return [{params:{lang:"es"}},{params:{lang:"en"}}];
-}
-const { lang } = Astro.params;
-const labels = lang==="en" ? (await import("../../i18n/en/common")).labels : (await import("../../i18n/es/common")).labels;
-const data = lang==="en" ? (await import("../../i18n/en/losing-medicaid")).losingMedicaid : (await import("../../i18n/es/losing-medicaid")).losingMedicaid;
+export async function getStaticPaths(){ return [{ params: { lang: "es" } }, { params: { lang: "en" } }]; }
+
+const lang = Astro.params.lang ?? "en";
+
+const home = lang === "en"
+  ? (await import("../../i18n/en/home")).home
+  : (await import("../../i18n/es/home")).home;
+
+const page = lang === "en"
+  ? (await import("../../i18n/en/losing-medicaid")).losing-medicaid
+  : (await import("../../i18n/es/losing-medicaid")).losing-medicaid;
 ---
-<SiteShell lang={lang} labels={labels} title={`MLC Insurance | ${data.hero.title}`}>
-  <Banner eyebrow={data.hero.eyebrow} title={data.hero.title} body={data.hero.body}>
-    <button class="btn primary" type="button" onclick="window.__openLeadModal()">{labels.form.title}</button>
-    <a class="btn ghost" href={`/${lang}/`}>{labels.nav.home}</a>
-  </Banner>
 
-  <section class="section">
-    <div class="container">
-      <h2 class="h2" style="margin:0 0 12px">{data.bulletsTitle}</h2>
-      <ul style="margin:0;padding-left:18px;line-height:1.7;color:var(--text2)">
-        {data.bullets.map((b)=>(<li>{b}</li>))}
-      </ul>
-    </div>
-  </section>
+<PageShell
+  lang={lang}
+  t={home}
+  kicker={page.kicker}
+  title={page.title}
+  desc={page.desc}
+  ctaHref={`/${lang}/#form`}
+  ctaText={lang==="en" ? "Check eligibility" : "Verificar elegibilidad"}
+>
+  <h2 class="title">{lang==="en" ? "Common situations" : "Situaciones comunes"}</h2>
+  <ul style="margin:10px 0 18px; color:var(--text2); line-height:1.8">
+    {page.points.map((p)=>(<li>{p}</li>))}
+  </ul>
 
-  <Faq title={data.faqTitle} items={data.faqs} />
-</SiteShell>
+  <h2 class="title">{lang==="en" ? "Frequently asked questions" : "Preguntas frecuentes"}</h2>
+  <Faq items={page.faq} />
+</PageShell>

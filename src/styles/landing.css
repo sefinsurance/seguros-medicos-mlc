@@ -1,4 +1,5 @@
 
+/* PATCH v2: shared layout for subpages + stronger nav visibility */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
@@ -16,7 +17,7 @@ a{color:inherit}
 @media(min-width:900px){.grid-3{grid-template-columns:repeat(3,1fr)}}
 
 .topbar{
-  position:sticky;top:0;z-index:20;
+  position:sticky;top:0;z-index:50;
   background:rgba(11,34,48,.92);
   backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(255,255,255,.08)
@@ -38,28 +39,39 @@ a{color:inherit}
 .card h3{margin:0 0 8px;font-size:20px}
 .card p{margin:0;color:var(--text2);line-height:1.7}
 
-.faq{display:grid;gap:12px}
-.faq details{background:#fff;border-radius:var(--r-md);box-shadow:var(--shadow2);padding:16px 18px}
-.faq summary{cursor:pointer;font-weight:900;list-style:none;font-size:18px}
-.faq summary::-webkit-details-marker{display:none}
-.faq .a{margin-top:10px;color:var(--text2);line-height:1.75}
-
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
 padding:13px 18px;border-radius:14px;font-weight:900;text-decoration:none;border:0;cursor:pointer;font-size:16px}
 .btn.primary{background:var(--accent);color:#0b2b36}
 .btn.ghost{background:rgba(255,255,255,.14);color:#fff}
+.btn.light{background:#fff;color:var(--brand2);border:1px solid rgba(15,23,42,.12)}
 
-.banner{background:linear-gradient(180deg,var(--brand),var(--brand2));
-border-radius:26px; box-shadow:var(--shadow); padding:var(--space-6) var(--space-5)}
-.banner .copy{max-width:760px;min-width:0}
-.banner .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-weight:900;font-size:12px;opacity:.92}
-.banner .headline{color:#fff;margin-top:12px}
-.banner .body{margin-top:14px;color:rgba(255,255,255,.92);line-height:1.75;font-size:clamp(18px,1.35vw,20px)}
-.banner .actions{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
-
-.breadcrumb{font-size:14px;color:rgba(255,255,255,.85);margin-bottom:10px}
-.breadcrumb a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:900}
-.breadcrumb a:hover{text-decoration:underline}
-
+/* Subpage header */
 .pagewrap{padding:var(--space-6) 0}
 .pagewrap .container{max-width:860px}
+.pagehead{
+  background:#fff;
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  padding:28px 26px;
+  border:1px solid rgba(15,23,42,.06);
+}
+.kicker{font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:rgba(15,23,42,.65)}
+.pagehead h1{margin:10px 0 10px;font-size:clamp(30px,3.3vw,44px);line-height:1.08}
+.pagehead p{margin:0;color:var(--text2);font-size:18px;line-height:1.7;max-width:70ch}
+.pageactions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+
+.breadcrumb{font-size:14px;color:rgba(15,23,42,.65);margin-bottom:10px}
+.breadcrumb a{color:rgba(15,23,42,.85);text-decoration:none;font-weight:900}
+.breadcrumb a:hover{text-decoration:underline}
+
+/* FAQ accordion */
+.faq{display:grid;gap:12px;margin-top:18px}
+.faq details{
+  background:#fff;border-radius:16px;
+  box-shadow:var(--shadow2);
+  padding:14px 16px;
+  border:1px solid rgba(15,23,42,.06);
+}
+.faq summary{cursor:pointer;font-weight:900;list-style:none;font-size:18px}
+.faq summary::-webkit-details-marker{display:none}
+.faq .a{margin-top:10px;color:var(--text2);line-height:1.75}
