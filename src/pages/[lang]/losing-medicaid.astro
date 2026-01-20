@@ -2,19 +2,22 @@
 import PageShell from "../../components/layout/PageShell.astro";
 import Faq from "../../components/ui/Faq.astro";
 
-export async function getStaticPaths(){ return [{ params: { lang: "es" } }, { params: { lang: "en" } }]; }
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
 
 const lang = Astro.params.lang ?? "en";
 
-const home = lang === "en"
-  ? (await import("../../i18n/en/home")).home
-  : (await import("../../i18n/es/home")).home;
+const home =
+  lang === "en"
+    ? (await import("../../i18n/en/home")).home
+    : (await import("../../i18n/es/home")).home;
 
-const page = lang === "en"
-  ? (await import("../../i18n/en/losing-medicaid")).losing-medicaid
-  : (await import("../../i18n/es/losing-medicaid")).losing-medicaid;
+const page =
+  lang === "en"
+    ? (await import("../../i18n/en/losing-medicaid")).["losing-medicaid"]
+    : (await import("../../i18n/es/losing-medicaid")).["losing-medicaid"];
 
-// Defensive defaults so missing keys in i18n don't break builds
 const points = Array.isArray(page?.points) ? page.points : [];
 const faqItems = Array.isArray(page?.faq) ? page.faq : [];
 ---
@@ -22,17 +25,17 @@ const faqItems = Array.isArray(page?.faq) ? page.faq : [];
 <PageShell
   lang={lang}
   t={home}
-  kicker={page.kicker}
-  title={page.title}
-  desc={page.desc}
+  kicker={page?.kicker ?? (lang === "en" ? "Losing Medicaid" : "Perdiendo Medicaid")}
+  title={page?.title ?? (lang === "en" ? "Losing Medicaid: what to do next" : "Perdiendo Medicaid: qué hacer ahora")}
+  desc={page?.desc ?? (lang === "en" ? "If you lost Medicaid, we can help you understand your next best options." : "Si perdiste Medicaid, te ayudamos a entender tus mejores opciones.")}
   ctaHref={`/${lang}/#form`}
-  ctaText={lang==="en" ? "Check eligibility" : "Verificar elegibilidad"}
+  ctaText={lang === "en" ? "Check eligibility" : "Verificar elegibilidad"}
 >
-  <h2 class="title">{lang==="en" ? "Common situations" : "Situaciones comunes"}</h2>
+  <h2 class="title">{lang === "en" ? "Common situations" : "Situaciones comunes"}</h2>
   <ul style="margin:10px 0 18px; color:var(--text2); line-height:1.8">
-    {points.map((p)=>(<li>{p}</li>))}
+    {points.map((p) => (<li>{p}</li>))}
   </ul>
 
-  <h2 class="title">{lang==="en" ? "Frequently asked questions" : "Preguntas frecuentes"}</h2>
+  <h2 class="title">{lang === "en" ? "Frequently asked questions" : "Preguntas frecuentes"}</h2>
   <Faq items={faqItems} />
 </PageShell>
