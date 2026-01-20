@@ -1,0 +1,18 @@
+---
+const { tone="light", title, subtitle } = Astro.props;
+---
+<section class={`sec ${tone}`}>
+  <div class="container">
+    {title && <h2 class="title">{title}</h2>}
+    {subtitle && <p class="sub">{subtitle}</p>}
+    <div class="content"><slot /></div>
+  </div>
+</section>
+
+<style>
+.sec{padding:var(--space-6) 0}
+.sec.dark{background:var(--brand); color:#fff}
+.title{margin:0 0 10px; font-size:clamp(22px,2.4vw,30px); text-wrap:balance}
+.sub{margin:0 0 var(--space-4); color:var(--text2); line-height:1.6}
+.dark .sub{color:rgba(255,255,255,.88)}
+</style>
