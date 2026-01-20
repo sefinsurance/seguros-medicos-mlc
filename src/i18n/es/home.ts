@@ -1,25 +1,31 @@
+
 export const home = {
-  hero:{
-    eyebrow:"Cobertura de salud",
-    title:"¿Califica para un seguro médico con subsidio?",
-    body:"Le ayudamos a revisar opciones disponibles (ACA, Medicare y más). Verificar es gratis y toma pocos minutos.",
-    cta:"Ver si califico"
+  nav: { home: "Inicio", services: "Coberturas", faq: "Preguntas" },
+  hero: {
+    eyebrow: "Seguro médico",
+    title: "¿Califica para un seguro médico con subsidio?",
+    body: "La verificación es gratis y toma menos de 2 minutos. Te orientamos en español o inglés, sin presión."
   },
-  services:{
-    title:"Opciones de cobertura",
-    subtitle:"Seleccione una categoría para ver detalles y preguntas frecuentes.",
-    cards:[
-      { slug:"aca", title:"ACA (Obamacare)", desc:"Planes con subsidio según ingresos y tamaño del hogar." },
-      { slug:"medicare", title:"Medicare", desc:"Inscripción, cambios de plan y preguntas comunes." },
-      { slug:"life", title:"Seguro de Vida", desc:"Protección para su familia con opciones flexibles." },
-      { slug:"losing-medicaid", title:"Perdiendo Medicaid", desc:"Evite un hueco de cobertura con guía rápida." },
-      { slug:"compare", title:"Comparar planes", desc:"Comparamos opciones para encontrar el mejor valor." }
+  cta: { qualify: "Ver si califico", viewOptions: "Ver opciones" },
+  services: {
+    title: "Opciones de cobertura",
+    subtitle: "Elige el tipo de seguro y mira respuestas claras a las preguntas más comunes.",
+    cards: [
+      { slug: "aca", title: "ACA (Obamacare)", desc: "Planes con subsidio según ingresos y tamaño del hogar." },
+      { slug: "medicare", title: "Medicare", desc: "Cumplir 65, inscribirte, o cambiar de plan con confianza." },
+      { slug: "life", title: "Seguro de Vida", desc: "Protege a tu familia con opciones simples y flexibles." },
+      { slug: "losing-medicaid", title: "Perdiendo Medicaid", desc: "Alternativas para evitar quedarte sin cobertura." },
+      { slug: "compare", title: "Comparar planes", desc: "Cómo comparar redes, costos y beneficios sin enredos." }
     ]
   },
-  faqTitle:"Preguntas frecuentes (rápidas)",
-  faqs:[
-    { q:"¿Cuánto cuesta verificar si califico?", a:"Nada. Revisamos su caso y le explicamos opciones sin costo." },
-    { q:"¿Necesito tener seguro ahora mismo?", a:"No. También ayudamos si está perdiendo cobertura o quiere cambiar de plan." },
-    { q:"¿Cuánto tarda el proceso?", a:"En muchos casos se puede avanzar en minutos. Si aplica, la cobertura puede iniciar tan pronto como el próximo mes." }
-  ]
+  faq: {
+    title: "Preguntas frecuentes",
+    subtitle: "Respuestas rápidas y honestas. Si quieres, lo revisamos contigo por teléfono o WhatsApp.",
+    items: [
+      { q: "¿Cuánto cuesta?", a: "Depende de tus ingresos, edad, condado y el plan. Muchas personas califican para primas muy bajas o incluso $0 con subsidio." },
+      { q: "¿Necesito hablar inglés?", a: "No. Te atendemos en español o inglés." },
+      { q: "¿Qué necesito para empezar?", a: "Nombre, fecha de nacimiento, dirección y un teléfono. Si aplica, ingresos estimados y miembros del hogar." },
+      { q: "¿Esto afecta mi estatus migratorio?", a: "La elegibilidad depende del programa y del estatus. Podemos explicarte tus opciones con claridad y respeto." }
+    ]
+  }
 };

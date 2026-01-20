@@ -1,34 +1,65 @@
+
 ---
 import SiteShell from "../../components/layout/SiteShell.astro";
-import Banner from "../../components/ui/Banner.astro";
+import TopNav from "../../components/layout/TopNav.astro";
+import Section from "../../components/ui/Section.astro";
+import Button from "../../components/ui/Button.astro";
 import Card from "../../components/ui/Card.astro";
 import Faq from "../../components/ui/Faq.astro";
 
-export async function getStaticPaths(){
-  return [{params:{lang:"es"}},{params:{lang:"en"}}];
-}
+export async function getStaticPaths(){ return [{params:{lang:"es"}},{params:{lang:"en"}}]; }
 const { lang } = Astro.params;
 
-const labels = lang==="en" ? (await import("../../i18n/en/common")).labels : (await import("../../i18n/es/common")).labels;
-const home = lang==="en" ? (await import("../../i18n/en/home")).home : (await import("../../i18n/es/home")).home;
+const t = lang === "en"
+  ? (await import("../../i18n/en/home")).home
+  : (await import("../../i18n/es/home")).home;
 ---
-<SiteShell lang={lang} labels={labels} title={lang==="en"?"MLC Insurance | Health coverage":"MLC Insurance | Seguro médico"}>
-  <Banner eyebrow={home.hero.eyebrow} title={home.hero.title} body={home.hero.body}>
-    <button class="btn primary" type="button" onclick="window.__openLeadModal()">{home.hero.cta}</button>
-    <a class="btn ghost" href={`/${lang}/compare`}>{labels.nav.compare}</a>
-  </Banner>
 
-  <section class="section">
-    <div class="container">
-      <h2 class="h2" style="margin:0 0 10px">{home.services.title}</h2>
-      <p class="p" style="margin:0 0 16px">{home.services.subtitle}</p>
-      <div class="grid grid-3">
-        {home.services.cards.map((c)=>(
-          <Card href={`/${lang}/${c.slug}`} title={c.title} desc={c.desc} />
-        ))}
+<SiteShell lang={lang} title="Obamacare Local | MLC Insurance">
+  <TopNav lang={lang} t={t} />
+
+  <Section tone="dark" id="home">
+    <div class="banner">
+      <div class="copy">
+        <div class="eyebrow">{t.hero.eyebrow}</div>
+        <div class="headline h1">{t.hero.title}</div>
+        <div class="body">{t.hero.body}</div>
+        <div class="actions">
+          <Button variant="primary" href={`/${lang}/#form`}>{t.cta.qualify}</Button>
+          <Button variant="ghost" href={`/${lang}/#services`}>{t.cta.viewOptions}</Button>
+        </div>
       </div>
     </div>
-  </section>
+  </Section>
 
-  <Faq title={home.faqTitle} items={home.faqs} />
+  <Section id="services" title={t.services.title} subtitle={t.services.subtitle}>
+    <div class="grid grid-3">
+      {t.services.cards.map((c)=>(
+        <Card href={`/${lang}/${c.slug}`} title={c.title} desc={c.desc} />
+      ))}
+    </div>
+  </Section>
+
+  <Section id="faq" title={t.faq.title} subtitle={t.faq.subtitle}>
+    <Faq items={t.faq.items} />
+  </Section>
+
+  <Section id="form" title={lang==="en" ? "Quick contact" : "Contacto rápido"}
+    subtitle={lang==="en" ? "Send your info and we’ll reach out." : "Envíanos tu información y te contactamos."}>
+    <div class="card" style="max-width:720px">
+      <form method="post" action="/api/lead">
+        <div class="grid" style="grid-template-columns:1fr;gap:12px">
+          <input name="name" placeholder={lang==="en"?"Full name":"Nombre completo"} required />
+          <input name="phone" placeholder={lang==="en"?"Phone":"Teléfono"} required />
+          <input name="email" placeholder="Email" type="email" />
+          <button class="btn primary" type="submit">{lang==="en"?"Submit":"Enviar"}</button>
+        </div>
+      </form>
+      <p style="margin:12px 0 0;color:var(--text2);font-size:14px;line-height:1.5">
+        {lang==="en"
+          ? "By submitting, you agree to be contacted by phone, text, or email about your request."
+          : "Al enviar, aceptas ser contactado por teléfono, texto o email sobre tu solicitud."}
+      </p>
+    </div>
+  </Section>
 </SiteShell>

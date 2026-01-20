@@ -1,26 +1,20 @@
+
 ---
-import LanguageSwitch from "../ui/LanguageSwitch.astro";
-const { lang, labels } = Astro.props;
+const { lang, t } = Astro.props;
+const other = lang === "es" ? "en" : "es";
+const path = Astro.url.pathname.replace(/^\/(es|en)/, "");
+const switchHref = `/${other}${path || "/"}`;
 ---
-<header class="top">
-  <div class="container row">
-    <a class="logo" href={`/${lang}/`}>MLC Insurance</a>
-    <nav class="nav">
-      <a href={`/${lang}/aca`}>{labels.nav.aca}</a>
-      <a href={`/${lang}/medicare`}>{labels.nav.medicare}</a>
-      <a href={`/${lang}/life`}>{labels.nav.life}</a>
-      <a href={`/${lang}/losing-medicaid`}>{labels.nav.losingMedicaid}</a>
-      <a href={`/${lang}/compare`}>{labels.nav.compare}</a>
-    </nav>
-    <LanguageSwitch lang={lang} />
+<header class="topbar">
+  <div class="container">
+    <div class="topbar-inner">
+      <div class="brand">MLC Insurance</div>
+      <nav class="nav" aria-label="Primary">
+        <a href={`/${lang}/#home`}>{t.nav.home}</a>
+        <a href={`/${lang}/#services`}>{t.nav.services}</a>
+        <a href={`/${lang}/#faq`}>{t.nav.faq}</a>
+        <a class="langbtn" href={switchHref}>{other.toUpperCase()}</a>
+      </nav>
+    </div>
   </div>
 </header>
-
-<style>
-.top{position:sticky;top:0;z-index:30;background:rgba(12,44,58,.92);backdrop-filter:blur(8px);color:#fff}
-.row{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
-.logo{text-decoration:none;font-weight:900;letter-spacing:.02em}
-.nav{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
-.nav a{color:#fff;text-decoration:none;font-weight:800;opacity:.95}
-.nav a:hover{opacity:1}
-</style>

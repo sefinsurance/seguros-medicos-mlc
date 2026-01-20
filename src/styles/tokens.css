@@ -1,4 +1,5 @@
 :root{
+  --bg:#0b2230;
   --surface:#ffffff;
   --muted:#f4f7fb;
   --text:#0f172a;
@@ -14,5 +15,5 @@
   --space-1:8px; --space-2:12px; --space-3:16px;
   --space-4:24px; --space-5:32px; --space-6:48px;
 
-  --max:1120px;
+  --max:1100px;
 }

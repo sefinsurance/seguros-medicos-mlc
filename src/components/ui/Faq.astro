@@ -1,24 +1,12 @@
----
-const { items = [], title } = Astro.props;
----
-<section class="section">
-  <div class="container">
-    <h2 class="h2" style="margin:0 0 14px">{title}</h2>
-    <div class="faq">
-      {items.map((x)=>(
-        <details class="item">
-          <summary>{x.q}</summary>
-          <div class="a">{x.a}</div>
-        </details>
-      ))}
-    </div>
-  </div>
-</section>
 
-<style>
-.faq{display:grid;gap:12px}
-.item{background:#fff;border-radius:var(--r-md);box-shadow:var(--shadow2);padding:14px 16px}
-summary{cursor:pointer;font-weight:900;list-style:none}
-summary::-webkit-details-marker{display:none}
-.a{margin-top:10px;color:var(--text2);line-height:1.65}
-</style>
+---
+const { items=[] } = Astro.props;
+---
+<div class="faq">
+  {items.map((x)=>(
+    <details>
+      <summary>{x.q}</summary>
+      <div class="a">{x.a}</div>
+    </details>
+  ))}
+</div>
