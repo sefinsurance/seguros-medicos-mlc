@@ -1,9 +1,9 @@
 ---
-import SiteShell from '../../../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../../../components/ui/FaqAccordion.astro';
-import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
-import { coverage } from '../../../../data/coverage';
-import { countyCities } from '../../../../data/countyCities';
+import SiteShell from '../../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../../components/ui/FaqAccordion.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import { coverage } from '../../../data/coverage';
+import { countyCities } from '../../../data/countyCities';
 
 export async function getStaticPaths() {
   const langs = ['es', 'en'];
