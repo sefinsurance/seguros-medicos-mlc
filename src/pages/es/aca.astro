@@ -1,64 +1,85 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const lang = 'es';
-const waText = 'Hola, quiero ayuda con mi seguro médico en Florida.';
-const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
-
-const title = 'Medicare en Florida';
-const description = '¿Cumples 65 pronto? Podemos ayudarte a preparar tu plan hasta 3 meses antes de tu cumpleaños.';
-const bullets = [
-  'Ventana inicial (3 meses antes del cumpleaños)',
-  'Medicare Advantage vs Original (explicado simple)',
-  'Revisión de doctores y medicamentos',
-  'Opciones según tu condado en Florida',
-];
-const faqs = [
-  { q: '¿De verdad puedo empezar 3 meses antes?', a: 'Sí. Tu ventana inicial suele incluir 3 meses antes del mes de tu cumpleaños. Planificar temprano te evita estrés.' },
-  { q: '¿Qué necesitan para orientarme?', a: 'Tu fecha de nacimiento, condado y si ya tienes Parte A/B. Si tomas medicinas, también ayuda.' },
-  { q: '¿Me ayudan a comparar planes?', a: 'Sí. Comparamos red, beneficios y el costo real, no solo el precio mensual.' },
-];
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
+const waHref = `https://wa.me/1${digits}`;
 ---
-<SiteShell lang={lang} title={`${title} | Seguros Médicos`} description={description} canonical="https://obamacarelocal.com/es/medicare/">
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida (Estado completo)</span>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href={waHref} rel="noopener">Escríbenos por WhatsApp</a>
-        <a class="btn btn-outline" href="tel:+18774582557">Llamar 1-877-458-2557</a>
+
+<SiteShell
+  lang="es"
+  title="Planes del Marketplace (ACA / Obamacare)"
+  description="Compara todos los planes del Marketplace con MLC Insurance. Llama/texto/WhatsApp 877-458-2557."
+  canonical="https://obamacarelocal.com/es/aca/"
+>
+  <section class="hero" style="padding:28px 0 18px">
+    <div class="container">
+      <span class="pill">Todos los planes del Marketplace · Español</span>
+      <h1 style="margin:14px 0 10px">ACA / “Obamacare” explicado en claro</h1>
+      <p class="muted" style="max-width:70ch">
+        El Marketplace (ACA) es donde puedes comparar planes privados de salud—y muchas familias califican para subsidios.
+        Te ayudamos a comparar lo disponible en tu ZIP y a inscribirte.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
+        <a class="btn btn-pill btn-outline" href={waHref} rel="noopener">WhatsApp</a>
+        <a class="btn btn-pill btn-outline" href="/es/faq">Preguntas</a>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="card">
-        <h2>Lo más común</h2>
-        <ul class="list">
-          {bullets.map((b) => <li>{b}</li>)}
-        </ul>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card">
-        <h2>Preguntas frecuentes</h2>
-        <FaqAccordion items={faqs} />
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
-        <h2>¿Listo? Te lo hacemos fácil</h2>
-        <p class="small">Escríbenos por WhatsApp y cuéntanos tu situación. Te orientamos con calma, como una conversación.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <a class="btn btn-primary" href={waHref} rel="noopener">Abrir WhatsApp</a>
-          <a class="btn btn-light" href="/es/">Volver al inicio</a>
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card pad">
+          <h2 style="margin-top:0">¿Quién debe considerar ACA?</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Sin seguro por empleo (o es muy caro)</li>
+            <li>Trabajas por cuenta propia / 1099</li>
+            <li>Jubilación temprana (aún no en Medicare)</li>
+            <li>Familias que necesitan cubrir a los niños</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2 style="margin-top:0">Lo que te pediremos</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Código ZIP</li>
+            <li>Tamaño del hogar</li>
+            <li>Ingreso anual estimado</li>
+            <li>Doctores/medicinas preferidas (si aplica)</li>
+          </ul>
         </div>
       </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0">Periodo Especial de Inscripción (SEP)</h2>
+        <p class="muted">
+          Si perdiste cobertura, te mudaste, te casaste, tuviste un bebé o cambió tu ingreso, es posible que califiques para inscribirte o cambiar de plan fuera del periodo abierto.
+          Te guiamos con lo que aplica y la documentación necesaria.
+        </p>
+      </div>
+
+      <div style="margin-top:18px" class="card pad">
+        <h2 style="margin-top:0">Nuestra promesa</h2>
+        <p class="muted" style="margin:8px 0 0">
+          Ofrecemos <b>todos los planes disponibles del Marketplace</b>. Te explicamos opciones sin presión y te ayudamos a elegir lo mejor para tu familia y presupuesto.
+        </p>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-pill btn-teal" href="/es/compare">Comparar planes</a>
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Hablar con un agente</a>
+      </div>
+
+      <p class="muted" style="margin-top:14px;font-size:13px">
+        Nota: MLC Insurance no está afiliada al gobierno. “Obamacare” se refiere a cobertura del Marketplace bajo la ACA.
+      </p>
     </div>
   </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{color:#0b1116}
+  </style>
 </SiteShell>

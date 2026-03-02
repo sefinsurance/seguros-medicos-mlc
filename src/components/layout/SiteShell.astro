@@ -5,8 +5,10 @@ import '../../styles/global.css';
 
 const {
   lang = 'es',
-  title = 'Seguros Mdicos',
-  description = 'Seguros mdicos, Obamacare (ACA), Medicare y ms.',
+  title = lang === 'es' ? 'Seguro médico para tu familia' : 'Health insurance for your family',
+  description = lang === 'es'
+    ? 'MLC Insurance te ayuda a comparar y elegir planes del Marketplace (ACA/Obamacare), Medicare, Dental y Vida. Atención en español.'
+    : 'MLC Insurance helps you compare and choose Marketplace (ACA/Obamacare) plans, Medicare, Dental, and Life. Bilingual support.',
   canonical = 'https://obamacarelocal.com/'
 } = Astro.props;
 
@@ -31,7 +33,7 @@ const waText = lang === 'es'
   ? 'Hola, quiero ayuda con mi seguro médico (ACA/Marketplace o Medicare).'
   : 'Hi, I would like help with health insurance (ACA/Marketplace or Medicare).';
 const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
-const fullTitle = `${title} | Seguros Mdicos`;
+const fullTitle = `${title} | MLC Insurance`;
 ---
 
 <!DOCTYPE html>
@@ -49,7 +51,7 @@ const fullTitle = `${title} | Seguros Mdicos`;
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="Seguros Medicos" />
+    <meta property="og:site_name" content="MLC Insurance" />
     <meta property="og:image" content={`${siteUrl}/images/logo.png`} />
 
     <!-- Twitter -->
@@ -67,13 +69,13 @@ const fullTitle = `${title} | Seguros Mdicos`;
             "@type": "WebSite",
             "@id": `${siteUrl}/#website`,
             "url": siteUrl,
-            "name": "Seguros Medicos",
+            "name": "MLC Insurance",
             "inLanguage": ["en", "es"]
           },
           {
             "@type": "ProfessionalService",
             "@id": `${siteUrl}/#organization`,
-            "name": "Seguros Medicos",
+            "name": "MLC Insurance",
             "alternateName": "MLC Insurance Agency",
             "url": siteUrl,
             "telephone": "+1-877-458-2557",

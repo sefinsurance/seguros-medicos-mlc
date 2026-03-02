@@ -1,77 +1,68 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const lang = 'en';
-const waText = 'Hi, I would like help with Medicare in Florida.';
-const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
-
-const bullets = [
-  'You can prepare up to 3 months before turning 65',
-  'We compare Medicare Advantage vs Original Medicare (plain English)',
-  'We check your doctors and clinics in-network',
-  'We review prescriptions to avoid surprises',
-  'Options and benefits vary by Florida county',
-];
-
-const faqs = [
-  { q: 'Can I really start 3 months before 65?', a: 'Yes. Your Initial Enrollment window often includes the 3 months before your birthday month. Planning early gives you control.' },
-  { q: 'What is Medicare Advantage?', a: 'It’s a private plan alternative to Original Medicare with its own network, rules, and benefits.' },
-  { q: 'Will you help me choose without pressure?', a: 'Yes. The goal is clarity—so you understand what you’re picking and why it fits.' },
-];
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
+
 <SiteShell
-  lang={lang}
-  title="Medicare in Florida | Seguros Médicos"
-  description="Turning 65 soon? We can help you prepare up to 3 months before your birthday."
+  lang="en"
+  title="Medicare Guidance"
+  description="Medicare questions? MLC Insurance can help explain options and next steps."
   canonical="https://obamacarelocal.com/en/medicare/"
 >
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida statewide</span>
-      <h1>Medicare in Florida</h1>
-      <p>Turning 65 soon? We can help you prepare up to 3 months before your birthday.</p>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href={waHref} rel="noopener">Message us on WhatsApp</a>
-        <a class="btn btn-outline" href="tel:+18774582557">Call 1-877-458-2557</a>
-      </div>
-
-      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
-        Send your birthdate + county and we’ll tell you what window applies—fast.
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">Friendly guidance · Bilingual</span>
+      <h1 style="margin:14px 0 10px">Medicare support (when you need it)</h1>
+      <p class="muted" style="max-width:70ch">
+        Turning 65, helping a parent, or reviewing coverage? We can explain the basics and help you understand what options are available in your area.
       </p>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="card">
-        <h2>What we usually review with you</h2>
-        <ul class="list">
-          {bullets.map((b) => <li>{b}</li>)}
-        </ul>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card">
-        <h2>Frequently asked</h2>
-        <FaqAccordion items={faqs} />
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
-        <h2>Ready? I can explain it in 2 minutes</h2>
-        <p class="small">
-          Message us on WhatsApp and share: birthdate + county + whether you already have Part A/B.
-          That’s enough for a clear next step.
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <a class="btn btn-primary" href={waHref} rel="noopener">Open WhatsApp</a>
-          <a class="btn btn-light" href="/en/">Back to home</a>
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">We can help you with</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Understanding Part A & Part B</li>
+            <li>When you can enroll (IEP, AEP, SEP, etc.)</li>
+            <li>Reviewing current coverage and next steps</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">What to have ready</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Date of birth</li>
+            <li>Medicare number (if you have it)</li>
+            <li>Current plan info (if enrolled)</li>
+          </ul>
         </div>
       </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">Also shopping Marketplace plans?</h2>
+        <p class="muted">If you’re not eligible for Medicare yet, our team can help you compare ACA / Marketplace plans too.</p>
+        <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-pill btn-teal" href="/en/aca">ACA / Obamacare</a>
+          <a class="btn btn-pill btn-light" href="/en/compare">Compare plans</a>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:14px;font-size:13px">
+        Disclaimer: Medicare plan availability varies by area and eligibility.
+      </p>
     </div>
   </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{font-size:22px}
+  </style>
 </SiteShell>

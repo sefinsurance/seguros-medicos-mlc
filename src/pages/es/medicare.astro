@@ -1,77 +1,68 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const lang = 'es';
-const waText = 'Hola, quiero ayuda con Medicare en Florida.';
-const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
-
-const bullets = [
-  'Puedes prepararte hasta 3 meses antes de cumplir 65',
-  'Comparamos Medicare Advantage vs Medicare Original (sin enredos)',
-  'Revisamos si tus doctores y clínicas están en la red',
-  'Chequeamos recetas para evitar sorpresas',
-  'Opciones y beneficios cambian según tu condado en Florida',
-];
-
-const faqs = [
-  { q: '¿De verdad puedo empezar 3 meses antes de cumplir 65?', a: 'Sí. Tu ventana inicial normalmente incluye 3 meses antes del mes de tu cumpleaños. Planificar temprano te da más control.' },
-  { q: '¿Qué es Medicare Advantage?', a: 'Es un plan ofrecido por compañías privadas que reemplaza Medicare Original. Tiene red, reglas y beneficios específicos.' },
-  { q: '¿Me ayudan a elegir sin presión?', a: 'Sí. Nuestra meta es que entiendas lo que estás comprando y por qué te conviene.' },
-];
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
+
 <SiteShell
-  lang={lang}
-  title="Medicare en Florida | Seguros Médicos"
-  description="¿Cumples 65 pronto? Podemos ayudarte a preparar tu plan hasta 3 meses antes de tu cumpleaños."
+  lang="es"
+  title="Ayuda con Medicare"
+  description="¿Preguntas de Medicare? MLC Insurance puede ayudarte a entender opciones y próximos pasos."
   canonical="https://obamacarelocal.com/es/medicare/"
 >
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida (Estado completo)</span>
-      <h1>Medicare en Florida</h1>
-      <p>¿Cumples 65 pronto? Podemos ayudarte a preparar tu plan hasta 3 meses antes de tu cumpleaños.</p>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href={waHref} rel="noopener">Escríbenos por WhatsApp</a>
-        <a class="btn btn-outline" href="tel:+18774582557">Llamar 1-877-458-2557</a>
-      </div>
-
-      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
-        Si me dices tu fecha de nacimiento y condado, te digo rápido qué ventana aplica para ti.
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">Guía amigable · Español</span>
+      <h1 style="margin:14px 0 10px">Medicare: apoyo cuando lo necesites</h1>
+      <p class="muted" style="max-width:70ch">
+        ¿Cumples 65, estás ayudando a un familiar, o revisando tu cobertura? Te explicamos lo básico y qué opciones pueden estar disponibles en tu área.
       </p>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="card">
-        <h2>Lo más común que revisamos contigo</h2>
-        <ul class="list">
-          {bullets.map((b) => <li>{b}</li>)}
-        </ul>
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card">
-        <h2>Preguntas frecuentes</h2>
-        <FaqAccordion items={faqs} />
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
-        <h2>¿Listo? Te lo explico en 2 minutos</h2>
-        <p class="small">
-          Escríbeme por WhatsApp y dime: fecha de nacimiento + condado + si ya tienes Parte A/B.
-          Con eso te doy una guía clara de tus opciones.
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <a class="btn btn-primary" href={waHref} rel="noopener">Abrir WhatsApp</a>
-          <a class="btn btn-light" href="/es/">Volver al inicio</a>
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">Te ayudamos con</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Entender Parte A y Parte B</li>
+            <li>Cuándo puedes inscribirte (IEP, AEP, SEP, etc.)</li>
+            <li>Revisar tu cobertura actual y próximos pasos</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">Ten a la mano</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Fecha de nacimiento</li>
+            <li>Número de Medicare (si lo tienes)</li>
+            <li>Información del plan actual (si estás inscrito)</li>
+          </ul>
         </div>
       </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">¿También buscas Marketplace?</h2>
+        <p class="muted">Si aún no calificas para Medicare, te ayudamos a comparar planes del Marketplace (ACA) también.</p>
+        <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-pill btn-teal" href="/es/aca">ACA / Obamacare</a>
+          <a class="btn btn-pill btn-light" href="/es/compare">Comparar planes</a>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:14px;font-size:13px">
+        Aviso: La disponibilidad de planes de Medicare varía por área y elegibilidad.
+      </p>
     </div>
   </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{font-size:22px}
+  </style>
 </SiteShell>

@@ -1,29 +1,43 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
 
-const lang = 'en';
-const waText = 'Hi, I would like dental insurance options in Florida.';
-const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
+
 <SiteShell
-  lang={lang}
-  title="Dental Insurance in Florida | Seguros Médicos"
-  description="Affordable dental options for you and your family."
+  lang="en"
+  title="Dental Coverage"
+  description="Explore dental plan options with MLC Insurance."
   canonical="https://obamacarelocal.com/en/dental/"
 >
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida statewide</span>
-      <h1>Dental Insurance in Florida</h1>
-      <p>
-        Cleanings, x-rays, major procedures.
-        We help you compare dental options that actually fit your budget.
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">Dental options · Simple guidance</span>
+      <h1 style="margin:14px 0 10px">Dental plans that make sense</h1>
+      <p class="muted" style="max-width:70ch">
+        Whether you need cleanings, basic work, or major services, we can help you understand dental plan options and pick one that fits your needs.
       </p>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href={waHref}>Message us on WhatsApp</a>
-        <a class="btn btn-outline" href="tel:+18774582557">Call</a>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
       </div>
     </div>
   </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-3">
+        <div class="card pad"><b>Preventive</b><p class="muted">Cleanings, exams, and X-rays (varies by plan).</p></div>
+        <div class="card pad"><b>Basic services</b><p class="muted">Fillings and simple procedures (often with waiting periods).</p></div>
+        <div class="card pad"><b>Major work</b><p class="muted">Crowns, bridges, and more (coverage and limits vary).</p></div>
+      </div>
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">Tell us what you need</h2>
+        <p class="muted">If you already know what treatment you might need, tell us and we’ll help you choose the best type of plan for your situation.</p>
+      </div>
+    </div>
+  </section>
+
+  <style>.section{padding:26px 0} h2{font-size:22px}</style>
 </SiteShell>

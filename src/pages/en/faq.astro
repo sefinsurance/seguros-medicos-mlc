@@ -1,61 +1,76 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const lang = 'en';
-const waText = 'Hi, I have questions about health insurance in Florida.';
-const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
-
-const faqs = [
-  { q: 'Do you serve all of Florida?', a: 'Yes. We help clients statewide. WhatsApp is the fastest way to reach us.' },
-  { q: 'What do I need to check ACA eligibility?', a: 'Your county, household size, and estimated household income. That’s enough to start.' },
-  { q: 'Can I enroll outside Open Enrollment?', a: 'Sometimes. Losing coverage, moving, marriage, new baby and other life events can trigger Special Enrollment.' },
-  { q: 'When should I start planning for Medicare?', a: 'In many cases, up to 3 months before your 65th birthday month.' },
-  { q: 'What if I lost Medicaid?', a: 'There may be a Special Enrollment opportunity. The key is avoiding a coverage gap.' },
-  { q: 'Does it cost to get guidance?', a: 'Message us and we’ll guide you. If you qualify for assistance or subsidies, we explain it clearly.' },
-];
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
+
 <SiteShell
-  lang={lang}
-  title="Frequently Asked Questions | Seguros Médicos"
-  description="Clear answers about ACA, Medicare, Medicaid and coverage options in Florida."
+  lang="en"
+  title="FAQ"
+  description="Common questions about ACA / Obamacare Marketplace plans."
   canonical="https://obamacarelocal.com/en/faq/"
 >
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida statewide</span>
-      <h1>Frequently Asked Questions</h1>
-      <p>
-        Here are quick answers. If your situation is specific (and most are),
-        message us and we’ll review it with you personally.
-      </p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href={waHref} rel="noopener">Message us on WhatsApp</a>
-        <a class="btn btn-outline" href="tel:+18774582557">Call 1-877-458-2557</a>
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">Quick answers · Real help</span>
+      <h1 style="margin:14px 0 10px">Frequently asked questions</h1>
+      <p class="muted" style="max-width:70ch">If you don’t see your question here, call or text us and we’ll walk you through it.</p>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="card">
-        <h2>Quick Answers</h2>
-        <FaqAccordion items={faqs} />
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
-        <h2>Prefer a real conversation?</h2>
-        <p class="small">
-          Message us on WhatsApp and describe your situation in one sentence.
-          We’ll guide you from there.
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <a class="btn btn-primary" href={waHref} rel="noopener">Open WhatsApp</a>
-          <a class="btn btn-light" href="/en/">Back to home</a>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <div class="card pad">
+          <b>Do I qualify for a subsidy?</b>
+          <p class="muted">Many families do. It depends on household size, estimated annual income, and access to affordable job-based coverage.</p>
+        </div>
+        <div class="card pad">
+          <b>What if my income changes?</b>
+          <p class="muted">Update your Marketplace application as soon as possible to avoid surprises at tax time.</p>
+        </div>
+        <div class="card pad">
+          <b>Can I enroll outside Open Enrollment?</b>
+          <p class="muted">Yes—if you qualify for a Special Enrollment Period (loss of coverage, move, marriage, newborn, etc.).</p>
+        </div>
+        <div class="card pad">
+          <b>Will my doctors be in-network?</b>
+          <p class="muted">Networks vary. When possible, we help you check doctors/hospitals before choosing a plan.</p>
+        </div>
+        <div class="card pad">
+          <b>Is “Obamacare” the same as Marketplace?</b>
+          <p class="muted">In everyday language, yes. “Obamacare” commonly refers to ACA Marketplace coverage.</p>
+        </div>
+        <div class="card pad">
+          <b>Do you charge for help?</b>
+          <p class="muted">In most cases, there’s no extra cost to you for using an agent. Ask us if you want the details.</p>
         </div>
       </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">Ready to compare options?</h2>
+        <p class="muted" style="margin:8px 0 0">
+          Send us your ZIP code, household size, and estimated income. We’ll compare all available Marketplace plans and explain your best options.
+        </p>
+        <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
+          <a class="btn btn-pill btn-teal" href="/en/compare">Compare plans</a>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:14px;font-size:13px">
+        Note: MLC Insurance is not affiliated with the government.
+      </p>
     </div>
   </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{font-size:22px}
+  </style>
 </SiteShell>
