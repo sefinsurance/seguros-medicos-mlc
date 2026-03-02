@@ -1,82 +1,64 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import FaqAccordion from '../../components/ui/FaqAccordion.astro';
-import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 
-const lang = 'es';
-const title = 'Perdí Medicaid: opciones de seguro médico';
-const description = 'Si perdiste Medicaid, te ayudamos a revisar opciones (ACA/Marketplace, planes familiares y más). Atención en español.';
-
-const faq_items = [
-  { q: '¿Perder Medicaid me da un Período Especial?', a: 'Muchas veces sí. Si recibiste una carta de terminación o cambio, puedes calificar para inscribirte fuera de Open Enrollment. Escríbenos y lo confirmamos.' },
-  { q: '¿Qué información necesitan?', a: 'Condado, edades, ingreso estimado del hogar y fecha en que termina Medicaid (si la tienes).' },
-  { q: '¿Cómo evito sorpresas en impuestos?', a: 'Reportando cambios de ingreso durante el año. Te guiamos para hacerlo correctamente.' }
-];
-
-const crumbs = [
-  { label: 'Inicio', href: '/es/' },
-  { label: 'Perdí Medicaid' }
-];
-
-const canonical = 'https://obamacarelocal.com/es/losing-medicaid/';
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${canonical}#breadcrumb`,
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://obamacarelocal.com/es/" },
-        { "@type": "ListItem", "position": 2, "name": "Perdí Medicaid", "item": canonical }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "@id": `${canonical}#faq`,
-      "mainEntity": faq_items.map((f) => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": { "@type": "Answer", "text": f.a }
-      }))
-    }
-  ]
-};
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
 
-<SiteShell lang={lang} title={title} description={description} canonical={canonical}>
-  <main class="container">
-    <Breadcrumbs items={crumbs} />
-
-    <section class="hero">
-      <h1>{title}</h1>
-      <p class="lead">
-        Si perdiste Medicaid o recibiste una carta, no estás solo. Te ayudamos a revisar si calificas para un Período Especial y a comparar planes del Marketplace (ACA) con créditos, para que el costo sea realista para tu hogar.
+<SiteShell
+  lang="es"
+  title="¿Perdiendo Medicaid?"
+  description="Si estás perdiendo Medicaid, podrías calificar para SEP y obtener cobertura del Marketplace (ACA)."
+  canonical="https://obamacarelocal.com/es/losing-medicaid/"
+>
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">Ayuda con SEP · Rápido</span>
+      <h1 style="margin:14px 0 10px">Si estás perdiendo Medicaid, no esperes.</h1>
+      <p class="muted" style="max-width:70ch">
+        Perder Medicaid puede abrir un Periodo Especial de Inscripción (SEP) para cobertura del Marketplace.
+        Te ayudamos a entender tu tiempo y a comparar todos los planes disponibles.
       </p>
-
-      <div class="cta-row">
-        <a class="btn primary" href={`https://wa.me/18774582557?text=${encodeURIComponent('Hola, perdí Medicaid y necesito opciones. ¿Me puedes orientar?')}`} target="_blank" rel="noopener noreferrer">
-          Escribir por WhatsApp
-        </a>
-        <a class="btn" href="/es/aca">Ver ACA / Marketplace</a>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Qué revisamos contigo</h2>
-      <ul>
-        <li>Fecha en que termina Medicaid (si aplica)</li>
-        <li>Ingresos estimados del hogar</li>
-        <li>Doctores, hospitales y medicamentos</li>
-        <li>Mejor plan para tu presupuesto y necesidades</li>
-      </ul>
-    </section>
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">Qué hacer ahora</h2>
+          <ol class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Busca tu carta de terminación (si la tienes).</li>
+            <li>Confirma el último día activo de Medicaid.</li>
+            <li>Cotiza en Marketplace y elige fecha de inicio para evitar huecos.</li>
+          </ol>
+        </div>
+        <div class="card pad">
+          <h2 style="margin-top:0;color:#0b1116">Lo que necesitaremos</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>Código ZIP</li>
+            <li>Tamaño del hogar</li>
+            <li>Ingreso anual estimado</li>
+            <li>Fecha/carta de terminación (si disponible)</li>
+          </ul>
+        </div>
+      </div>
 
-    <section class="card">
-      <h2>Preguntas frecuentes</h2>
-      <FaqAccordion items={faq_items} />
-    </section>
-  </main>
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">Comparamos todos los planes</h2>
+        <p class="muted">Revisamos lo disponible en tu área y te ayudamos a inscribirte con confianza.</p>
+      </div>
 
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-pill btn-teal" href="/es/compare">Comparar planes</a>
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Ayuda hoy</a>
+      </div>
+    </div>
+  </section>
+
+  <style>.section{padding:26px 0} h2{font-size:22px}</style>
 </SiteShell>

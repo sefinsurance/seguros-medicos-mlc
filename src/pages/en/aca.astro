@@ -1,7 +1,85 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
+const waHref = `https://wa.me/1${digits}`;
 ---
-<SiteShell lang="en" title="Aca">
-  <h1>Aca</h1>
-  <p>Página en construcción.</p>
+
+<SiteShell
+  lang="en"
+  title="ACA / Obamacare Marketplace Plans"
+  description="Compare all available Marketplace plans with MLC Insurance. Call/text/WhatsApp 877-458-2557."
+  canonical="https://obamacarelocal.com/en/aca/"
+>
+  <section class="hero" style="padding:28px 0 18px">
+    <div class="container">
+      <span class="pill">All available Marketplace plans · Bilingual</span>
+      <h1 style="margin:14px 0 10px">ACA / “Obamacare” made simple</h1>
+      <p class="muted" style="max-width:70ch">
+        The Marketplace (ACA) is where you can shop private health plans—and many families qualify for subsidies.
+        We’ll compare what’s available in your ZIP code and help you enroll.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
+        <a class="btn btn-pill btn-outline" href={waHref} rel="noopener">WhatsApp</a>
+        <a class="btn btn-pill btn-outline" href="/en/faq">FAQ</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card pad">
+          <h2 style="margin-top:0">Who should consider ACA plans?</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>No job-based coverage (or it’s unaffordable)</li>
+            <li>Self-employed / 1099 income</li>
+            <li>Early retirees (not yet on Medicare)</li>
+            <li>Families needing coverage for kids</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h2 style="margin-top:0">What we’ll ask for</h2>
+          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
+            <li>ZIP code</li>
+            <li>Household size</li>
+            <li>Estimated yearly income</li>
+            <li>Preferred doctors / prescriptions (if any)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0">Special Enrollment Period (SEP)</h2>
+        <p class="muted">
+          If you lost coverage, moved, got married, had a baby, or your income changed, you may qualify to enroll or change plans outside Open Enrollment.
+          We’ll tell you what applies and what documentation is needed.
+        </p>
+      </div>
+
+      <div style="margin-top:18px" class="card pad">
+        <h2 style="margin-top:0">Our promise</h2>
+        <p class="muted" style="margin:8px 0 0">
+          We offer <b>all available Marketplace plans</b>. We’ll explain your options clearly and help you choose a plan that fits your family and budget.
+        </p>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-pill btn-teal" href="/en/compare">Compare plans</a>
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Talk to an agent</a>
+      </div>
+
+      <p class="muted" style="margin-top:14px;font-size:13px">
+        Note: MLC Insurance is not affiliated with the government. “Obamacare” refers to ACA Marketplace coverage.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{color:#0b1116}
+  </style>
 </SiteShell>

@@ -1,7 +1,81 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const phoneHref = `tel:+1${digits}`;
 ---
-<SiteShell lang="en" title="Compare">
-  <h1>Compare</h1>
-  <p>Página en construcción.</p>
+
+<SiteShell
+  lang="en"
+  title="Compare Marketplace Plans"
+  description="MLC Insurance compares all available ACA / Obamacare Marketplace plans for your area."
+  canonical="https://obamacarelocal.com/en/compare/"
+>
+  <section class="hero" style="padding:26px 0 14px">
+    <div class="container">
+      <span class="pill">No pressure · Clear explanations</span>
+      <h1 style="margin:14px 0 10px">Compare plans like a pro</h1>
+      <p class="muted" style="max-width:70ch">
+        We’ll help you compare plans based on what matters most: monthly cost, doctor access, prescriptions, and peace of mind.
+      </p>
+      <div style="margin-top:14px">
+        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid cols-3">
+        <div class="card pad">
+          <b>Monthly premium</b>
+          <p class="muted">What you pay each month after tax credits (if eligible).</p>
+        </div>
+        <div class="card pad">
+          <b>Deductible & max out-of-pocket</b>
+          <p class="muted">Your “worst-case” cost in a year for covered services.</p>
+        </div>
+        <div class="card pad">
+          <b>Network & prescriptions</b>
+          <p class="muted">Whether your doctors, hospitals, and meds are covered.</p>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h2 style="margin-top:0;color:#0b1116">Quick checklist</h2>
+        <div class="grid cols-2" style="align-items:start">
+          <ul class="muted" style="margin:0;line-height:1.7">
+            <li>Do you want the lowest premium or lower copays?</li>
+            <li>Do you expect frequent doctor visits this year?</li>
+            <li>Any expensive prescriptions?</li>
+            <li>Preferred hospitals or specialists?</li>
+          </ul>
+          <ul class="muted" style="margin:0;line-height:1.7">
+            <li>HMO/EPO vs PPO style access (varies by area)</li>
+            <li>Virtual care benefits</li>
+            <li>Mental health and therapy access</li>
+            <li>Coverage for kids & family needs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:16px" class="card pad">
+        <h2 style="margin-top:0;color:#0b1116">Want us to do it with you?</h2>
+        <p class="muted" style="margin:8px 0 0">
+          Text or call us with your ZIP code, household size, and estimated income. We’ll compare all available Marketplace plans and explain the best options.
+        </p>
+        <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
+          <a class="btn btn-pill btn-teal" href="/en/aca">ACA basics</a>
+          <a class="btn btn-pill btn-light" href="/en/faq">FAQ</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .section{padding:26px 0}
+    h2{font-size:22px}
+  </style>
 </SiteShell>

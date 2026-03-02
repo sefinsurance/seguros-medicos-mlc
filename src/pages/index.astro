@@ -1,28 +1,41 @@
 ---
 import SiteShell from '../components/layout/SiteShell.astro';
+
+const phone = '877-458-2557';
+const digits = phone.replace(/[^0-9]/g,'');
+const waHref = `https://wa.me/1${digits}`;
 ---
+
 <SiteShell
   lang="es"
-  title="Seguros Médicos en Florida | Obamacare • Medicare • Vida • Dental"
-  description="Ayuda cálida y profesional para elegir tu cobertura en Florida. WhatsApp directo."
+  title="MLC Insurance | Obamacare (ACA) y mÃ¡s"
+  description="MLC Insurance: comparamos todos los planes disponibles del Marketplace (ACA/Obamacare). Llama, texto o WhatsApp 877-458-2557."
   canonical="https://obamacarelocal.com/"
 >
   <section class="hero">
-    <div class="container hero-inner">
-      <span class="badge">Florida (Estado completo)</span>
-      <h1>Bienvenido(a). Empecemos por lo importante: tu tranquilidad.</h1>
-      <p>
-        Entra al sitio en español (recomendado), o cambia a inglés cuando quieras.
+    <div class="container hero-inner" style="max-width:900px">
+      <span class="pill">MLC Insurance Â· AtenciÃ³n familiar Â· EspaÃ±ol / English</span>
+      <h1 style="margin-top:14px">Elige tu idioma para comenzar</h1>
+      <p class="muted" style="max-width:65ch">
+        Te ayudamos a comparar <b>todos los planes del Marketplace</b> (ACA / Obamacare) y elegir el que mejor se ajusta a tu familia.
       </p>
 
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
-        <a class="btn btn-primary" href="/es/">Ir al inicio</a>
-        <a class="btn btn-outline" href="/en/">English</a>
+        <a class="btn btn-pill btn-gold" href="/es/">EspaÃ±ol</a>
+        <a class="btn btn-pill btn-outline" href="/en/">English</a>
+        <a class="btn btn-pill btn-outline" href={waHref} rel="noopener">WhatsApp</a>
       </div>
 
       <p class="small" style="margin-top:14px;color:rgba(255,255,255,.85)">
-        Si estás en el celular, WhatsApp es la forma más rápida.
+        Tel: <b>{phone}</b> (llamadas, texto y WhatsApp).
       </p>
     </div>
   </section>
 </SiteShell>
+
+<style>
+  .hero{padding:46px 0 34px;background:radial-gradient(1200px 600px at 10% -10%, rgba(244,196,48,.28), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(27,126,166,.32), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.06), transparent 60%);
+  }
+</style>
