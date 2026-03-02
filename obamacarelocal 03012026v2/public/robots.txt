@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://obamacarelocal.com/sitemap-index.xml

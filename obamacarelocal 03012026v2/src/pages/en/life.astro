@@ -1,0 +1,29 @@
+---
+import SiteShell from '../../components/layout/SiteShell.astro';
+
+const lang = 'en';
+const waText = 'Hi, I would like information about life insurance in Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+---
+<SiteShell
+  lang={lang}
+  title="Life Insurance in Florida | Seguros Médicos"
+  description="Protect your family with clear, affordable life insurance options."
+  canonical="https://obamacarelocal.com/en/life/"
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">Florida statewide</span>
+      <h1>Life Insurance in Florida</h1>
+      <p>
+        If something happened tomorrow, would your family be financially protected?
+        Life insurance gives peace of mind.
+      </p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref}>Message us on WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Call</a>
+      </div>
+    </div>
+  </section>
+</SiteShell>

@@ -1,0 +1,40 @@
+---
+const { lang } = Astro.props;
+const other = lang === 'es' ? 'en' : 'es';
+
+const nav = lang === 'es'
+  ? { home:'Inicio', aca:'Obamacare', medicare:'Medicare', life:'Vida', dental:'Dental', compare:'Comparar', faq:'Preguntas', wa:'WhatsApp', call:'Llamar' }
+  : { home:'Home', aca:'ACA', medicare:'Medicare', life:'Life', dental:'Dental', compare:'Compare', faq:'FAQs', wa:'WhatsApp', call:'Call' };
+
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico en Florida.'
+  : 'Hi, I would like help with health insurance in Florida.';
+
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+---
+<header style="background:rgba(11,79,108,.94);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(255,255,255,.12)">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:14px">
+
+    <a href={`/${lang}/`} style="display:flex;align-items:center;gap:10px;color:#fff">
+      <img src="/images/logo.png" alt="Seguros Médicos" width="36" height="36" style="background:#fff;border-radius:50%;padding:3px">
+      <strong style="font-size:12px;letter-spacing:.14em;text-transform:uppercase">Seguros Médicos</strong>
+    </a>
+
+    <nav style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <a href={`/${lang}/`}>{nav.home}</a>
+      <a href={`/${lang}/aca`}>{nav.aca}</a>
+      <a href={`/${lang}/medicare`}>{nav.medicare}</a>
+      <a href={`/${lang}/life`}>{nav.life}</a>
+      <a href={`/${lang}/dental`}>{nav.dental}</a>
+      <a href={`/${lang}/compare`}>{nav.compare}</a>
+      <a href={`/${lang}/faq`}>{nav.faq}</a>
+
+      <a class="btn btn-primary" href={waHref}>{nav.wa}</a>
+      <a class="btn btn-outline" href="tel:+18774582557">{nav.call}</a>
+
+      <a href={`/${other}/`} style="border:1px solid rgba(255,255,255,.3);padding:8px 10px;border-radius:10px;font-weight:800">
+        {other.toUpperCase()}
+      </a>
+    </nav>
+  </div>
+</header>

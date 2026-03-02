@@ -1,0 +1,77 @@
+---
+import SiteShell from '../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
+
+const lang = 'en';
+const waText = 'Hi, I would like help with Medicare in Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const bullets = [
+  'You can prepare up to 3 months before turning 65',
+  'We compare Medicare Advantage vs Original Medicare (plain English)',
+  'We check your doctors and clinics in-network',
+  'We review prescriptions to avoid surprises',
+  'Options and benefits vary by Florida county',
+];
+
+const faqs = [
+  { q: 'Can I really start 3 months before 65?', a: 'Yes. Your Initial Enrollment window often includes the 3 months before your birthday month. Planning early gives you control.' },
+  { q: 'What is Medicare Advantage?', a: 'It’s a private plan alternative to Original Medicare with its own network, rules, and benefits.' },
+  { q: 'Will you help me choose without pressure?', a: 'Yes. The goal is clarity—so you understand what you’re picking and why it fits.' },
+];
+---
+<SiteShell
+  lang={lang}
+  title="Medicare in Florida | Seguros Médicos"
+  description="Turning 65 soon? We can help you prepare up to 3 months before your birthday."
+  canonical="https://obamacarelocal.com/en/medicare/"
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">Florida statewide</span>
+      <h1>Medicare in Florida</h1>
+      <p>Turning 65 soon? We can help you prepare up to 3 months before your birthday.</p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref} rel="noopener">Message us on WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Call 1-877-458-2557</a>
+      </div>
+
+      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
+        Send your birthdate + county and we’ll tell you what window applies—fast.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2>What we usually review with you</h2>
+        <ul class="list">
+          {bullets.map((b) => <li>{b}</li>)}
+        </ul>
+      </div>
+
+      <div style="height:16px"></div>
+
+      <div class="card">
+        <h2>Frequently asked</h2>
+        <FaqAccordion items={faqs} />
+      </div>
+
+      <div style="height:16px"></div>
+
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>Ready? I can explain it in 2 minutes</h2>
+        <p class="small">
+          Message us on WhatsApp and share: birthdate + county + whether you already have Part A/B.
+          That’s enough for a clear next step.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">Open WhatsApp</a>
+          <a class="btn btn-light" href="/en/">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteShell>
