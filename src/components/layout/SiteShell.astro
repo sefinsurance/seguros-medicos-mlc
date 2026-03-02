@@ -1,36 +1,130 @@
 ---
-import Header from "./Header.astro";
-import Footer from "./Footer.astro";
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../../styles/global.css';
 
-const { title, description, lang = "en", canonical } = Astro.props;
+const {
+  lang = 'es',
+  title = 'Seguros Mdicos',
+  description = 'Seguros mdicos, Obamacare (ACA), Medicare y ms.',
+  canonical = 'https://obamacarelocal.com/'
+} = Astro.props;
 
-const site = "https://obamacarelocal.com";
-const path = Astro.url.pathname;
-const isEs = path.startsWith("/es");
-const isEn = path.startsWith("/en");
+const siteUrl = 'https://obamacarelocal.com';
+const path = Astro.url?.pathname || '/';
+const canonicalUrl = canonical || `${siteUrl}${path}`;
 
-const altEs = isEs ? `${site}${path}` : `${site}/es${path === "/" ? "" : path.replace(/^\/en/, "")}`;
-const altEn = isEn ? `${site}${path}` : `${site}/en${path === "/" ? "" : path.replace(/^\/es/, "")}`;
-const xDefault = `${site}/`;
-const canon = canonical || `${site}${path}`;
+// hreflang alternates (assumes routes are prefixed with /es or /en)
+function swapLang(p: string, target: 'es'|'en') {
+  if (p === '/') return `/${target}/`;
+  const cleaned = p.startsWith('/') ? p : `/${p}`;
+  if (cleaned.startsWith('/es/')) return `/${target}/` + cleaned.slice(4);
+  if (cleaned.startsWith('/en/')) return `/${target}/` + cleaned.slice(4);
+  // if path is not language-prefixed, default to target root
+  return `/${target}/`;
+}
+const altEs = `${siteUrl}${swapLang(path, 'es')}`;
+const altEn = `${siteUrl}${swapLang(path, 'en')}`;
+const altDefault = `${siteUrl}/`;
+const waNumber = '18774582557';
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico (ACA/Marketplace o Medicare).'
+  : 'Hi, I would like help with health insurance (ACA/Marketplace or Medicare).';
+const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
+const fullTitle = `${title} | Seguros Mdicos`;
 ---
+
+<!DOCTYPE html>
 <html lang={lang}>
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {title && <title>{title}</title>}
-    {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={canon} />
 
-    <link rel="alternate" hreflang="es" href={altEs} />
-    <link rel="alternate" hreflang="en" href={altEn} />
-    <link rel="alternate" hreflang="x-default" href={xDefault} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Seguros Medicos" />
+    <meta property="og:image" content={`${siteUrl}/images/logo.png`} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}/images/logo.png`} />
+
+    <!-- Global Structured Data -->
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
+            "url": siteUrl,
+            "name": "Seguros Medicos",
+            "inLanguage": ["en", "es"]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": `${siteUrl}/#organization`,
+            "name": "Seguros Medicos",
+            "alternateName": "MLC Insurance Agency",
+            "url": siteUrl,
+            "telephone": "+1-877-458-2557",
+            "logo": `${siteUrl}/images/logo.png`,
+            "image": `${siteUrl}/images/logo.png`,
+            "areaServed": [
+              "Florida",
+              "Texas",
+              "North Carolina",
+              "South Carolina",
+              "Alabama",
+              "Arizona",
+              "Michigan",
+              "Indiana",
+              "Ohio",
+              "Tennessee",
+              "Georgia",
+              "Missouri",
+              "Mississippi"
+            ],
+            "availableLanguage": ["English", "Spanish"],
+            "contactPoint": [{
+              "@type": "ContactPoint",
+              "telephone": "+1-877-458-2557",
+              "contactType": "customer service",
+              "availableLanguage": ["en", "es"]
+            }],
+            "sameAs": [
+              "https://wa.me/18774582557"
+            ],
+            "knowsAbout": [
+              "Health Insurance",
+              "ACA Marketplace",
+              "Obamacare",
+              "Medicare Advantage",
+              "Medicare Supplements",
+              "Medicaid Transition",
+              "Life Insurance",
+              "Dental Insurance"
+            ]
+          }
+        ]
+      })}
+    </script>
   </head>
+
   <body>
-    <Header />
+    <Header lang={lang} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>
