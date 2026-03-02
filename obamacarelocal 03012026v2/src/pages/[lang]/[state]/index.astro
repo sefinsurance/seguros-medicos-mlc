@@ -1,0 +1,144 @@
+---
+import SiteShell from '../../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../../components/ui/FaqAccordion.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import { coverage } from '../../../data/coverage';
+import { stateSeo } from '../../../data/stateSeo';
+
+export async function getStaticPaths() {
+  const langs = ['es', 'en'];
+  const states = Object.keys(coverage);
+
+  return langs.flatMap((lang) =>
+    states.map((state) => ({
+      params: { lang, state },
+    }))
+  );
+}
+
+const { lang, state } = Astro.params;
+
+const counties = coverage[state] || [];
+const seo = stateSeo[state];
+
+const stateLabel = (state || '')
+  .split('-')
+  .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+  .join(' ');
+
+const title = seo
+  ? (lang === 'es' ? seo.titleEs : seo.titleEn)
+  : (lang === 'es' ? `Seguro médico en ${stateLabel}` : `Health insurance in ${stateLabel}`);
+
+const description = lang === 'es'
+  ? `Ayuda en español para comparar planes ACA/Marketplace, Medicare, Dental y Vida en ${stateLabel}. Cotiza rápido por WhatsApp.`
+  : `Help comparing ACA/Marketplace, Medicare, Dental and Life plans in ${stateLabel}. Get options fast on WhatsApp.`;
+
+const canonical = `https://obamacarelocal.com/${lang}/${state}/`;
+
+const primary = seo?.primaryCounties?.filter((c) => counties.includes(c)) || [];
+const secondary = counties.filter((c) => !primary.includes(c));
+
+const crumbs = [
+  { label: lang === 'es' ? 'Inicio' : 'Home', href: `/${lang}/` },
+  { label: stateLabel }
+];
+
+const pageUrl = canonical;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": (lang === "es" ? "Inicio" : "Home"), "item": `https://obamacarelocal.com/${lang}/` },
+        { "@type": "ListItem", "position": 2, "name": stateLabel, "item": pageUrl }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": pageUrl,
+      "url": pageUrl,
+      "name": title,
+      "description": description,
+      "inLanguage": lang === "es" ? "es-US" : "en-US"
+    }
+  ]
+};
+---
+
+<SiteShell lang={lang} title={title} description={description} canonical={canonical}>
+  <main class="container">
+    <Breadcrumbs items={crumbs} />
+
+    <section class="hero">
+      <h1>{title}</h1>
+      <p class="lead">
+        {seo ? (lang === 'es' ? seo.introEs : seo.introEn) : description}
+      </p>
+
+      <div class="cta-row">
+        <a class="btn primary" href={`https://wa.me/18774582557?text=${encodeURIComponent(lang === 'es' ? `Hola, quiero cotizar seguro médico en ${stateLabel}.` : `Hi, I want a health insurance quote in ${stateLabel}.`)}`} target="_blank" rel="noopener noreferrer">
+          {lang === 'es' ? 'Cotizar por WhatsApp' : 'Get a WhatsApp quote'}
+        </a>
+        <a class="btn" href={`/${lang}/compare`}>{lang === 'es' ? 'Comparar Planes' : 'Compare Plans'}</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>{lang === 'es' ? 'Condados populares' : 'Popular counties'}</h2>
+      <p class="muted">
+        {lang === 'es'
+          ? 'Selecciona tu condado para señales locales más fuertes en Google.'
+          : 'Pick your county for stronger local ranking signals.'}
+      </p>
+
+      {primary.length > 0 ? (
+        <>
+          <div class="grid counties">
+            {primary.map((c) => (
+              <a class="county-chip" href={`/${lang}/${state}/${c}/`}>{c.split('-').map((x)=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')}</a>
+            ))}
+          </div>
+
+          {secondary.length > 0 ? (
+            <>
+              <h3 style="margin-top:18px">{lang === 'es' ? 'Más condados' : 'More counties'}</h3>
+              <div class="grid counties">
+                {secondary.map((c) => (
+                  <a class="county-chip" href={`/${lang}/${state}/${c}/`}>{c.split('-').map((x)=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')}</a>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </>
+      ) : (
+        <div class="grid counties">
+          {counties.map((c) => (
+            <a class="county-chip" href={`/${lang}/${state}/${c}/`}>{c.split('-').map((x)=>x.charAt(0).toUpperCase()+x.slice(1)).join(' ')}</a>
+          ))}
+        </div>
+      )}
+    </section>
+
+    {seo ? (
+      <section class="card">
+        <h2>{lang === 'es' ? 'Preguntas frecuentes' : 'FAQ'}</h2>
+        <FaqAccordion items={lang === 'es' ? seo.faqsEs : seo.faqsEn} />
+      </section>
+    ) : null}
+
+    <section class="card">
+      <h2>{lang === 'es' ? 'Ayuda rápida para familias hispanas' : 'Fast help for Hispanic families'}</h2>
+      <ul>
+        <li>{lang === 'es' ? 'Asistencia en español (y explicaciones claras).' : 'Spanish support (and clear explanations).'} </li>
+        <li>{lang === 'es' ? 'Comparamos redes, medicamentos y costo real con créditos.' : 'We compare networks, prescriptions, and real cost after credits.'}</li>
+        <li>{lang === 'es' ? 'Te decimos qué hacer si perdiste Medicaid o cambiaste de empleo.' : 'We guide you if you lost Medicaid or changed jobs.'}</li>
+      </ul>
+    </section>
+  </main>
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+</SiteShell>

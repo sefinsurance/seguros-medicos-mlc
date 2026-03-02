@@ -1,0 +1,82 @@
+---
+import SiteShell from '../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+
+const lang = 'en';
+const title = 'Lost Medicaid: health insurance options';
+const description = 'If you lost Medicaid, we help you review options (ACA/Marketplace, family plans, and more). Spanish support available.';
+
+const faq_items = [
+  { q: 'Does losing Medicaid qualify me for a Special Enrollment Period?', a: 'Often yes. If you received a termination notice or coverage ended, you may qualify to enroll outside Open Enrollment. Message us and we’ll confirm.' },
+  { q: 'What info do you need?', a: 'County, ages, estimated household income, and the date Medicaid ends (if available).' },
+  { q: 'How do I avoid tax surprises?', a: 'By reporting income changes during the year. We’ll guide you on the right way to do it.' }
+];
+
+const crumbs = [
+  { label: 'Home', href: '/en/' },
+  { label: 'Lost Medicaid' }
+];
+
+const canonical = 'https://obamacarelocal.com/en/losing-medicaid/';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonical}#breadcrumb`,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://obamacarelocal.com/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Lost Medicaid", "item": canonical }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonical}#faq`,
+      "mainEntity": faq_items.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a }
+      }))
+    }
+  ]
+};
+---
+
+<SiteShell lang={lang} title={title} description={description} canonical={canonical}>
+  <main class="container">
+    <Breadcrumbs items={crumbs} />
+
+    <section class="hero">
+      <h1>{title}</h1>
+      <p class="lead">
+        If you lost Medicaid or received a termination notice, you may still have options. We’ll check whether you qualify for a Special Enrollment Period and compare Marketplace (ACA) plans—so the price and benefits make sense for your household.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn primary" href={`https://wa.me/18774582557?text=${encodeURIComponent('Hi, I lost Medicaid and need options. Can you guide me?')}`} target="_blank" rel="noopener noreferrer">
+          Message on WhatsApp
+        </a>
+        <a class="btn" href="/en/aca">View ACA / Marketplace</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>What we review with you</h2>
+      <ul>
+        <li>Medicaid end date (if applicable)</li>
+        <li>Estimated household income</li>
+        <li>Doctors, hospitals, and prescriptions</li>
+        <li>The best plan for your budget</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>FAQ</h2>
+      <FaqAccordion items={faq_items} />
+    </section>
+  </main>
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+</SiteShell>

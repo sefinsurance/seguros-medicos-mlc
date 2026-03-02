@@ -1,0 +1,133 @@
+---
+import SiteShell from '../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
+
+const lang = 'es';
+const waText = 'Hola, quiero ayuda con mi seguro médico en Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const faq_items = [
+  { q: '¿Atienden a toda Florida?', a: 'Sí. Trabajamos con clientes en todo el estado. WhatsApp es lo más rápido.' },
+  { q: '¿Qué información necesitan para orientarme?', a: 'Nombre, fecha de nacimiento, condado en Florida y un estimado de ingreso del hogar. Con eso arrancamos.' },
+  { q: '¿Esto tiene algún costo?', a: 'Escríbenos y te guiamos. Si calificas para subsidio u opciones especiales, te lo explicamos en simple.' },
+];
+---
+<SiteShell
+  lang={lang}
+  title="Seguros Médicos en Florida | Obamacare • Medicare • Vida • Dental"
+  description="Ayuda cálida y profesional para elegir tu cobertura en Florida. WhatsApp directo."
+  canonical="https://obamacarelocal.com/es/"
+>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <span class="badge">Florida (Estado completo)</span>
+        <span class="badge">Español e Inglés</span>
+        <span class="badge">WhatsApp directo</span>
+      </div>
+
+      <h1>¿Listo para encontrar un plan que sí encaje contigo?</h1>
+      <p>
+        En Florida, mucha gente paga de más o se queda sin cobertura por falta de orientación.
+        Aquí lo hacemos simple: te guiamos como una conversación, paso a paso.
+      </p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref} rel="noopener">Escríbenos por WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Llamar 1-877-458-2557</a>
+      </div>
+
+      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
+        Tip: si cumples 65 pronto, podemos ayudarte a preparar Medicare hasta <strong>3 meses antes</strong>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>¿Con qué te ayudamos hoy?</h2>
+      <p class="small">Elige el tema que más se parece a tu situación. Si no estás seguro, escríbenos y lo vemos contigo.</p>
+
+      <div class="grid grid-3" style="margin-top:14px">
+        <a class="card" href="/es/aca">
+          <h3>Obamacare (ACA)</h3>
+          <p class="small">Menores de 65. Subsidios, Open Enrollment y eventos especiales.</p>
+        </a>
+
+        <a class="card" href="/es/medicare">
+          <h3>Medicare</h3>
+          <p class="small">Cumples 65 o ya tienes Medicare. Te ayudamos con calma y claridad.</p>
+        </a>
+
+        <a class="card" href="/es/losing-medicaid">
+          <h3>Perdiendo Medicaid</h3>
+          <p class="small">Si te cancelaron Medicaid, puede haber opciones rápidas para evitar un “gap”.</p>
+        </a>
+
+        <a class="card" href="/es/life">
+          <h3>Seguro de Vida</h3>
+          <p class="small">Protege a tu familia con una opción accesible y fácil de entender.</p>
+        </a>
+
+        <a class="card" href="/es/dental">
+          <h3>Dental</h3>
+          <p class="small">Cobertura dental para ti o tu familia, con opciones fáciles de comparar.</p>
+        </a>
+
+        <a class="card" href="/es/compare">
+          <h3>Comparar Planes</h3>
+          <p class="small">No solo el precio: doctores, recetas, deducibles y máximos.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+<section class="section">
+  <div class="container">
+    <h2>Condados por estado</h2>
+    <p class="small">
+      Selecciona tu estado para ver condados y opciones locales. (Florida y Texas tienen más cobertura por volumen.)
+    </p>
+
+    <div class="grid grid-3" style="margin-top:14px">
+      <a class="card" href="/es/florida/"><h3>Florida</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/texas/"><h3>Texas</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/north-carolina/"><h3>North Carolina</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/south-carolina/"><h3>South Carolina</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/georgia/"><h3>Georgia</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/arizona/"><h3>Arizona</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/tennessee/"><h3>Tennessee</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/ohio/"><h3>Ohio</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/indiana/"><h3>Indiana</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/michigan/"><h3>Michigan</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/missouri/"><h3>Missouri</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/mississippi/"><h3>Mississippi</h3><p class="small">Ver condados</p></a>
+      <a class="card" href="/es/alabama/"><h3>Alabama</h3><p class="small">Ver condados</p></a>
+    </div>
+  </div>
+</section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>Una conversación rápida puede ahorrarte mucho</h2>
+        <p class="small">
+          ¿Pagas mucho? ¿Perdiste cobertura? ¿Te preocupa elegir mal?
+          Escríbenos y te guiamos con claridad para que tomes una decisión segura.
+        </p>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">Abrir WhatsApp</a>
+          <a class="btn btn-light" href="/es/faq">Ver preguntas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Preguntas rápidas</h2>
+      <FaqAccordion items={faq_items} />
+    </div>
+  </section>
+</SiteShell>
