@@ -3,11 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "deploy": "echo \"Cloudflare Pages handles deployment automatically\""
+"scripts": {
+  "dev": "astro dev",
+  "build": "astro build",
+  "preview": "astro preview",
+  "deploy": "echo \"Cloudflare Pages handles deployment automatically\""
+}
   },
   "dependencies": {
     "astro": "^5.10.1"
