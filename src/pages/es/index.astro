@@ -1,5 +1,6 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+import ServiceAreas from '../../components/ui/ServiceAreas.astro';
 
 const phone = '877-458-2557';
 const digits = phone.replace(/[^0-9]/g,'');
@@ -13,10 +14,11 @@ const waHref = `https://wa.me/1${digits}`;
   description="MLC Insurance te ayuda a comparar todos los planes disponibles de Obamacare (ACA). Llama, envía texto o WhatsApp al 877-458-2557."
   canonical="https://obamacarelocal.com/es/"
 >
-  <section class="hero">
+  <section class="hero latina-pattern">
     <div class="container split">
       <div>
         <span class="pill">Español · Familiar · Expertos en Marketplace</span>
+        <div class="badge-es" style="margin-top:12px"><span class="badge-dot"></span>Atención en español · Trato familiar</div>
         <h1>Encuentra el plan de <span style="color:var(--accent)">Obamacare (ACA)</span> ideal—sin enredos.</h1>
         <p class="muted" style="max-width:60ch">
           En MLC Insurance comparamos <b>todos los planes disponibles del Marketplace</b> y te ayudamos a inscribirte con confianza.
@@ -37,7 +39,11 @@ const waHref = `https://wa.me/1${digits}`;
       </div>
 
       <div class="card pad" style="background:#fff">
-        <div class="kicker" style="color:var(--brand2)">Te ayudamos con</div>
+        <div class="card-media">
+          <img src="/images/brand/mlc-business-card.webp" alt="MLC Insurance business card" loading="lazy" decoding="async" />
+        </div>
+
+        <div class="kicker" style="color:var(--brand-700)">Te ayudamos con</div>
         <h2 style="margin:10px 0 0;color:#0b1116">Un plan que se ajuste a tu familia</h2>
         <p class="muted" style="margin:10px 0 0;color:rgba(15,23,42,.72)">
           Subsidios, deducibles, redes, medicinas—te lo explicamos paso a paso para que elijas bien.
@@ -67,6 +73,10 @@ const waHref = `https://wa.me/1${digits}`;
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="container">
+    <ServiceAreas lang="es" />
   </section>
 
   <section class="section">
@@ -125,4 +135,8 @@ const waHref = `https://wa.me/1${digits}`;
   h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:14px 0 12px}
   h2{font-size:clamp(24px,3vw,34px);margin:10px 0}
   .section{padding:34px 0}
+
+  .card-media{margin:-18px -18px 14px;overflow:hidden;border-radius:16px}
+  .card-media img{display:block;width:100%;height:auto}
+
 </style>

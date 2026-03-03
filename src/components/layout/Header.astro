@@ -1,92 +1,94 @@
 ---
 const { lang = 'en' } = Astro.props;
-const isEs = lang === 'es';
-const t = {
-  brand: 'MLC Insurance',
-  phone: '877-458-2557',
-  nav: isEs
-    ? [
-        { href: '/es/aca', label: 'Obamacare' },
-        { href: '/es/medicare', label: 'Medicare' },
-        { href: '/es/dental', label: 'Dental' },
-        { href: '/es/faq', label: 'Preguntas' },
-      ]
-    : [
-        { href: '/en/aca', label: 'ACA / Obamacare' },
-        { href: '/en/medicare', label: 'Medicare' },
-        { href: '/en/dental', label: 'Dental' },
-        { href: '/en/faq', label: 'FAQ' },
-      ],
-  cta: isEs ? 'Llamar o enviar texto' : 'Call / Text',
-  whatsapp: 'WhatsApp',
-};
 
-const digits = t.phone.replace(/[^0-9]/g, '');
-const phoneHref = `tel:+1${digits}`;
-const smsHref = `sms:+1${digits}`;
-// WhatsApp deep-link. (If WhatsApp is not installed, it falls back to web.)
-const waHref = `https://wa.me/1${digits}`;
+const nav = [
+  { href: `/${lang}/aca/`, label: lang === 'es' ? 'Obamacare (ACA)' : 'ACA (Obamacare)' },
+  { href: `/${lang}/medicare/`, label: 'Medicare' },
+  { href: `/${lang}/life/`, label: lang === 'es' ? 'Vida' : 'Life' },
+  { href: `/${lang}/dental/`, label: 'Dental' },
+  { href: `/${lang}/faq/`, label: lang === 'es' ? 'Preguntas' : 'FAQ' },
+];
+
+const phoneDisplay = '877-458-2557';
+const phoneHref = 'tel:+18774582557';
+const waHref = 'https://wa.me/18774582557';
 ---
 
-<header>
-  <div class="container bar">
-    <a class="brand" href={isEs ? '/es' : '/en'} aria-label={`${t.brand} home`}>
-      <span class="logo" aria-hidden="true">MLC</span>
-      <span>
-        <b>{t.brand}</b>
-        <small>{isEs ? 'Atención familiar · Hablamos español' : 'Family-focused · Bilingual support'}</small>
-      </span>
+<header class="top">
+  <div class="bar">
+    <div class="bar__left">
+      <span class="bar__pill">{lang === 'es' ? 'Se habla español' : 'Hablamos Español'}</span>
+      <span class="bar__sep">•</span>
+      <span class="bar__text">{lang === 'es' ? 'Atención familiar y sin presión' : 'Family-first, no-pressure help'}</span>
+    </div>
+
+    <div class="bar__right">
+      <a class="bar__link" href={phoneHref} aria-label={lang === 'es' ? 'Llamar a MLC Insurance' : 'Call MLC Insurance'}>
+        <span class="bar__label">{lang === 'es' ? 'Llámanos' : 'Call'}</span>
+        <span class="bar__value">{phoneDisplay}</span>
+      </a>
+      <a class="bar__btn" href={waHref} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <div class="nav">
+    <a class="brand" href={`/${lang}/`} aria-label="MLC Insurance">
+      <img class="brand__logo" src="/images/brand/mlc-logo.webp" width="48" height="48" alt="MLC Insurance logo" loading="eager" decoding="async" />
+      <div class="brand__text">
+        <div class="brand__name">MLC Insurance</div>
+        <div class="brand__tag">{lang === 'es' ? 'Seguros de salud para tu familia' : 'Health coverage for your family'}</div>
+      </div>
     </a>
 
-    <nav class="nav" aria-label="Primary">
-      {t.nav.map((item) => (
-        <a class="navlink" href={item.href}>{item.label}</a>
+    <nav class="nav__links" aria-label="Primary">
+      {nav.map((item) => (
+        <a class="nav__link" href={item.href}>{item.label}</a>
       ))}
     </nav>
 
-    <div class="cta">
-      <a class="btn btn-pill btn-teal" href={phoneHref}>{t.cta}</a>
-      <a class="btn btn-pill btn-light" href={waHref} rel="noopener">{t.whatsapp}</a>
+    <div class="nav__cta">
+      <a class="cta" href={`/${lang}/compare/`}>{lang === 'es' ? 'Comparar planes' : 'Compare plans'}</a>
     </div>
-
-    <details class="menu">
-      <summary aria-label="Menu">☰</summary>
-      <div class="panel">
-        {t.nav.map((item) => (
-          <a class="panelLink" href={item.href}>{item.label}</a>
-        ))}
-        <div class="panelCtas">
-          <a class="btn btn-pill btn-teal" href={phoneHref}>{t.cta}</a>
-          <a class="btn btn-pill btn-light" href={smsHref}>{isEs ? 'Texto' : 'Text'}</a>
-          <a class="btn btn-pill btn-light" href={waHref} rel="noopener">WhatsApp</a>
-        </div>
-      </div>
-    </details>
   </div>
 </header>
 
 <style>
-  header{position:sticky;top:0;z-index:50;background:rgba(11,17,22,.72);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.12)}
-  .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0}
-  .brand{display:flex;align-items:center;gap:10px;min-width:240px}
-  .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:950;color:#051015;letter-spacing:.05em}
-  .brand b{display:block;line-height:1.1}
-  .brand small{display:block;opacity:.85;font-size:12px;margin-top:2px}
-  .nav{display:flex;gap:14px;align-items:center}
-  .navlink{opacity:.9;font-weight:800;font-size:14px;padding:10px 10px;border-radius:12px}
-  .navlink:hover{background:rgba(255,255,255,.10);opacity:1}
-  .cta{display:flex;gap:10px;align-items:center}
-  .menu{display:none}
+  .top{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(10px)}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;background:linear-gradient(90deg,var(--brand-900),var(--brand-800));color:white;border-bottom:1px solid rgba(255,255,255,.14)}
+  .bar__left{display:flex;align-items:center;gap:10px;min-width:0}
+  .bar__pill{font-weight:900;font-size:12px;letter-spacing:.02em;background:rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;white-space:nowrap}
+  .bar__sep{opacity:.7}
+  .bar__text{opacity:.92;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar__right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .bar__link{display:flex;align-items:baseline;gap:8px;color:white;text-decoration:none;font-weight:900}
+  .bar__label{font-size:12px;opacity:.85}
+  .bar__value{font-size:14px;letter-spacing:.02em}
+  .bar__btn{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 12px;border-radius:10px;background:var(--accent-500);color:#04212a;font-weight:900;text-decoration:none}
 
-  @media (max-width: 920px){
-    .nav{display:none}
-    .cta{display:none}
-    .menu{display:block}
-    summary{list-style:none;cursor:pointer;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);font-weight:900}
-    summary::-webkit-details-marker{display:none}
-    .panel{position:absolute;right:16px;top:64px;width:min(92vw,360px);background:#0b1116;border:1px solid rgba(255,255,255,.16);border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.45);padding:12px}
-    .panelLink{display:block;padding:12px 12px;border-radius:14px;font-weight:900;opacity:.92}
-    .panelLink:hover{background:rgba(255,255,255,.08);opacity:1}
-    .panelCtas{display:grid;gap:10px;padding:10px 6px 6px}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;background:rgba(255,255,255,.9);border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;min-width:220px}
+  .brand__logo{border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.10)}
+  .brand__name{font-weight:900;letter-spacing:.01em}
+  .brand__tag{font-size:12px;opacity:.72}
+
+  .nav__links{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .nav__link{color:var(--text);text-decoration:none;font-weight:900;font-size:14px;padding:8px 10px;border-radius:10px}
+  .nav__link:hover{background:rgba(0,0,0,.05)}
+
+  .cta{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:12px;background:linear-gradient(90deg,var(--brand-800),var(--brand-700));color:white;font-weight:900;text-decoration:none;box-shadow:0 12px 25px rgba(0,0,0,.10)}
+  .cta:hover{filter:brightness(1.05)}
+
+  @media (max-width: 860px){
+    .bar{padding:10px 14px}
+    .nav{padding:12px 14px;flex-wrap:wrap}
+    .brand{min-width:auto}
+    .nav__links{width:100%;order:3;padding-top:8px}
+    .nav__cta{order:2}
+  }
+
+  @media (max-width: 520px){
+    .bar__text{display:none}
   }
 </style>
