@@ -193,8 +193,10 @@ h3{font-size:22px}
 /* FAQ accordion */
 .faq{display:grid;gap:10px;margin-top:14px}
 .faq details{
-  background:#fff;border:1px solid rgba(15,23,42,.08);
-  border-radius:18px;padding:14px 16px;
+  background:#fff;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:16px;
+  padding:18px 24px;   /* increased left + right padding */
 }
 .faq summary{cursor:pointer;font-weight:700;list-style:none}
 .faq summary::-webkit-details-marker{display:none}
