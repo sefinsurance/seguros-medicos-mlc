@@ -1,28 +1,50 @@
 @import './tokens.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+:root{
+  --font-heading:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family:var(--font-body);
   background:var(--bg);
   color:var(--text);
   font-size:18px;
   line-height:1.65;
+  letter-spacing:-0.01em;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
+
 a{text-decoration:none;color:inherit}
 .container{max-width:1100px;margin:auto;padding:0 16px}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:12px 16px;border-radius:12px;font-weight:800;border:1px solid transparent;
+  padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid transparent;
+  letter-spacing:-0.01em;
 }
 .btn-primary{background:var(--accent); color:#0B2B36}
 .btn-outline{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
 .btn-light{background:#fff;border-color:rgba(15,23,42,.12);color:var(--brand)}
 
 .small{font-size:14px;color:var(--muted)}
-h1{font-size:clamp(34px,4.4vw,56px);line-height:1.05;margin:0 0 12px}
-h2{font-size:clamp(22px,2.6vw,34px);line-height:1.15;margin:0 0 10px}
-h3{font-size:20px;margin:0 0 6px}
+
+h1,h2,h3,h4{
+  font-family:var(--font-heading);
+  letter-spacing:-0.02em;
+  line-height:1.08;
+}
+
+h1{font-size:clamp(34px,4.4vw,56px);margin:0 0 12px;font-weight:800}
+h2{font-size:clamp(22px,2.6vw,34px);margin:0 0 10px;font-weight:800}
+h3{font-size:20px;margin:0 0 6px;font-weight:800}
+
 p{margin:0 0 14px}
 
 .card{
@@ -53,7 +75,7 @@ p{margin:0 0 14px}
 
 .faq{display:grid;gap:12px;margin-top:10px}
 .faq details{background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:16px;padding:14px 16px}
-.faq summary{cursor:pointer;font-weight:900;font-size:18px;list-style:none}
+.faq summary{cursor:pointer;font-weight:800;font-size:18px;list-style:none}
 .faq summary::-webkit-details-marker{display:none}
 .faq .a{margin-top:10px;color:var(--muted);line-height:1.75}
 
