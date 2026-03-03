@@ -1,6 +1,7 @@
 ---
 import SiteShell from "../../components/layout/SiteShell.astro";
 import Faq from "../../components/ui/Faq.astro";
+import Icon from "../../components/home/Icon.astro";
 
 export async function getStaticPaths() {
   return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
@@ -74,72 +75,96 @@ const waText = lang === "es"
   ? "Hola, quiero ayuda con mi seguro médico."
   : "Hi, I would like help with health insurance.";
 const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const categories = [
+  {
+    key: "aca",
+    href: `/${lang}/aca`,
+    label: lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)",
+    desc: lang === "es" ? "Subsidios y planes del Marketplace" : "Marketplace plans & subsidies",
+    icon: "shield",
+  },
+  {
+    key: "medicare",
+    href: `/${lang}/medicare`,
+    label: "Medicare",
+    desc: lang === "es" ? "MA/MAPD y ventanas de inscripción" : "MA/MAPD & enrollment windows",
+    icon: "plus",
+  },
+  {
+    key: "life",
+    href: `/${lang}/life`,
+    label: lang === "es" ? "Vida" : "Life",
+    desc: lang === "es" ? "Protege tu familia" : "Protect your family",
+    icon: "heart",
+  },
+  {
+    key: "dental",
+    href: `/${lang}/dental`,
+    label: lang === "es" ? "Dental" : "Dental",
+    desc: lang === "es" ? "Planes individuales" : "Standalone plans",
+    icon: "tooth",
+  },
+  {
+    key: "vision",
+    href: `/${lang}/compare`,
+    label: lang === "es" ? "Visión" : "Vision",
+    desc: lang === "es" ? "Opciones y descuentos" : "Options & savings",
+    icon: "eye",
+  },
+];
 ---
 <SiteShell
   lang={lang}
   title={lang === "es" ? "Seguros Médicos | Ayuda en Español" : "Health Insurance | Bilingual Help"}
   description={copy.lead}
 >
-  <section class="hero">
+  <!-- Proton-style hero: centered headline + floating product icons -->
+  <section class="p-hero" aria-label="Intro">
     <div class="container">
-      <div class="hero-grid">
-        <div>
-          <div class="kicker">{copy.kicker}</div>
-          <h1 style="margin-top:14px">{copy.title}</h1>
-          <p class="lead">{copy.lead}</p>
+      <div class="p-hero-inner">
+        <div class="p-kicker">{copy.kicker}</div>
+        <h1 class="p-title">{copy.title}</h1>
+        <p class="p-lead">{copy.lead}</p>
 
-          <div class="cta-row">
-            <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
-            <a class="btn btn-secondary" href={`/${lang}/compare`}>{copy.secondary}</a>
-            <a class="btn btn-ghost" href="tel:+18774582557">{copy.call}</a>
+        <div class="p-cta">
+          <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+          <a class="btn btn-outline" href={`/${lang}/compare`}>{copy.secondary}</a>
+        </div>
+
+        <div class="p-cloud" aria-label="Categories">
+          <div class="p-cloud-bg" aria-hidden="true"></div>
+          <div class="p-cloud-grid">
+            {categories.map((c) => (
+              <a class="p-card" href={c.href} data-k={c.key}>
+                <span class="p-ic" aria-hidden="true"><Icon name={c.icon} /></span>
+                <span class="p-name">{c.label}</span>
+                <span class="p-desc">{c.desc}</span>
+              </a>
+            ))}
           </div>
         </div>
 
-        <aside class="visual" aria-label="Quick info">
-          <div class="panel">
-            <h3>{lang === "es" ? "En 2 minutos te orientamos" : "Get oriented in 2 minutes"}</h3>
-            <p style="margin-top:8px;color:rgba(15,23,42,.72)">
-              {lang === "es"
-                ? "Dinos tu ZIP, tamaño del hogar e ingreso estimado. Te decimos qué aplica y tus mejores opciones."
-                : "Share your ZIP, household size, and estimated income. We’ll tell you what applies and your best options."}
-            </p>
-
-            <div class="mini">
-              <div><strong>{copy.trust1t}</strong><span>{copy.trust1d}</span></div>
-              <div><strong>{copy.trust2t}</strong><span>{copy.trust2d}</span></div>
-              <div><strong>{copy.trust3t}</strong><span>{copy.trust3d}</span></div>
-            </div>
-          </div>
-        </aside>
+        <div class="p-trust" aria-label="Trust">
+          <div class="p-trust-item"><strong>{copy.trust1t}</strong><span>{copy.trust1d}</span></div>
+          <div class="p-trust-item"><strong>{copy.trust2t}</strong><span>{copy.trust2d}</span></div>
+          <div class="p-trust-item"><strong>{copy.trust3t}</strong><span>{copy.trust3d}</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" aria-label="Quick links">
     <div class="container">
       <h2>{copy.h2}</h2>
       <p class="sub">{copy.sub}</p>
 
-      <div class="feature-grid">
-        <div class="feature">
-          <h3>{copy.f1t}</h3>
-          <p>{copy.f1d}</p>
-        </div>
-        <div class="feature">
-          <h3>{copy.f2t}</h3>
-          <p>{copy.f2d}</p>
-        </div>
-        <div class="feature">
-          <h3>{copy.f3t}</h3>
-          <p>{copy.f3d}</p>
-        </div>
-      </div>
-
-      <div class="pill-links" aria-label="Quick links">
-        <a href={`/${lang}/aca`}>{lang === "es" ? "Obamacare (ACA)" : "ACA"}</a>
+      <div class="pill-links">
+        <a href={`/${lang}/aca`}>{lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)"}</a>
         <a href={`/${lang}/medicare`}>Medicare</a>
         <a href={`/${lang}/dental`}>{lang === "es" ? "Dental" : "Dental"}</a>
         <a href={`/${lang}/life`}>{lang === "es" ? "Vida" : "Life"}</a>
+        <a href={`/${lang}/compare`}>{lang === "es" ? "Visión" : "Vision"}</a>
         <a href={`/${lang}/losing-medicaid`}>{lang === "es" ? "Perdí Medicaid" : "Losing Medicaid"}</a>
       </div>
     </div>
@@ -168,3 +193,119 @@ const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
     </div>
   </section>
 </SiteShell>
+
+<style>
+  /* Proton-like, but uses your palette (tokens.css) */
+  .p-hero{
+    position:relative;
+    overflow:hidden;
+    padding:96px 0 56px;
+    background:
+      radial-gradient(1100px 600px at 80% 12%, rgba(244,196,48,.28), rgba(244,196,48,0) 60%),
+      radial-gradient(900px 520px at 12% 18%, rgba(27,126,166,.35), rgba(27,126,166,0) 58%),
+      linear-gradient(180deg, rgba(11,79,108,.10), rgba(11,79,108,0));
+  }
+
+  .p-hero-inner{max-width:860px;margin:0 auto;text-align:center;}
+  .p-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(11,79,108,.10);
+    border:1px solid rgba(11,79,108,.16);
+    color:rgba(15,23,42,.82);
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.02em;
+  }
+  .p-title{margin-top:18px;}
+  .p-lead{margin:0 auto;max-width:68ch;}
+
+  .p-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+
+  /* Floating icon cloud */
+  .p-cloud{position:relative;margin-top:34px;}
+  .p-cloud-bg{
+    position:absolute;inset:-40px -60px;
+    background:
+      radial-gradient(520px 220px at 50% 0%, rgba(255,255,255,.90), rgba(255,255,255,0) 70%),
+      radial-gradient(650px 280px at 12% 70%, rgba(255,255,255,.70), rgba(255,255,255,0) 65%),
+      radial-gradient(650px 280px at 88% 70%, rgba(255,255,255,.70), rgba(255,255,255,0) 65%);
+    pointer-events:none;
+  }
+
+  .p-cloud-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+    justify-items:stretch;
+    align-items:stretch;
+  }
+  @media(min-width:860px){
+    .p-cloud-grid{grid-template-columns:repeat(5, minmax(0, 1fr));}
+  }
+
+  .p-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-decoration:none;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:18px;
+    padding:18px 14px 16px;
+    box-shadow:0 14px 40px rgba(2,8,23,.08);
+    transition:transform .18s ease, box-shadow .18s ease;
+    min-height:126px;
+  }
+  .p-card:hover{transform:translateY(-2px); box-shadow:0 18px 52px rgba(2,8,23,.12)}
+
+  .p-ic{
+    width:56px;height:56px;border-radius:16px;
+    display:grid;place-items:center;
+    background:linear-gradient(180deg, rgba(11,79,108,.10), rgba(27,126,166,.06));
+    border:1px solid rgba(11,79,108,.14);
+    color:var(--brand);
+  }
+  .p-name{margin-top:10px;font-weight:700;color:#0f172a;font-size:14px;}
+  .p-desc{margin-top:3px;color:rgba(15,23,42,.68);font-size:12.5px;line-height:1.35;max-width:20ch;}
+
+  /* Gentle “floating” offsets like Proton */
+  @media(min-width:860px){
+    .p-card[data-k="aca"]{transform:translateY(10px) rotate(-.35deg)}
+    .p-card[data-k="medicare"]{transform:translateY(-6px) rotate(.25deg)}
+    .p-card[data-k="life"]{transform:translateY(14px) rotate(.15deg)}
+    .p-card[data-k="dental"]{transform:translateY(-4px) rotate(-.15deg)}
+    .p-card[data-k="vision"]{transform:translateY(8px) rotate(.35deg)}
+    .p-card:hover{transform:translateY(-2px) !important;}
+  }
+
+  .p-trust{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin:34px auto 0;
+    max-width:980px;
+    text-align:left;
+  }
+  @media(min-width:860px){
+    .p-trust{grid-template-columns:repeat(3,1fr);}
+  }
+  .p-trust-item{
+    background:rgba(255,255,255,.70);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:18px;
+    padding:14px 16px;
+    box-shadow:0 10px 24px rgba(2,8,23,.06);
+  }
+  .p-trust-item strong{display:block;font-weight:700}
+  .p-trust-item span{display:block;color:rgba(15,23,42,.70);margin-top:4px;font-size:14px;line-height:1.45}
+
+  /* Existing homepage classes (used below) */
+  .section.slim{padding:60px 0}
+  .surface{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:22px;padding:32px;box-shadow:0 12px 34px rgba(0,0,0,.05)}
+  .btn.btn-outline{border-color:rgba(0,0,0,.18)}
+</style>
