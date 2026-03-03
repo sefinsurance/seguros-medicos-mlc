@@ -5,14 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "deploy": "wrangler deploy"
+    "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.10.1"
-  },
-  "devDependencies": {
-    "@astrojs/sitemap": "^3.2.1",
-    "wrangler": "^4.69.0"
+    "astro": "^5.10.1",
+    "@astrojs/sitemap": "^3.4.2"
   }
 }

@@ -1,83 +1,116 @@
 @import './tokens.css';
-
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{margin:0;padding:0}
 body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
   color:var(--text);
-  background:
-    radial-gradient(1100px 700px at 20% -10%, rgba(38,168,201,.22), transparent 60%),
-    radial-gradient(900px 600px at 95% 0%, rgba(244,194,58,.18), transparent 55%),
-    linear-gradient(180deg, var(--bg), #ffffff);
+  font-size:18px;
+  line-height:1.65;
 }
-
-a{color:inherit}
-
-.container{max-width:1120px;margin:0 auto;padding:0 18px}
-
-h1,h2,h3{letter-spacing:-0.02em}
-h1{font-size:clamp(34px, 4vw, 54px);line-height:1.05;margin:0 0 12px;font-weight:900}
-h2{font-size:clamp(26px, 3vw, 36px);line-height:1.15;margin:0 0 10px;font-weight:900}
-h3{font-size:20px;line-height:1.25;margin:0 0 8px;font-weight:900}
-
-p{margin:0 0 14px;color:var(--muted);line-height:1.6}
-
-.card{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
+a{text-decoration:none;color:inherit}
+.container{max-width:1100px;margin:auto;padding:0 16px}
 
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  height:44px;padding:0 16px;border-radius:14px;
-  background:linear-gradient(90deg,var(--brand-800),var(--brand-700));
-  color:white;font-weight:900;text-decoration:none;
-  box-shadow:0 12px 25px rgba(0,0,0,.10);
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 16px;border-radius:12px;font-weight:800;border:1px solid transparent;
 }
-.btn:hover{filter:brightness(1.05)}
+.btn-primary{background:var(--accent); color:#0B2B36}
+.btn-outline{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
+.btn-light{background:#fff;border-color:rgba(15,23,42,.12);color:var(--brand)}
 
-.btn--soft{
-  background:rgba(5,85,111,.08);
-  color:var(--brand-900);
-  border:1px solid rgba(5,85,111,.18);
-  box-shadow:none;
+.small{font-size:14px;color:var(--muted)}
+h1{font-size:clamp(34px,4.4vw,56px);line-height:1.05;margin:0 0 12px}
+h2{font-size:clamp(22px,2.6vw,34px);line-height:1.15;margin:0 0 10px}
+h3{font-size:20px;margin:0 0 6px}
+p{margin:0 0 14px}
+
+.card{
+  background:#fff;border:1px solid rgba(15,23,42,.08);
+  border-radius:18px; padding:18px;
+  box-shadow:0 8px 22px rgba(2,12,27,.06);
 }
+
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid-3{grid-template-columns:repeat(3,1fr)}}
+.section{padding:56px 0}
+
+.hero{
+  background:linear-gradient(180deg,var(--brand),var(--brand2));
+  color:#fff;
+}
+.hero-inner{padding:70px 0}
+.hero p{color:rgba(255,255,255,.92);font-size:clamp(18px,1.4vw,20px);max-width:70ch}
 
 .badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  background:rgba(38,168,201,.12);
-  border:1px solid rgba(38,168,201,.24);
-  font-weight:900;font-size:12px;color:var(--brand-900)
+  display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+  font-weight:700;font-size:13px
 }
 
-.kicker{font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-700);font-size:12px}
+.list{margin:0;padding-left:18px}
+.list li{margin:8px 0;color:var(--muted);line-height:1.7}
 
-.hr{height:1px;background:var(--line);margin:18px 0}
+.faq{display:grid;gap:12px;margin-top:10px}
+.faq details{background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:16px;padding:14px 16px}
+.faq summary{cursor:pointer;font-weight:900;font-size:18px;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq .a{margin-top:10px;color:var(--muted);line-height:1.75}
 
-/* Subtle “fiesta tile” pattern for Hispanic branding */
-.latina-pattern{
-  background:
-    radial-gradient(circle at 16px 16px, rgba(244,194,58,.22) 0 6px, transparent 7px),
-    radial-gradient(circle at 48px 48px, rgba(38,168,201,.18) 0 7px, transparent 8px),
-    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.85));
-  background-size:64px 64px, 64px 64px, auto;
+/* Breadcrumbs */
+.breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.breadcrumbs a{color:rgba(255,255,255,.92);text-decoration:underline;text-decoration-color:rgba(255,255,255,.35)}
+.breadcrumbs .sep{opacity:.7}
+.breadcrumbs .current{opacity:.92;font-weight:800}
+
+/* --- Page background wrapper (prevents "broken" gradient blocks) --- */
+.site-main{
+  background: linear-gradient(180deg, var(--bg) 0%, #ffffff 40%, var(--bg) 100%);
+  min-height: 70vh;
 }
 
-.hero-tilt{position:relative;overflow:hidden}
-.hero-tilt:before{
-  content:'';position:absolute;inset:-1px;
-  background:radial-gradient(900px 500px at 15% 25%, rgba(38,168,201,.35), transparent 60%),
-             radial-gradient(700px 420px at 90% 20%, rgba(244,194,58,.22), transparent 55%);
-  pointer-events:none;
+/* --- Layout helpers --- */
+.prose-container{max-width:920px;margin:0 auto;padding:0 16px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.cta-row .btn{border-radius:999px;padding:12px 18px}
+
+/* --- Pill links (states/counties/services) --- */
+.pill-links{display:flex;flex-wrap:wrap;gap:10px}
+.pill-links a{display:inline-flex;align-items:center;gap:8px;background:rgba(14,84,100,.10);border:1px solid rgba(14,84,100,.18);padding:10px 14px;border-radius:999px;text-decoration:none;font-weight:600;color:var(--text)}
+.pill-links a:hover{background:rgba(14,84,100,.14)}
+.muted{color:var(--muted)}
+.kicker{font-weight:800;letter-spacing:.02em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,.92)}
+.hero .card{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16)}
+.hero .card p,.hero .card li{color:rgba(255,255,255,.92)}
+.hero .card h3{color:#fff}
+
+/* --- Premium card system --- */
+.card{padding:26px}
+.card.tight{padding:18px}
+.card h2{margin-top:0}
+.card h3{margin-top:0}
+.card .list li{color:var(--muted)}
+.card .list li strong{color:var(--text)}
+
+/* --- Feature grid --- */
+.feature-grid{display:grid;gap:16px}
+@media(min-width:900px){.feature-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* --- Soft section separators --- */
+.section-title{max-width:70ch}
+.section-sub{max-width:78ch}
+.band{
+  background: linear-gradient(180deg, rgba(11,79,108,.08), rgba(11,79,108,0));
+  border-top:1px solid rgba(15,23,42,.06);
+  border-bottom:1px solid rgba(15,23,42,.06);
 }
-
-/* Legacy utility classes used by existing pages */
-.btn-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 16px;border-radius:999px;font-weight:900;text-decoration:none}
-.btn-pill.btn-primary{background:linear-gradient(90deg,var(--brand-800),var(--brand-700));color:#fff;box-shadow:0 12px 25px rgba(0,0,0,.10)}
-.btn-pill.btn-light{background:rgba(5,85,111,.08);border:1px solid rgba(5,85,111,.18);color:var(--brand-900)}
-
-.card2{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.cta-band{
+  background: linear-gradient(180deg, var(--brand), var(--brand2));
+  color:#fff;
+  border-radius:22px;
+  padding:28px;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 12px 30px rgba(2,12,27,.10);
+}
+.cta-band p{color:rgba(255,255,255,.92);max-width:70ch}
+.cta-band .btn-outline{border-color:rgba(255,255,255,.32)}

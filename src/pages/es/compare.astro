@@ -1,81 +1,64 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
+const lang = 'es';
+const waText = 'Hola, quiero ayuda con mi seguro médico en Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const title = 'Medicare en Florida';
+const description = '¿Cumples 65 pronto? Podemos ayudarte a preparar tu plan hasta 3 meses antes de tu cumpleaños.';
+const bullets = [
+  'Ventana inicial (3 meses antes del cumpleaños)',
+  'Medicare Advantage vs Original (explicado simple)',
+  'Revisión de doctores y medicamentos',
+  'Opciones según tu condado en Florida',
+];
+const faqs = [
+  { q: '¿De verdad puedo empezar 3 meses antes?', a: 'Sí. Tu ventana inicial suele incluir 3 meses antes del mes de tu cumpleaños. Planificar temprano te evita estrés.' },
+  { q: '¿Qué necesitan para orientarme?', a: 'Tu fecha de nacimiento, condado y si ya tienes Parte A/B. Si tomas medicinas, también ayuda.' },
+  { q: '¿Me ayudan a comparar planes?', a: 'Sí. Comparamos red, beneficios y el costo real, no solo el precio mensual.' },
+];
 ---
-
-<SiteShell
-  lang="es"
-  title="Comparar planes del Marketplace"
-  description="MLC Insurance compara todos los planes disponibles del Marketplace (ACA/Obamacare) en tu área."
-  canonical="https://obamacarelocal.com/es/compare/"
->
-  <section class="hero" style="padding:26px 0 14px">
-    <div class="container">
-      <span class="pill">Sin presión · Explicación clara</span>
-      <h1 style="margin:14px 0 10px">Compara planes como un experto</h1>
-      <p class="muted" style="max-width:70ch">
-        Te ayudamos a comparar según lo que importa: costo mensual, acceso a doctores, medicinas y tranquilidad.
-      </p>
-      <div style="margin-top:14px">
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
+<SiteShell lang={lang} title={`${title} | Seguros Médicos`} description={description} canonical="https://obamacarelocal.com/es/medicare/">
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">Florida (Estado completo)</span>
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref} rel="noopener">Escríbenos por WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Llamar 1-877-458-2557</a>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="grid cols-3">
-        <div class="card pad">
-          <b>Prima mensual</b>
-          <p class="muted">Lo que pagas cada mes después del subsidio (si aplica).</p>
-        </div>
-        <div class="card pad">
-          <b>Deducible y máximo anual</b>
-          <p class="muted">Tu costo “peor caso” del año por servicios cubiertos.</p>
-        </div>
-        <div class="card pad">
-          <b>Red y medicinas</b>
-          <p class="muted">Si tus doctores, hospitales y recetas están cubiertos.</p>
-        </div>
+      <div class="card">
+        <h2>Lo más común</h2>
+        <ul class="list">
+          {bullets.map((b) => <li>{b}</li>)}
+        </ul>
       </div>
 
-      <div class="card pad" style="margin-top:16px">
-        <h2 style="margin-top:0;color:#0b1116">Lista rápida</h2>
-        <div class="grid cols-2" style="align-items:start">
-          <ul class="muted" style="margin:0;line-height:1.7">
-            <li>¿Quieres la prima más baja o copagos más bajos?</li>
-            <li>¿Vas mucho al doctor este año?</li>
-            <li>¿Medicinas costosas?</li>
-            <li>¿Hospitales o especialistas preferidos?</li>
-          </ul>
-          <ul class="muted" style="margin:0;line-height:1.7">
-            <li>HMO/EPO vs PPO (varía por área)</li>
-            <li>Beneficios de telemedicina</li>
-            <li>Salud mental y terapia</li>
-            <li>Cobertura para niños y familia</li>
-          </ul>
-        </div>
+      <div style="height:16px"></div>
+
+      <div class="card">
+        <h2>Preguntas frecuentes</h2>
+        <FaqAccordion items={faqs} />
       </div>
 
-      <div style="margin-top:16px" class="card pad">
-        <h2 style="margin-top:0;color:#0b1116">¿Quieres que lo hagamos contigo?</h2>
-        <p class="muted" style="margin:8px 0 0">
-          Envíanos tu ZIP, tamaño del hogar e ingreso estimado. Comparamos todos los planes disponibles y te explicamos las mejores opciones.
-        </p>
-        <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
-          <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
-          <a class="btn btn-pill btn-teal" href="/es/aca">Bases de ACA</a>
-          <a class="btn btn-pill btn-light" href="/es/faq">Preguntas</a>
+      <div style="height:16px"></div>
+
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>¿Listo? Te lo hacemos fácil</h2>
+        <p class="small">Escríbenos por WhatsApp y cuéntanos tu situación. Te orientamos con calma, como una conversación.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">Abrir WhatsApp</a>
+          <a class="btn btn-light" href="/es/">Volver al inicio</a>
         </div>
       </div>
     </div>
   </section>
-
-  <style>
-    .section{padding:26px 0}
-    h2{font-size:22px}
-  </style>
 </SiteShell>
