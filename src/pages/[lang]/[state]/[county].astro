@@ -1,8 +1,10 @@
 ---
-import SiteShell from '../../../../components/layout/SiteShell.astro';
-import Breadcrumbs from '../../../../components/ui/Breadcrumbs.astro';
-import FaqAccordion from '../../../../components/ui/FaqAccordion.astro';
-import { coverage } from '../../../../data/coverage';
+// NOTE: This file lives at src/pages/[lang]/[state]/[county].astro
+// so we go up 3 levels to reach src/ then import components/data.
+import SiteShell from '../../../components/layout/SiteShell.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import FaqAccordion from '../../../components/ui/FaqAccordion.astro';
+import { coverage } from '../../../data/coverage';
 
 export async function getStaticPaths() {
   const langs = ['es', 'en'];
