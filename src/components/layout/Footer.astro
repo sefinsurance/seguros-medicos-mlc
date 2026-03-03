@@ -1,111 +1,42 @@
 ---
-import ServiceAreas from '../ui/ServiceAreas.astro';
+const { lang } = Astro.props;
+const text = lang === 'es'
+  ? {
+      blurb: 'Seguro médico, Medicare, Vida y Dental en toda Florida.',
+      hours: 'Lunes a Viernes · 9am–6pm',
+      cta: 'Escríbenos por WhatsApp',
+      rights: 'Todos los derechos reservados.'
+    }
+  : {
+      blurb: 'Health insurance, Medicare, Life & Dental across Florida.',
+      hours: 'Monday to Friday · 9am–6pm',
+      cta: 'Message us on WhatsApp',
+      rights: 'All rights reserved.'
+    };
 
-const { lang = 'en' } = Astro.props;
-const isEs = lang === 'es';
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
-const smsHref = `sms:+1${digits}`;
-const waHref = `https://wa.me/1${digits}`;
-
-const states = [
-  { code: 'FL', name: 'Florida' },
-  { code: 'TX', name: 'Texas' },
-  { code: 'SC', name: 'South Carolina' },
-  { code: 'TN', name: 'Tennessee' },
-  { code: 'NC', name: 'North Carolina' },
-];
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico en Florida.'
+  : 'Hi, I would like help with health insurance in Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
 ---
-
-<footer class="footer">
-  <div class="container wrap">
-    <div class="col">
-      <div class="brand">
-        <img class="logo" src="/images/brand/mlc-logo.webp" width="48" height="48" alt="MLC Insurance logo" loading="lazy" decoding="async" />
-        <div>
-          <div class="name">MLC Insurance</div>
-          <div class="muted">{isEs ? 'Seguro de salud · Medicare · Dental · Vida' : 'Health · Medicare · Dental · Life'}</div>
-        </div>
-      </div>
-
-      <p class="muted" style="margin:12px 0 0">
-        {isEs
-          ? 'Somos una agencia familiar con enfoque hispano. Comparamos opciones y te ayudamos a elegir un plan del Marketplace que se ajuste a tu familia y tu presupuesto.'
-          : 'A family-focused agency with a strong Hispanic community presence. We compare options and help you choose a Marketplace plan that fits your family and budget.'}
-      </p>
-
-      <div class="ctas">
-        <a class="btn" href={phoneHref}>{isEs ? 'Llamar' : 'Call'} {phone}</a>
-        <a class="btn btn--soft" href={smsHref}>{isEs ? 'Texto' : 'Text'}</a>
-        <a class="btn btn--soft" href={waHref} rel="noopener">WhatsApp</a>
-      </div>
-
-      <p class="fine">
-        {isEs
-          ? 'Nota: No estamos afiliados al gobierno. “Obamacare” se refiere a planes de la Ley de Cuidado de Salud Asequible (ACA).'
-          : 'Note: We are not affiliated with the government. “Obamacare” refers to Affordable Care Act (ACA) Marketplace plans.'}
-      </p>
-    </div>
-
-    <div class="col">
-      <h4>{isEs ? 'Servicios' : 'Services'}</h4>
-      <ul class="list">
-        <li>{isEs ? 'Marketplace (ACA / Obamacare): todos los planes disponibles' : 'Marketplace (ACA / Obamacare): all available plans'}</li>
-        <li>{isEs ? 'Ayuda con elegibilidad, SEP y cambios de ingreso' : 'Help with eligibility, SEP, and income changes'}</li>
-        <li>{isEs ? 'Medicare (según disponibilidad)' : 'Medicare (where available)'}</li>
-        <li>{isEs ? 'Dental y Vida (opciones individuales)' : 'Dental & Life (individual options)'}</li>
-      </ul>
-
-      <h4 style="margin-top:18px">{isEs ? 'Estados' : 'States'}</h4>
-      <div class="chips">
-        {states.map((s) => (
-          <span class="chip">{s.code}</span>
-        ))}
-      </div>
-      <div class="muted" style="margin-top:8px;font-size:13px">
-        {states.map((s) => s.name).join(' · ')}
+<footer style="background:var(--brand);color:#fff;padding:48px 0;margin-top:80px">
+  <div class="container" style="display:grid;gap:16px">
+    <div style="display:flex;gap:12px;align-items:center">
+      <img src="/images/logo.png" width="44" height="44" style="background:#fff;border-radius:50%;padding:3px">
+      <div>
+        <strong style="font-size:12px;letter-spacing:.14em;text-transform:uppercase">Seguros Médicos</strong>
+        <div class="small" style="color:rgba(255,255,255,.85)">{text.blurb}</div>
       </div>
     </div>
 
-    <div class="col">
-      <h4>{isEs ? 'Enlaces' : 'Links'}</h4>
-      <ul class="list">
-        <li><a href={isEs ? '/es/aca' : '/en/aca'}>{isEs ? 'Obamacare' : 'ACA / Obamacare'}</a></li>
-        <li><a href={isEs ? '/es/compare' : '/en/compare'}>{isEs ? 'Comparar' : 'Compare'}</a></li>
-        <li><a href={isEs ? '/es/faq' : '/en/faq'}>{isEs ? 'Preguntas frecuentes' : 'FAQ'}</a></li>
-        <li><a href="/about">{isEs ? 'Sobre nosotros' : 'About'}</a></li>
-      </ul>
-
-      <div class="fine" style="margin-top:18px">
-        © {new Date().getFullYear()} MLC Insurance. {isEs ? 'Todos los derechos reservados.' : 'All rights reserved.'}
-      </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <a class="btn btn-primary" href={waHref}>{text.cta}</a>
+      <a class="btn btn-light" href="tel:+18774582557">1-877-458-2557</a>
+      <span class="small" style="color:rgba(255,255,255,.85)">{text.hours}</span>
     </div>
-  </div>
 
-  <div class="container" style="margin-top:18px;padding-bottom:30px">
-    <ServiceAreas lang={lang} compact={true} />
+    <div class="small" style="color:rgba(255,255,255,.7)">
+      © {new Date().getFullYear()} Seguros Médicos · {text.rights}
+    </div>
   </div>
 </footer>
-
-<style>
-  .footer{background:rgba(255,255,255,.85);border-top:1px solid var(--line);margin-top:44px}
-  .wrap{display:grid;gap:18px;padding:30px 0}
-  @media(min-width:900px){.wrap{grid-template-columns:1.3fr .9fr .7fr}}
-
-  .brand{display:flex;gap:12px;align-items:center}
-  .logo{border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.10)}
-  .name{font-weight:900}
-
-  h4{margin:0 0 10px;color:var(--text);font-weight:900}
-  .muted{color:var(--muted)}
-  .ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-  .list{margin:0;padding-left:18px;color:var(--muted)}
-  .list li{margin:8px 0}
-  .list a{color:inherit;text-decoration:underline;text-decoration-color:rgba(11,111,142,.30)}
-
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{padding:6px 10px;border-radius:999px;background:rgba(11,111,142,.08);border:1px solid rgba(11,111,142,.18);color:var(--brand-900);font-weight:900;font-size:12px}
-
-  .fine{color:rgba(10,34,48,.70);font-size:12px;line-height:1.4;margin-top:12px}
-</style>

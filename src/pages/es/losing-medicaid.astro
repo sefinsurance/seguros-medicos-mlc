@@ -1,64 +1,107 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
+const lang = 'es';
+const siteUrl = 'https://obamacarelocal.com';
+const canonical = `${siteUrl}/es/losing-medicaid/`;
+
+const title = 'Perdiste Medicaid en Florida: opciones rápidas (ACA / Marketplace)';
+const description = 'Si te cancelaron Medicaid, puede haber un Periodo Especial para inscribirte en Obamacare (ACA) y evitar quedarte sin cobertura. Hablamos español.';
+
+const waText = 'Hola, perdí Medicaid y necesito opciones de seguro médico. ¿Me pueden ayudar?';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonical}#breadcrumb`,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": `${siteUrl}/es/` },
+        { "@type": "ListItem", "position": 2, "name": "Perdiendo Medicaid", "item": canonical },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonical}#webpage`,
+      "url": canonical,
+      "name": title,
+      "description": description,
+      "inLanguage": "es",
+      "isPartOf": { "@type": "WebSite", "@id": `${siteUrl}/#website`, "url": siteUrl, "name": "Seguros Médicos" },
+    },
+  ],
+};
+
+const breadcrumbItems = [
+  { href: '/es/', label: 'Inicio' },
+  { href: '/es/losing-medicaid', label: 'Perdiendo Medicaid' },
+];
 ---
 
-<SiteShell
-  lang="es"
-  title="¿Perdiendo Medicaid?"
-  description="Si estás perdiendo Medicaid, podrías calificar para SEP y obtener cobertura del Marketplace (ACA)."
-  canonical="https://obamacarelocal.com/es/losing-medicaid/"
->
-  <section class="hero" style="padding:26px 0 14px">
-    <div class="container">
-      <span class="pill">Ayuda con SEP · Rápido</span>
-      <h1 style="margin:14px 0 10px">Si estás perdiendo Medicaid, no esperes.</h1>
-      <p class="muted" style="max-width:70ch">
-        Perder Medicaid puede abrir un Periodo Especial de Inscripción (SEP) para cobertura del Marketplace.
-        Te ayudamos a entender tu tiempo y a comparar todos los planes disponibles.
+<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+
+<SiteShell lang={lang} title={title} description={description} canonical={canonical}>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">Florida</span>
+      <h1>¿Perdiste Medicaid? No te quedes sin cobertura.</h1>
+      <p>
+        Si te cancelaron Medicaid (o te subieron el “share of cost”), muchas personas califican para un <strong>Periodo Especial</strong>
+        que permite inscribirte en Obamacare (ACA / Marketplace) sin esperar al Open Enrollment.
       </p>
-      <div style="margin-top:14px">
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref} rel="noopener">Escríbenos por WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Llamar 1-877-458-2557</a>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="grid cols-2" style="align-items:start">
-        <div class="card pad">
-          <h2 style="margin-top:0;color:#0b1116">Qué hacer ahora</h2>
-          <ol class="muted" style="margin:10px 0 0;line-height:1.7">
-            <li>Busca tu carta de terminación (si la tienes).</li>
-            <li>Confirma el último día activo de Medicaid.</li>
-            <li>Cotiza en Marketplace y elige fecha de inicio para evitar huecos.</li>
-          </ol>
+      <div class="grid grid-3">
+        <div class="card">
+          <h2>Qué suele pasar</h2>
+          <p class="small">
+            Cuando termina Medicaid, puede haber una ventana corta para aplicar a un plan del Marketplace. Si se te pasa,
+            podrías quedarte sin cobertura hasta la próxima inscripción.
+          </p>
         </div>
-        <div class="card pad">
-          <h2 style="margin-top:0;color:#0b1116">Lo que necesitaremos</h2>
-          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
-            <li>Código ZIP</li>
-            <li>Tamaño del hogar</li>
-            <li>Ingreso anual estimado</li>
-            <li>Fecha/carta de terminación (si disponible)</li>
+
+        <div class="card">
+          <h2>Qué necesitamos</h2>
+          <ul class="list">
+            <li>Fechas: ¿cuándo terminó (o termina) Medicaid?</li>
+            <li>Personas en el hogar</li>
+            <li>Ingreso estimado (aprox.)</li>
           </ul>
+          <p class="small">Con eso te decimos si conviene ACA, otra opción, o qué paso sigue.</p>
+        </div>
+
+        <div class="card">
+          <h2>Enfocado en la comunidad hispana</h2>
+          <p class="small">
+            Hablamos español y explicamos sin términos complicados. Si recibiste una carta que no entiendes,
+            envíanos una foto por WhatsApp.
+          </p>
         </div>
       </div>
 
-      <div class="card pad" style="margin-top:16px">
-        <h2 style="margin-top:0;color:#0b1116">Comparamos todos los planes</h2>
-        <p class="muted">Revisamos lo disponible en tu área y te ayudamos a inscribirte con confianza.</p>
-      </div>
+      <div style="height:18px"></div>
 
-      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
-        <a class="btn btn-pill btn-teal" href="/es/compare">Comparar planes</a>
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Ayuda hoy</a>
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>Si hoy mismo necesitas moverlo, mejor.</h2>
+        <p class="small">
+          Entre más rápido confirmemos fechas y opciones, más fácil evitar un “gap”.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">Abrir WhatsApp</a>
+          <a class="btn btn-light" href="/es/aca">Ver Obamacare (ACA)</a>
+        </div>
       </div>
     </div>
   </section>
-
-  <style>.section{padding:26px 0} h2{font-size:22px}</style>
 </SiteShell>

@@ -1,43 +1,29 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
 
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
+const lang = 'es';
+const waText = 'Hola, quiero opciones de seguro dental en Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
 ---
-
 <SiteShell
-  lang="es"
-  title="Cobertura dental"
-  description="Opciones de planes dentales con MLC Insurance."
+  lang={lang}
+  title="Seguro Dental en Florida | Seguros Médicos"
+  description="Opciones dentales accesibles para ti y tu familia."
   canonical="https://obamacarelocal.com/es/dental/"
 >
-  <section class="hero" style="padding:26px 0 14px">
-    <div class="container">
-      <span class="pill">Opciones dentales · Guía simple</span>
-      <h1 style="margin:14px 0 10px">Planes dentales que sí convienen</h1>
-      <p class="muted" style="max-width:70ch">
-        Ya sea limpieza, trabajo básico o procedimientos mayores, te ayudamos a entender opciones y elegir un plan que se ajuste a tu necesidad.
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">Florida (Estado completo)</span>
+      <h1>Seguro Dental en Florida</h1>
+      <p>
+        Limpiezas, radiografías, tratamientos.
+        Podemos ayudarte a encontrar una opción dental que tenga sentido para tu presupuesto.
       </p>
-      <div style="margin-top:14px">
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Llamar / Texto {phone}</a>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref}>Escríbenos por WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Llamar</a>
       </div>
     </div>
   </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="grid cols-3">
-        <div class="card pad"><b>Preventivo</b><p class="muted">Limpiezas, exámenes y rayos X (varía por plan).</p></div>
-        <div class="card pad"><b>Servicios básicos</b><p class="muted">Empastes y procedimientos simples (a veces con espera).</p></div>
-        <div class="card pad"><b>Trabajo mayor</b><p class="muted">Coronas, puentes y más (límites y cobertura varían).</p></div>
-      </div>
-      <div class="card pad" style="margin-top:16px">
-        <h2 style="margin-top:0;color:#0b1116">Cuéntanos qué necesitas</h2>
-        <p class="muted">Si ya sabes qué tratamiento podrías necesitar, dínoslo y te ayudamos a escoger el tipo de plan más conveniente.</p>
-      </div>
-    </div>
-  </section>
-
-  <style>.section{padding:26px 0} h2{font-size:22px}</style>
 </SiteShell>

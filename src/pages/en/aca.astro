@@ -1,85 +1,161 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
-const waHref = `https://wa.me/1${digits}`;
+const lang = 'en';
+const waText = 'Hi, I want help comparing Obamacare (ACA) plans.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const title = 'Obamacare (ACA) Help';
+const description = 'Compare Marketplace plans and check if you qualify for subsidies. Spanish & English help. No pressure.';
+
+const who = [
+  'No employer coverage (or it’s too expensive)',
+  'Self‑employed / 1099',
+  'Families who need coverage for children',
+  'Recent income change or lost coverage',
+];
+
+const ask = [
+  'ZIP code and county',
+  'Household size',
+  'Estimated annual income',
+  'Preferred doctors/medications (if any)',
+];
+
+const sep = [
+  'Lost Medicaid or job-based coverage',
+  'Moved, got married, or had a baby',
+  'A major income change',
+];
+
+const faqs = [
+  { q: 'Do you charge to help?', a: 'No. We help you compare options and understand eligibility. If subsidies apply, we’ll explain how they work.' },
+  { q: 'Can I enroll outside Open Enrollment?', a: 'Yes—if you qualify for a Special Enrollment Period (SEP), such as losing coverage, moving, marriage, birth, or a major income change.' },
+  { q: 'Do you check doctors and prescriptions?', a: 'Yes. We help review networks and medications to avoid surprises.' },
+  { q: 'Do you provide Spanish support?', a: 'Yes. We can help in English or Spanish—whatever is easier for you.' },
+];
 ---
 
 <SiteShell
-  lang="en"
-  title="ACA / Obamacare Marketplace Plans"
-  description="Compare all available Marketplace plans with MLC Insurance. Call/text/WhatsApp 877-458-2557."
+  lang={lang}
+  title={title}
+  description={description}
   canonical="https://obamacarelocal.com/en/aca/"
 >
-  <section class="hero" style="padding:28px 0 18px">
-    <div class="container">
-      <span class="pill">All available Marketplace plans · Bilingual</span>
-      <h1 style="margin:14px 0 10px">ACA / “Obamacare” made simple</h1>
-      <p class="muted" style="max-width:70ch">
-        The Marketplace (ACA) is where you can shop private health plans—and many families qualify for subsidies.
-        We’ll compare what’s available in your ZIP code and help you enroll.
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">Spanish & English • Family-first help</div>
+      <h1>Obamacare (ACA) without the headache</h1>
+      <p class="section-sub">
+        We compare Marketplace plans and check whether you qualify for subsidies. Clear answers, no pressure—
+        just help choosing what fits your family.
       </p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
-        <a class="btn btn-pill btn-outline" href={waHref} rel="noopener">WhatsApp</a>
-        <a class="btn btn-pill btn-outline" href="/en/faq">FAQ</a>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/en/compare/">Compare plans</a>
+        <a class="btn btn-outline" href={waHref} rel="noopener">Quote on WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Call 877‑458‑2557</a>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:18px">
+        <div class="card">
+          <h3>Fast & clear</h3>
+          <p>In minutes you’ll know your options and what the real cost looks like.</p>
+        </div>
+        <div class="card">
+          <h3>Networks checked</h3>
+          <p>Doctors, clinics, prescriptions—so the plan works in real life.</p>
+        </div>
+        <div class="card">
+          <h3>SEP guidance</h3>
+          <p>Lost Medicaid or coverage? We guide you step by step.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="section">
-    <div class="container">
-      <div class="grid cols-2" style="align-items:start">
-        <div class="card pad">
-          <h2 style="margin-top:0">Who should consider ACA plans?</h2>
-          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
-            <li>No job-based coverage (or it’s unaffordable)</li>
-            <li>Self-employed / 1099 income</li>
-            <li>Early retirees (not yet on Medicare)</li>
-            <li>Families needing coverage for kids</li>
-          </ul>
-        </div>
-        <div class="card pad">
-          <h2 style="margin-top:0">What we’ll ask for</h2>
-          <ul class="muted" style="margin:10px 0 0;line-height:1.7">
-            <li>ZIP code</li>
-            <li>Household size</li>
-            <li>Estimated yearly income</li>
-            <li>Preferred doctors / prescriptions (if any)</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card pad" style="margin-top:16px">
-        <h2 style="margin-top:0">Special Enrollment Period (SEP)</h2>
-        <p class="muted">
-          If you lost coverage, moved, got married, had a baby, or your income changed, you may qualify to enroll or change plans outside Open Enrollment.
-          We’ll tell you what applies and what documentation is needed.
-        </p>
-      </div>
-
-      <div style="margin-top:18px" class="card pad">
-        <h2 style="margin-top:0">Our promise</h2>
-        <p class="muted" style="margin:8px 0 0">
-          We offer <b>all available Marketplace plans</b>. We’ll explain your options clearly and help you choose a plan that fits your family and budget.
-        </p>
-      </div>
-
-      <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
-        <a class="btn btn-pill btn-teal" href="/en/compare">Compare plans</a>
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Talk to an agent</a>
-      </div>
-
-      <p class="muted" style="margin-top:14px;font-size:13px">
-        Note: MLC Insurance is not affiliated with the government. “Obamacare” refers to ACA Marketplace coverage.
+    <div class="prose-container">
+      <h2>In 2 minutes we can check eligibility</h2>
+      <p class="muted section-sub">
+        These are the most common questions. If you don’t have everything ready, that’s fine—we start with basics.
       </p>
+
+      <div class="grid" style="margin-top:14px">
+        <div class="card">
+          <h2>Who should consider ACA?</h2>
+          <ul class="list">
+            {who.map((x) => <li>{x}</li>)}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>What we’ll ask for</h2>
+          <ul class="list">
+            {ask.map((x) => <li>{x}</li>)}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>Special Enrollment Period (SEP)</h2>
+          <p class="muted">
+            If you had a major life change, you may be able to enroll outside Open Enrollment.
+          </p>
+          <ul class="list">
+            {sep.map((x) => <li>{x}</li>)}
+          </ul>
+          <p class="small" style="margin-top:10px">
+            Not sure? Message us and we’ll confirm.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <style>
-    .section{padding:26px 0}
-    h2{color:#0b1116}
-  </style>
+  <section class="section band">
+    <div class="prose-container">
+      <h2>Why families choose us</h2>
+      <p class="muted section-sub">
+        No pressure sales. Our goal is simple: help you understand options and pick a plan that actually fits.
+      </p>
+
+      <div class="feature-grid" style="margin-top:14px">
+        <div class="card tight">
+          <h3>Plain-language help</h3>
+          <p class="muted">Clear explanations and time for questions.</p>
+        </div>
+        <div class="card tight">
+          <h3>Subsidies & real costs</h3>
+          <p class="muted">We explain premiums, deductibles, max out-of-pocket, and income impact.</p>
+        </div>
+        <div class="card tight">
+          <h3>Doctors & prescriptions</h3>
+          <p class="muted">We help check networks and medications to avoid surprises.</p>
+        </div>
+      </div>
+
+      <div class="cta-band" style="margin-top:18px">
+        <h3 style="margin:0 0 8px">Ready to compare?</h3>
+        <p>
+          Text us on WhatsApp or call. If you already have a plan, we can review it and help you avoid surprises.
+        </p>
+        <div class="cta-row" style="margin-top:12px">
+          <a class="btn btn-primary" href="/en/compare/">Compare plans</a>
+          <a class="btn btn-outline" href={waHref} rel="noopener">WhatsApp</a>
+          <a class="btn btn-outline" href="/en/faq/">FAQs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="prose-container">
+      <h2>Frequently asked questions</h2>
+      <FaqAccordion items={faqs} />
+      <p class="small" style="margin-top:14px">
+        Note: We are not affiliated with the government. “Obamacare” refers to Marketplace plans under the ACA.
+      </p>
+    </div>
+  </section>
 </SiteShell>

@@ -1,142 +1,133 @@
 ---
 import SiteShell from '../../components/layout/SiteShell.astro';
-import ServiceAreas from '../../components/ui/ServiceAreas.astro';
+import FaqAccordion from '../../components/ui/FaqAccordion.astro';
 
-const phone = '877-458-2557';
-const digits = phone.replace(/[^0-9]/g,'');
-const phoneHref = `tel:+1${digits}`;
-const waHref = `https://wa.me/1${digits}`;
+const lang = 'en';
+const waText = 'Hi, I would like help with health insurance in Florida.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const faq_items = [
+  { q: 'Do you serve all of Florida?', a: 'Yes—Florida statewide. WhatsApp is the fastest way to get help.' },
+  { q: 'What do you need to guide me?', a: 'Name, date of birth, your Florida county, and an estimate of household income.' },
+  { q: 'Does it cost to get help?', a: 'Message us and we’ll guide you. If you qualify for subsidies or special options, we explain it clearly.' },
+];
 ---
-
 <SiteShell
-  lang="en"
-  title="Marketplace health insurance you can trust"
-  description="MLC Insurance helps families compare all available ACA / Obamacare Marketplace plans. Call, text, or WhatsApp 877-458-2557."
+  lang={lang}
+  title="Florida Health Insurance Help | ACA • Medicare • Life • Dental"
+  description="Warm, professional guidance to choose coverage in Florida. WhatsApp-first."
   canonical="https://obamacarelocal.com/en/"
 >
-  <section class="hero latina-pattern">
-    <div class="container split">
-      <div>
-        <span class="pill">Bilingual · Family-first · Marketplace experts</span>
-        <div class="badge-es" style="margin-top:12px"><span class="badge-dot"></span>Se habla español · Atención familiar</div>
-        <h1>Find the right <span style="color:var(--accent)">Obamacare (ACA)</span> plan—without the headache.</h1>
-        <p class="muted" style="max-width:60ch">
-          MLC Insurance helps you compare <b>all available Marketplace plans</b> and enroll with confidence.
-          We keep it simple, explain your options, and support you after enrollment.
-        </p>
-
-        <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
-          <a class="btn btn-pill btn-outline" href={waHref} rel="noopener">WhatsApp</a>
-          <a class="btn btn-pill btn-outline" href="/en/compare">Compare options</a>
-        </div>
-
-        <div class="statrow">
-          <div class="stat"><b>All Marketplace plans</b><span>We shop what’s available in your area</span></div>
-          <div class="stat"><b>Fast quotes</b><span>Most people get answers in minutes</span></div>
-          <div class="stat"><b>Real humans</b><span>English & Spanish support</span></div>
-        </div>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <span class="badge">Florida statewide</span>
+        <span class="badge">English & Spanish</span>
+        <span class="badge">WhatsApp-first</span>
       </div>
 
-      <div class="card pad" style="background:#fff">
-        <div class="card-media">
-          <img src="/images/brand/mlc-business-card.webp" alt="MLC Insurance business card" loading="lazy" decoding="async" />
-        </div>
+      <h1>Ready to find coverage that actually fits your life?</h1>
+      <p>
+        In Florida, many people overpay or lose coverage simply because nobody explained the options clearly.
+        We keep it simple and guide you step by step—like a real conversation.
+      </p>
 
-        <div class="kicker" style="color:var(--brand-700)">What we help with</div>
-        <h2 style="margin:10px 0 0;color:#0b1116">A plan that fits your family</h2>
-        <p class="muted" style="margin:10px 0 0;color:rgba(15,23,42,.72)">
-          Subsidies, deductibles, networks, prescriptions—we break it down and help you pick a plan that matches your needs.
-        </p>
-        <div class="grid" style="margin-top:14px">
-          <div class="icon-card">
-            <div class="icon">$</div>
-            <div>
-              <b style="color:#0b1116">Premium & subsidy guidance</b>
-              <p>Understand tax credits and what changes can affect them.</p>
-            </div>
-          </div>
-          <div class="icon-card">
-            <div class="icon">🏥</div>
-            <div>
-              <b style="color:#0b1116">Doctor & hospital networks</b>
-              <p>We help you avoid surprises by checking networks when possible.</p>
-            </div>
-          </div>
-          <div class="icon-card">
-            <div class="icon">🧾</div>
-            <div>
-              <b style="color:#0b1116">SEP & life changes</b>
-              <p>Lost coverage, moved, had a baby, income changed—we’ll guide the next steps.</p>
-            </div>
-          </div>
-        </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" href={waHref} rel="noopener">Message us on WhatsApp</a>
+        <a class="btn btn-outline" href="tel:+18774582557">Call 1-877-458-2557</a>
       </div>
+
+      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
+        Tip: Turning 65 soon? We can help you prepare Medicare up to <strong>3 months before</strong> your birthday.
+      </p>
     </div>
-  </section>
-
-  <section class="container">
-    <ServiceAreas lang="en" />
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="kicker">Why families choose MLC</div>
-      <h2>Warm, clear guidance—no pressure.</h2>
-      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:14px">
-        <div class="card pad">
-          <b>Strong Hispanic family tone</b>
-          <p class="muted">We meet you where you are—respectful, patient, and easy to understand.</p>
-        </div>
-        <div class="card pad">
-          <b>We explain the “why”</b>
-          <p class="muted">Not just a quote—real clarity on deductibles, copays, and coverage.</p>
-        </div>
-        <div class="card pad">
-          <b>Support after enrollment</b>
-          <p class="muted">Need to update income, add a dependent, or change plans later? We help.</p>
+      <h2>What do you need help with today?</h2>
+      <p class="small">Pick what matches your situation. If you’re not sure, message us and we’ll figure it out together.</p>
+
+      <div class="grid grid-3" style="margin-top:14px">
+        <a class="card" href="/en/aca">
+          <h3>ACA (Marketplace)</h3>
+          <p class="small">Under 65? Subsidies, Open Enrollment, and Special Enrollment options.</p>
+        </a>
+
+        <a class="card" href="/en/medicare">
+          <h3>Medicare</h3>
+          <p class="small">Turning 65 or already enrolled—get calm, clear help choosing the right path.</p>
+        </a>
+
+        <a class="card" href="/en/losing-medicaid">
+          <h3>Losing Medicaid</h3>
+          <p class="small">If Medicaid ended, there may be fast options to avoid a coverage gap.</p>
+        </a>
+
+        <a class="card" href="/en/life">
+          <h3>Life Insurance</h3>
+          <p class="small">Protect your family with options that are simple and affordable.</p>
+        </a>
+
+        <a class="card" href="/en/dental">
+          <h3>Dental</h3>
+          <p class="small">Dental coverage options you can actually compare.</p>
+        </a>
+
+        <a class="card" href="/en/compare">
+          <h3>Compare Plans</h3>
+          <p class="small">Not just price: doctors, prescriptions, deductibles, and max out-of-pocket.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+<section class="section">
+  <div class="container">
+    <h2>Counties by state</h2>
+    <p class="small">
+      Choose your state to browse counties and local coverage options. (Florida & Texas have wider coverage.)
+    </p>
+
+    <div class="grid grid-3" style="margin-top:14px">
+      <a class="card" href="/en/florida/"><h3>Florida</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/texas/"><h3>Texas</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/north-carolina/"><h3>North Carolina</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/south-carolina/"><h3>South Carolina</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/georgia/"><h3>Georgia</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/arizona/"><h3>Arizona</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/tennessee/"><h3>Tennessee</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/ohio/"><h3>Ohio</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/indiana/"><h3>Indiana</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/michigan/"><h3>Michigan</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/missouri/"><h3>Missouri</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/mississippi/"><h3>Mississippi</h3><p class="small">Browse counties</p></a>
+      <a class="card" href="/en/alabama/"><h3>Alabama</h3><p class="small">Browse counties</p></a>
+    </div>
+  </div>
+</section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>A quick chat can save you a lot</h2>
+        <p class="small">
+          Overpaying? Lost coverage? Not sure what you qualify for?
+          Message us and we’ll guide you clearly so you can make a confident choice.
+        </p>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">Open WhatsApp</a>
+          <a class="btn btn-light" href="/en/faq">View FAQs</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" style="background:rgba(255,255,255,.04)">
+  <section class="section">
     <div class="container">
-      <div class="kicker">How it works</div>
-      <h2>3 steps. Done.</h2>
-      <div class="grid cols-3" style="margin-top:14px">
-        <div class="card pad">
-          <b>1) Tell us your basics</b>
-          <p class="muted">Household size, ZIP code, and estimated income.</p>
-        </div>
-        <div class="card pad">
-          <b>2) We compare options</b>
-          <p class="muted">We review all available Marketplace plans and highlight your best fits.</p>
-        </div>
-        <div class="card pad">
-          <b>3) Enroll & relax</b>
-          <p class="muted">We help you enroll and keep your info updated when life changes.</p>
-        </div>
-      </div>
-      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
-        <a class="btn btn-pill btn-gold" href={phoneHref}>Call / Text {phone}</a>
-        <a class="btn btn-pill btn-teal" href="/en/aca">Learn about ACA</a>
-        <a class="btn btn-pill btn-light" href="/en/faq">Common questions</a>
-      </div>
+      <h2>Quick questions</h2>
+      <FaqAccordion items={faq_items} />
     </div>
   </section>
 </SiteShell>
-
-<style>
-  .hero{padding:46px 0 24px;background:radial-gradient(1200px 600px at 10% -10%, rgba(244,196,48,.28), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(27,126,166,.32), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,.06), transparent 60%);
-  }
-  h1{font-size:clamp(34px,5vw,54px);line-height:1.05;margin:14px 0 12px}
-  h2{font-size:clamp(24px,3vw,34px);margin:10px 0}
-  .section{padding:34px 0}
-
-  .card-media{margin:-18px -18px 14px;overflow:hidden;border-radius:16px}
-  .card-media img{display:block;width:100%;height:auto}
-
-</style>
