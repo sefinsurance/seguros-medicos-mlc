@@ -1,146 +1,83 @@
 @import './tokens.css';
+
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html,body{height:100%}
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:var(--bg);
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color:var(--text);
-  font-size:18px;
-  line-height:1.65;
-}
-a{text-decoration:none;color:inherit}
-.container{max-width:1100px;margin:auto;padding:0 16px}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:12px 16px;border-radius:12px;font-weight:800;border:1px solid transparent;
-}
-.btn-primary{background:var(--accent); color:#0B2B36}
-.btn-outline{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
-.btn-light{background:#fff;border-color:rgba(15,23,42,.12);color:var(--brand)}
-
-/* Brand CTA variants */
-.btn-pill{border-radius:999px}
-.btn-teal{background:var(--brand); color:#fff}
-.btn-teal:hover{filter:brightness(1.03)}
-.btn-gold{background:var(--accent); color:#0B2B36}
-.btn-gold:hover{filter:brightness(1.03)}
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:7px 12px;border-radius:999px;
-  background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.20);
-  font-weight:900;font-size:13px
+  background:
+    radial-gradient(1100px 700px at 20% -10%, rgba(38,168,201,.22), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%, rgba(244,194,58,.18), transparent 55%),
+    linear-gradient(180deg, var(--bg), #ffffff);
 }
 
-.small{font-size:14px;color:var(--muted)}
-h1{font-size:clamp(34px,4.4vw,56px);line-height:1.05;margin:0 0 12px}
-h2{font-size:clamp(22px,2.6vw,34px);line-height:1.15;margin:0 0 10px}
-h3{font-size:20px;margin:0 0 6px}
-p{margin:0 0 14px}
+a{color:inherit}
+
+.container{max-width:1120px;margin:0 auto;padding:0 18px}
+
+h1,h2,h3{letter-spacing:-0.02em}
+h1{font-size:clamp(34px, 4vw, 54px);line-height:1.05;margin:0 0 12px;font-weight:900}
+h2{font-size:clamp(26px, 3vw, 36px);line-height:1.15;margin:0 0 10px;font-weight:900}
+h3{font-size:20px;line-height:1.25;margin:0 0 8px;font-weight:900}
+
+p{margin:0 0 14px;color:var(--muted);line-height:1.6}
 
 .card{
-  background:#fff;border:1px solid rgba(15,23,42,.08);
-  border-radius:18px; padding:18px;
-  box-shadow:0 8px 22px rgba(2,12,27,.06);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
 
-.grid{display:grid;gap:16px}
-@media(min-width:900px){.grid-3{grid-template-columns:repeat(3,1fr)}}
-.section{padding:56px 0}
-
-.hero{
-  background:linear-gradient(180deg,var(--brand),var(--brand2));
-  color:#fff;
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:44px;padding:0 16px;border-radius:14px;
+  background:linear-gradient(90deg,var(--brand-800),var(--brand-700));
+  color:white;font-weight:900;text-decoration:none;
+  box-shadow:0 12px 25px rgba(0,0,0,.10);
 }
-.hero-inner{padding:70px 0}
-.hero p{color:rgba(255,255,255,.92);font-size:clamp(18px,1.4vw,20px);max-width:70ch}
+.btn:hover{filter:brightness(1.05)}
+
+.btn--soft{
+  background:rgba(5,85,111,.08);
+  color:var(--brand-900);
+  border:1px solid rgba(5,85,111,.18);
+  box-shadow:none;
+}
 
 .badge{
-  display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
-  font-weight:700;font-size:13px
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(38,168,201,.12);
+  border:1px solid rgba(38,168,201,.24);
+  font-weight:900;font-size:12px;color:var(--brand-900)
 }
 
-.list{margin:0;padding-left:18px}
-.list li{margin:8px 0;color:var(--muted);line-height:1.7}
+.kicker{font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-700);font-size:12px}
 
-.faq{display:grid;gap:12px;margin-top:10px}
-.faq details{background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:16px;padding:14px 16px}
-.faq summary{cursor:pointer;font-weight:900;font-size:18px;list-style:none}
-.faq summary::-webkit-details-marker{display:none}
-.faq .a{margin-top:10px;color:var(--muted);line-height:1.75}
+.hr{height:1px;background:var(--line);margin:18px 0}
 
-
-/* --- Breadcrumbs --- */
-.breadcrumbs {
-  margin: 16px 0 10px;
-  font-size: 14px;
-}
-.breadcrumbs a { text-decoration: none; }
-.breadcrumbs .crumb-sep { opacity: .6; margin: 0 6px; }
-
-/* --- Footer --- */
-.footer { border-top: 1px solid rgba(0,0,0,.08); margin-top: 40px; padding: 28px 0; }
-.footer-inner { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 18px; width: min(1100px, 92vw); margin: 0 auto; }
-.footer-brand { font-weight: 800; letter-spacing: .2px; }
-.footer-title { font-weight: 700; margin-bottom: 10px; }
-.footer-blurb { margin: 8px 0; opacity: .9; }
-.footer-micro { margin-top: 10px; opacity: .75; font-size: 14px; }
-.footer-link { display: block; margin: 8px 0; }
-.footer-small { opacity: .75; font-size: 14px; margin-top: 8px; }
-.footer-bottom { width: min(1100px, 92vw); margin: 18px auto 0; opacity: .75; font-size: 13px; }
-@media (max-width: 900px){
-  .footer-inner { grid-template-columns: 1fr; }
+/* Subtle “fiesta tile” pattern for Hispanic branding */
+.latina-pattern{
+  background:
+    radial-gradient(circle at 16px 16px, rgba(244,194,58,.22) 0 6px, transparent 7px),
+    radial-gradient(circle at 48px 48px, rgba(38,168,201,.18) 0 7px, transparent 8px),
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.85));
+  background-size:64px 64px, 64px 64px, auto;
 }
 
-/* --- Mobile sticky WhatsApp CTA --- */
-.mobile-sticky-cta {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
-  z-index: 50;
-  display: none;
-}
-.mobile-sticky-cta a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 14px;
-  border-radius: 14px;
-  font-weight: 800;
-  box-shadow: 0 10px 30px rgba(0,0,0,.16);
-  border: 1px solid rgba(0,0,0,.08);
-  background: white;
-}
-@media (max-width: 720px){
-  .mobile-sticky-cta { display: block; }
-  body { padding-bottom: 80px; }
+.hero-tilt{position:relative;overflow:hidden}
+.hero-tilt:before{
+  content:'';position:absolute;inset:-1px;
+  background:radial-gradient(900px 500px at 15% 25%, rgba(38,168,201,.35), transparent 60%),
+             radial-gradient(700px 420px at 90% 20%, rgba(244,194,58,.22), transparent 55%);
+  pointer-events:none;
 }
 
+/* Legacy utility classes used by existing pages */
+.btn-pill{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 16px;border-radius:999px;font-weight:900;text-decoration:none}
+.btn-pill.btn-primary{background:linear-gradient(90deg,var(--brand-800),var(--brand-700));color:#fff;box-shadow:0 12px 25px rgba(0,0,0,.10)}
+.btn-pill.btn-light{background:rgba(5,85,111,.08);border:1px solid rgba(5,85,111,.18);color:var(--brand-900)}
 
-/* --- County chips --- */
-.lead { font-size: 18px; line-height: 1.55; opacity: .95; }
-.grid.counties { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 12px; }
-.county-chip {
-  display: block;
-  padding: 12px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(0,0,0,.08);
-  background: white;
-  text-decoration: none;
-}
-.county-chip:hover { transform: translateY(-1px); }
-.muted { opacity: .75; }
-
-/* --- Marketing sections --- */
-.split{display:grid;gap:18px;align-items:center}
-@media(min-width:900px){.split{grid-template-columns:1.15fr .85fr}}
-.statrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.stat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:10px 12px;min-width:160px}
-.stat b{display:block;font-size:14px;letter-spacing:.01em}
-.stat span{display:block;font-size:13px;opacity:.9}
-.icon-card{display:flex;gap:12px;align-items:flex-start}
-.icon{width:42px;height:42px;border-radius:14px;background:rgba(11,79,108,.10);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--brand)}
-.icon-card p{margin:6px 0 0;color:var(--muted)}
+.card2{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}

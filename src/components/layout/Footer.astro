@@ -1,4 +1,6 @@
 ---
+import ServiceAreas from '../ui/ServiceAreas.astro';
+
 const { lang = 'en' } = Astro.props;
 const isEs = lang === 'es';
 const phone = '877-458-2557';
@@ -16,13 +18,13 @@ const states = [
 ];
 ---
 
-<footer>
+<footer class="footer">
   <div class="container wrap">
     <div class="col">
       <div class="brand">
-        <span class="logo" aria-hidden="true">MLC</span>
+        <img class="logo" src="/images/brand/mlc-logo.webp" width="48" height="48" alt="MLC Insurance logo" loading="lazy" decoding="async" />
         <div>
-          <b>MLC Insurance</b>
+          <div class="name">MLC Insurance</div>
           <div class="muted">{isEs ? 'Seguro de salud · Medicare · Dental · Vida' : 'Health · Medicare · Dental · Life'}</div>
         </div>
       </div>
@@ -34,9 +36,9 @@ const states = [
       </p>
 
       <div class="ctas">
-        <a class="btn btn-pill btn-teal" href={phoneHref}>{isEs ? 'Llamar' : 'Call'} {phone}</a>
-        <a class="btn btn-pill btn-light" href={smsHref}>{isEs ? 'Texto' : 'Text'}</a>
-        <a class="btn btn-pill btn-light" href={waHref} rel="noopener">WhatsApp</a>
+        <a class="btn" href={phoneHref}>{isEs ? 'Llamar' : 'Call'} {phone}</a>
+        <a class="btn btn--soft" href={smsHref}>{isEs ? 'Texto' : 'Text'}</a>
+        <a class="btn btn--soft" href={waHref} rel="noopener">WhatsApp</a>
       </div>
 
       <p class="fine">
@@ -80,22 +82,30 @@ const states = [
       </div>
     </div>
   </div>
+
+  <div class="container" style="margin-top:18px;padding-bottom:30px">
+    <ServiceAreas lang={lang} compact={true} />
+  </div>
 </footer>
 
 <style>
-  footer{background:#ffffff;border-top:1px solid rgba(15,23,42,.10);margin-top:40px}
-  .wrap{display:grid;gap:18px;padding:28px 0}
+  .footer{background:rgba(255,255,255,.85);border-top:1px solid var(--line);margin-top:44px}
+  .wrap{display:grid;gap:18px;padding:30px 0}
   @media(min-width:900px){.wrap{grid-template-columns:1.3fr .9fr .7fr}}
-  .brand{display:flex;gap:10px;align-items:center}
-  .logo{width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:950;color:#061018;letter-spacing:.06em}
-  b{font-weight:950}
-  h4{margin:0 0 10px;color:#0b1116}
-  .muted{color:rgba(15,23,42,.70)}
+
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.10)}
+  .name{font-weight:900}
+
+  h4{margin:0 0 10px;color:var(--text);font-weight:900}
+  .muted{color:var(--muted)}
   .ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-  .list{margin:0;padding-left:18px;color:rgba(15,23,42,.76)}
+  .list{margin:0;padding-left:18px;color:var(--muted)}
   .list li{margin:8px 0}
-  .list a{color:inherit;text-decoration:underline;text-decoration-color:rgba(11,79,108,.25)}
+  .list a{color:inherit;text-decoration:underline;text-decoration-color:rgba(11,111,142,.30)}
+
   .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{padding:6px 10px;border-radius:999px;background:rgba(11,79,108,.08);border:1px solid rgba(11,79,108,.12);color:var(--brand2);font-weight:900;font-size:12px}
-  .fine{color:rgba(15,23,42,.62);font-size:12px;line-height:1.4;margin-top:12px}
+  .chip{padding:6px 10px;border-radius:999px;background:rgba(11,111,142,.08);border:1px solid rgba(11,111,142,.18);color:var(--brand-900);font-weight:900;font-size:12px}
+
+  .fine{color:rgba(10,34,48,.70);font-size:12px;line-height:1.4;margin-top:12px}
 </style>

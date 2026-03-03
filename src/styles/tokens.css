@@ -1,8 +1,29 @@
 :root{
- --brand:#0B4F6C;
- --brand2:#1B7EA6;
- --accent:#F4C430;
- --bg:#F7FAFC;
- --text:#0F172A;
- --muted:#475569;
+  /* MLC Insurance – teal/blue palette inspired by provided logo & card */
+  --brand-900:#05384a;
+  --brand-800:#06556f;
+  --brand-700:#0b6f8e;
+  --brand-600:#178fb2;
+  --brand-500:#26a8c9;
+
+  /* Warm accent (Hispanic-friendly, energetic) */
+  --accent-600:#e1a316;
+  --accent-500:#f4c23a;
+  --accent-400:#ffd56a;
+
+  --bg:#f6fbfd;
+  --surface:#ffffff;
+  --text:#0a2230;
+  --muted:#3d5562;
+  --line:rgba(9, 28, 38, .12);
+
+  --radius:18px;
+  --shadow:0 16px 40px rgba(0,0,0,.08);
+}
+
+/* Backwards-compatible aliases (some components use these) */
+:root{
+  --brand: var(--brand-700);
+  --brand2: var(--brand-600);
+  --accent: var(--accent-500);
 }
