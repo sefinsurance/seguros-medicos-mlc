@@ -7,7 +7,10 @@ export default defineConfig({
     sitemap({
       // Prefer clean trailing slashes to match your routes.
       // (Astro will still include both in canonical/hreflang when relevant.)
-      filter: (page) => !page.pathname.includes('/images/'),
+      filter: (page) => {
+  const path = typeof page === 'string' ? page : (page?.pathname ?? '');
+  return !path.includes('/images/');
+},
     }),
   ],
 });
