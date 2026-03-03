@@ -1,71 +1,170 @@
-
 ---
 import SiteShell from "../../components/layout/SiteShell.astro";
-import TopNav from "../../components/layout/TopNav.astro";
-import Section from "../../components/ui/Section.astro";
-import Button from "../../components/ui/Button.astro";
-import Card from "../../components/ui/Card.astro";
 import Faq from "../../components/ui/Faq.astro";
 
-export async function getStaticPaths(){ return [{params:{lang:"es"}},{params:{lang:"en"}}]; }
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
 
-const propLang = Astro.props?.lang;
-const paramLang = Astro.params?.lang;
-const lang = propLang ?? paramLang ?? "es";
+const { lang } = Astro.params;
 
-const t = lang === "en"
-  ? (await import("../../i18n/en/home")).home
-  : (await import("../../i18n/es/home")).home;
+const copy = lang === "es"
+  ? {
+      kicker: "Se habla español • Atención familiar y sin presión",
+      title: "Seguro médico, sin estrés",
+      lead: "Te ayudamos a comparar opciones de Obamacare (ACA) y Medicare. Respuestas claras, rápido por llamada, texto o WhatsApp.",
+      primary: "Hablar por WhatsApp",
+      secondary: "Comparar planes",
+      trust1t: "Elegibilidad rápida",
+      trust1d: "Te decimos si calificas y qué documentos necesitas.",
+      trust2t: "Opciones reales",
+      trust2d: "Comparamos redes, doctores y costo total.",
+      trust3t: "Ayuda con SEP",
+      trust3d: "Si perdiste cobertura o cambió tu ingreso, te guiamos.",
+      h2: "Cómo te ayudamos",
+      sub: "Enfocados en familias hispanas. Te explicamos sin tecnicismos y te damos opciones claras.",
+      f1t: "Obamacare (ACA)",
+      f1d: "Subsidios, planes con $0–bajo costo, inscripciones y cambios.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, períodos de inscripción y beneficios extra (según disponibilidad).",
+      f3t: "Dental y Vida",
+      f3d: "Opciones individuales para completar tu cobertura.",
+      faqTitle: "Preguntas frecuentes",
+      faq: [
+        { q: "¿Cuánto cuesta usar un agente?", a: "En la mayoría de los casos no pagas extra por nuestra ayuda. Te explicamos opciones y te guiamos paso a paso." },
+        { q: "¿Califico para subsidio?", a: "Depende del tamaño del hogar, ingreso anual estimado y si tienes cobertura de empleo “asequible”." },
+        { q: "¿Puedo inscribirme fuera del periodo abierto?", a: "Sí, si calificas para un Periodo Especial (SEP) por eventos como pérdida de cobertura, mudanza, matrimonio, bebé, etc." },
+      ],
+      ctaTitle: "Listo para comparar?",
+      ctaLead: "Envíanos tu ZIP, tamaño del hogar e ingreso estimado. Te respondemos con opciones claras.",
+      call: "Llamar / Texto 877-458-2557",
+    }
+  : {
+      kicker: "Bilingual • Family-first, no pressure",
+      title: "Health insurance, without the stress",
+      lead: "We help you compare ACA (Marketplace) and Medicare options. Clear answers, fast—by call, text, or WhatsApp.",
+      primary: "Chat on WhatsApp",
+      secondary: "Compare plans",
+      trust1t: "Fast eligibility",
+      trust1d: "We’ll tell you what you qualify for and what you need.",
+      trust2t: "Real options",
+      trust2d: "We compare networks, doctors, and total cost.",
+      trust3t: "SEP guidance",
+      trust3d: "Lost coverage or income changed? We’ll guide you.",
+      h2: "How we help",
+      sub: "We keep it simple and practical—so you can choose confidently.",
+      f1t: "ACA (Marketplace)",
+      f1d: "Subsidies, enrollment, plan changes, and next steps.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, enrollment windows, and extra benefits (availability varies).",
+      f3t: "Dental & Life",
+      f3d: "Standalone options to complete your coverage.",
+      faqTitle: "FAQs",
+      faq: [
+        { q: "Do you charge for help?", a: "In most cases, there’s no extra cost for our assistance. We guide you step by step." },
+        { q: "Do I qualify for subsidies?", a: "It depends on household size, estimated annual income, and whether you have “affordable” employer coverage." },
+        { q: "Can I enroll outside open enrollment?", a: "Yes—if you qualify for a Special Enrollment Period (SEP) due to events like loss of coverage, move, marriage, baby, etc." },
+      ],
+      ctaTitle: "Ready to compare?",
+      ctaLead: "Send your ZIP, household size, and estimated income. We’ll reply with clear options.",
+      call: "Call / Text 877-458-2557",
+    };
+
+const waText = lang === "es"
+  ? "Hola, quiero ayuda con mi seguro médico."
+  : "Hi, I would like help with health insurance.";
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
 ---
+<SiteShell
+  lang={lang}
+  title={lang === "es" ? "Seguros Médicos | Ayuda en Español" : "Health Insurance | Bilingual Help"}
+  description={copy.lead}
+>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">{copy.kicker}</div>
+          <h1 style="margin-top:14px">{copy.title}</h1>
+          <p class="lead">{copy.lead}</p>
 
-<SiteShell lang={lang} title="Obamacare Local | MLC Insurance">
-  <TopNav lang={lang} t={t} />
+          <div class="cta-row">
+            <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+            <a class="btn btn-secondary" href={`/${lang}/compare`}>{copy.secondary}</a>
+            <a class="btn btn-ghost" href="tel:+18774582557">{copy.call}</a>
+          </div>
+        </div>
 
-  <Section tone="dark" id="home">
-    <div class="banner">
-      <div class="copy">
-        <div class="eyebrow">{t.hero.eyebrow}</div>
-        <div class="headline h1">{t.hero.title}</div>
-        <div class="body">{t.hero.body}</div>
-        <div class="actions">
-          <Button variant="primary" href={`/${lang}/#form`}>{t.cta.qualify}</Button>
-          <Button variant="ghost" href={`/${lang}/#services`}>{t.cta.viewOptions}</Button>
+        <aside class="visual" aria-label="Quick info">
+          <div class="panel">
+            <h3>{lang === "es" ? "En 2 minutos te orientamos" : "Get oriented in 2 minutes"}</h3>
+            <p style="margin-top:8px;color:rgba(15,23,42,.72)">
+              {lang === "es"
+                ? "Dinos tu ZIP, tamaño del hogar e ingreso estimado. Te decimos qué aplica y tus mejores opciones."
+                : "Share your ZIP, household size, and estimated income. We’ll tell you what applies and your best options."}
+            </p>
+
+            <div class="mini">
+              <div><strong>{copy.trust1t}</strong><span>{copy.trust1d}</span></div>
+              <div><strong>{copy.trust2t}</strong><span>{copy.trust2d}</span></div>
+              <div><strong>{copy.trust3t}</strong><span>{copy.trust3d}</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>{copy.h2}</h2>
+      <p class="sub">{copy.sub}</p>
+
+      <div class="feature-grid">
+        <div class="feature">
+          <h3>{copy.f1t}</h3>
+          <p>{copy.f1d}</p>
+        </div>
+        <div class="feature">
+          <h3>{copy.f2t}</h3>
+          <p>{copy.f2d}</p>
+        </div>
+        <div class="feature">
+          <h3>{copy.f3t}</h3>
+          <p>{copy.f3d}</p>
+        </div>
+      </div>
+
+      <div class="pill-links" aria-label="Quick links">
+        <a href={`/${lang}/aca`}>{lang === "es" ? "Obamacare (ACA)" : "ACA"}</a>
+        <a href={`/${lang}/medicare`}>Medicare</a>
+        <a href={`/${lang}/dental`}>{lang === "es" ? "Dental" : "Dental"}</a>
+        <a href={`/${lang}/life`}>{lang === "es" ? "Vida" : "Life"}</a>
+        <a href={`/${lang}/losing-medicaid`}>{lang === "es" ? "Perdí Medicaid" : "Losing Medicaid"}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.faqTitle}</h2>
+        <Faq items={copy.faq} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.ctaTitle}</h2>
+        <p class="sub">{copy.ctaLead}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+          <a class="btn btn-secondary" href={`/${lang}/compare`}>{copy.secondary}</a>
+          <a class="btn btn-ghost" href="tel:+18774582557">{copy.call}</a>
         </div>
       </div>
     </div>
-  </Section>
-
-  <Section id="services" title={t.services.title} subtitle={t.services.subtitle}>
-    <div class="grid grid-3">
-      {t.services.cards.map((c)=>(
-        <a class="card" href={`/${lang}/${c.slug}`}>
-          <h3>{c.title}</h3>
-          <p>{c.desc}</p>
-        </a>
-      ))}
-    </div>
-  </Section>
-
-  <Section id="faq" title={t.faq.title} subtitle={t.faq.subtitle}>
-    <Faq items={t.faq.items} />
-  </Section>
-
-  <Section id="form" title={lang==="en" ? "Quick contact" : "Contacto rápido"}
-    subtitle={lang==="en" ? "Send your info and we’ll reach out." : "Envíanos tu información y te contactamos."}>
-    <div class="card" style="max-width:720px">
-      <form method="post" action="/api/lead">
-        <div class="grid" style="grid-template-columns:1fr;gap:12px">
-          <input name="name" placeholder={lang==="en"?"Full name":"Nombre completo"} required />
-          <input name="phone" placeholder={lang==="en"?"Phone":"Teléfono"} required />
-          <input name="email" placeholder="Email" type="email" />
-          <button class="btn primary" type="submit">{lang==="en"?"Submit":"Enviar"}</button>
-        </div>
-      </form>
-      <p style="margin:12px 0 0;color:var(--text2);font-size:14px;line-height:1.5">
-        {lang==="en"
-          ? "By submitting, you agree to be contacted by phone, text, or email about your request."
-          : "Al enviar, aceptas ser contactado por teléfono, texto o email sobre tu solicitud."}
-      </p>
-    </div>
-  </Section>
+  </section>
 </SiteShell>
