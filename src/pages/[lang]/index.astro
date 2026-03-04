@@ -206,7 +206,7 @@ const categories = [
       linear-gradient(180deg, rgba(11,79,108,.10), rgba(11,79,108,0));
   }
 
-  .p-hero-inner{max-width:860px;margin:0 auto;text-align:center;}
+  .p-hero-inner{max-width:960px;margin:0 auto;text-align:center;}
   .p-kicker{
     display:inline-flex;
     align-items:center;
@@ -220,8 +220,8 @@ const categories = [
     font-size:13px;
     letter-spacing:.02em;
   }
-  .p-title{margin-top:18px;}
-  .p-lead{margin:0 auto;max-width:68ch;}
+  .p-title{margin-top:18px; letter-spacing:-0.02em; line-height:1.06; font-size:clamp(2.1rem, 4.8vw, 3.6rem);}
+  .p-lead{margin:0 auto;max-width:66ch;font-size:clamp(1.05rem, 1.7vw, 1.22rem);line-height:1.55;color:rgba(15,23,42,.78);}
 
   .p-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
 
@@ -240,7 +240,7 @@ const categories = [
     position:relative;
     display:grid;
     grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:14px;
+    gap:16px;
     justify-items:stretch;
     align-items:stretch;
   }
@@ -249,6 +249,10 @@ const categories = [
   }
 
   .p-card{
+    --ty: 0px;
+    --rot: 0deg;
+    --float: 0px;
+
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -258,10 +262,17 @@ const categories = [
     border-radius:18px;
     padding:18px 14px 16px;
     box-shadow:0 14px 40px rgba(2,8,23,.08);
-    transition:transform .18s ease, box-shadow .18s ease;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     min-height:126px;
+
+    transform: translateY(calc(var(--ty) + var(--float))) rotate(var(--rot));
+    will-change: transform;
   }
-  .p-card:hover{transform:translateY(-2px); box-shadow:0 18px 52px rgba(2,8,23,.12)}
+  .p-card:hover{
+    transform: translateY(calc(var(--ty) - 6px)) rotate(var(--rot)) scale(1.01);
+    box-shadow:0 22px 70px rgba(2,8,23,.14);
+    border-color: rgba(11,79,108,.18);
+  }
 
   .p-ic{
     width:56px;height:56px;border-radius:16px;
@@ -273,14 +284,24 @@ const categories = [
   .p-name{margin-top:10px;font-weight:700;color:#0f172a;font-size:14px;}
   .p-desc{margin-top:3px;color:rgba(15,23,42,.68);font-size:12.5px;line-height:1.35;max-width:20ch;}
 
-  /* Gentle “floating” offsets like Proton */
+  /* Gentle “floating” like Proton (offsets + slow drift) */
+  @keyframes p-float {
+    0% { --float: 0px; }
+    50% { --float: -8px; }
+    100% { --float: 0px; }
+  }
+
   @media(min-width:860px){
-    .p-card[data-k="aca"]{transform:translateY(10px) rotate(-.35deg)}
-    .p-card[data-k="medicare"]{transform:translateY(-6px) rotate(.25deg)}
-    .p-card[data-k="life"]{transform:translateY(14px) rotate(.15deg)}
-    .p-card[data-k="dental"]{transform:translateY(-4px) rotate(-.15deg)}
-    .p-card[data-k="vision"]{transform:translateY(8px) rotate(.35deg)}
-    .p-card:hover{transform:translateY(-2px) !important;}
+    .p-card{ animation: p-float 7.5s ease-in-out infinite; }
+    .p-card[data-k="aca"]{--ty:10px; --rot:-.35deg; animation-delay:.1s}
+    .p-card[data-k="medicare"]{--ty:-6px; --rot:.25deg; animation-delay:.25s}
+    .p-card[data-k="life"]{--ty:14px; --rot:.15deg; animation-delay:.4s}
+    .p-card[data-k="dental"]{--ty:-4px; --rot:-.15deg; animation-delay:.55s}
+    .p-card[data-k="vision"]{--ty:8px; --rot:.35deg; animation-delay:.7s}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .p-card{ animation: none !important; }
   }
 
   .p-trust{
