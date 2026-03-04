@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 120 120">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="0.55" stop-color="#dcebff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#b9d4ff" stop-opacity="0.92"/>
+    </radialGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0b2a52" flood-opacity="0.18"/>
+    </filter>
+    <linearGradient id="shieldBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5bb2ff"/>
+      <stop offset="0.55" stop-color="#2f7ee8"/>
+      <stop offset="1" stop-color="#1f4f93"/>
+    </linearGradient>
+    <linearGradient id="stripeRed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/>
+      <stop offset="1" stop-color="#d63a3a"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="60" cy="60" r="46" fill="url(#bg)"/>
+  <g filter="url(#softShadow)">
+    <path d="M60 16 95 31v29c0 26-22 41-35 46C47 101 25 86 25 60V31L60 16z" fill="url(#shieldBlue)"/>
+    <path d="M34 35h52v18H34z" fill="#2b6bd6" opacity="0.95"/>
+    <g fill="#fff" opacity="0.95">
+      <path d="M42 40l1.2 3.4h3.6l-2.9 2.1 1.1 3.4-3-2.1-3 2.1 1.1-3.4-2.9-2.1h3.6z"/>
+      <path d="M55 40l1.2 3.4h3.6l-2.9 2.1 1.1 3.4-3-2.1-3 2.1 1.1-3.4-2.9-2.1h3.6z"/>
+      <path d="M68 40l1.2 3.4h3.6l-2.9 2.1 1.1 3.4-3-2.1-3 2.1 1.1-3.4-2.9-2.1h3.6z"/>
+    </g>
+    <path d="M34 53h52v37c-7 6-16 11-26 14-10-3-19-8-26-14V53z" fill="#fff" opacity="0.96"/>
+    <g opacity="0.92">
+      <rect x="39" y="53" width="6" height="37" fill="url(#stripeRed)"/>
+      <rect x="50" y="53" width="6" height="37" fill="url(#stripeRed)"/>
+      <rect x="61" y="53" width="6" height="37" fill="url(#stripeRed)"/>
+      <rect x="72" y="53" width="6" height="37" fill="url(#stripeRed)"/>
+    </g>
+    <path d="M32 25c18-10 38-10 56 0" fill="none" stroke="url(#shine)" stroke-width="10" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>

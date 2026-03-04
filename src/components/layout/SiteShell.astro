@@ -1,0 +1,132 @@
+---
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../../styles/global.css';
+
+const {
+  lang = 'es',
+  title = 'Seguros Médicos',
+  description = 'Seguros médicos, Obamacare (ACA), Medicare y más.',
+  canonical = 'https://obamacarelocal.com/'
+} = Astro.props;
+
+const siteUrl = 'https://obamacarelocal.com';
+const fullTitle = `${title} | Seguros Médicos`;
+
+// --- Hreflang / alternates ---
+// For every page, output EN/ES alternates and an x-default.
+// Assumes routes live under /es/... and /en/... plus a language chooser at '/'.
+function swapLang(urlStr, fromLang, toLang) {
+  try {
+    const u = new URL(urlStr);
+    u.pathname = u.pathname.replace(`/${fromLang}/`, `/${toLang}/`);
+    return u.toString();
+  } catch {
+    return urlStr;
+  }
+}
+
+const isRoot = canonical === `${siteUrl}/`;
+const altEs = isRoot ? `${siteUrl}/es/` : (lang === 'es' ? canonical : swapLang(canonical, 'en', 'es'));
+const altEn = isRoot ? `${siteUrl}/en/` : (lang === 'en' ? canonical : swapLang(canonical, 'es', 'en'));
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="es" href={altEs} />
+    <link rel="alternate" hreflang="en" href={altEn} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Seguros Medicos" />
+    <meta property="og:image" content={`${siteUrl}/images/logo.png`} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}/images/logo.png`} />
+
+    <!-- Global Structured Data -->
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": `${siteUrl}/#website`,
+            "url": siteUrl,
+            "name": "Seguros Medicos",
+            "inLanguage": ["en", "es"]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": `${siteUrl}/#organization`,
+            "name": "Seguros Medicos",
+            "alternateName": "MLC Insurance Agency",
+            "url": siteUrl,
+            "telephone": "+1-877-458-2557",
+            "logo": `${siteUrl}/images/logo.png`,
+            "image": `${siteUrl}/images/logo.png`,
+            "areaServed": [
+              "Florida",
+              "Texas",
+              "North Carolina",
+              "South Carolina",
+              "Alabama",
+              "Arizona",
+              "Michigan",
+              "Indiana",
+              "Ohio",
+              "Tennessee",
+              "Georgia",
+              "Missouri",
+              "Mississippi"
+            ],
+            "availableLanguage": ["English", "Spanish"],
+            "contactPoint": [{
+              "@type": "ContactPoint",
+              "telephone": "+1-877-458-2557",
+              "contactType": "customer service",
+              "availableLanguage": ["en", "es"]
+            }],
+            "sameAs": [
+              "https://wa.me/18774582557"
+            ],
+            "knowsAbout": [
+              "Health Insurance",
+              "ACA Marketplace",
+              "Obamacare",
+              "Medicare Advantage",
+              "Medicare Supplements",
+              "Medicaid Transition",
+              "Life Insurance",
+              "Dental Insurance"
+            ]
+          }
+        ]
+      })}
+    </script>
+  </head>
+
+  <body>
+    <Header lang={lang} />
+    <main class="site-main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

@@ -1,0 +1,332 @@
+---
+import SiteShell from "../../components/layout/SiteShell.astro";
+import Faq from "../../components/ui/Faq.astro";
+import Icon from "../../components/home/Icon.astro";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+
+const copy = lang === "es"
+  ? {
+      kicker: "Se habla español • Atención familiar y sin presión",
+      title: "Seguro médico, sin estrés",
+      lead: "Te ayudamos a comparar opciones de Obamacare (ACA) y Medicare. Respuestas claras, rápido por llamada, texto o WhatsApp.",
+      primary: "Hablar por WhatsApp",
+      secondary: "Comparar planes",
+      trust1t: "Elegibilidad rápida",
+      trust1d: "Te decimos si calificas y qué documentos necesitas.",
+      trust2t: "Opciones reales",
+      trust2d: "Comparamos redes, doctores y costo total.",
+      trust3t: "Ayuda con SEP",
+      trust3d: "Si perdiste cobertura o cambió tu ingreso, te guiamos.",
+      h2: "Cómo te ayudamos",
+      sub: "Enfocados en familias hispanas. Te explicamos sin tecnicismos y te damos opciones claras.",
+      f1t: "Obamacare (ACA)",
+      f1d: "Subsidios, planes con $0–bajo costo, inscripciones y cambios.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, períodos de inscripción y beneficios extra (según disponibilidad).",
+      f3t: "Dental y Vida",
+      f3d: "Opciones individuales para completar tu cobertura.",
+      faqTitle: "Preguntas frecuentes",
+      faq: [
+        { q: "¿Cuánto cuesta usar un agente?", a: "En la mayoría de los casos no pagas extra por nuestra ayuda. Te explicamos opciones y te guiamos paso a paso." },
+        { q: "¿Califico para subsidio?", a: "Depende del tamaño del hogar, ingreso anual estimado y si tienes cobertura de empleo “asequible”." },
+        { q: "¿Puedo inscribirme fuera del periodo abierto?", a: "Sí, si calificas para un Periodo Especial (SEP) por eventos como pérdida de cobertura, mudanza, matrimonio, bebé, etc." },
+      ],
+      ctaTitle: "Listo para comparar?",
+      ctaLead: "Envíanos tu ZIP, tamaño del hogar e ingreso estimado. Te respondemos con opciones claras.",
+      call: "Llamar / Texto 877-458-2557",
+    }
+  : {
+      kicker: "Bilingual • Family-first, no pressure",
+      title: "Health insurance, without the stress",
+      lead: "We help you compare ACA (Marketplace) and Medicare options. Clear answers, fast—by call, text, or WhatsApp.",
+      primary: "Chat on WhatsApp",
+      secondary: "Compare plans",
+      trust1t: "Fast eligibility",
+      trust1d: "We’ll tell you what you qualify for and what you need.",
+      trust2t: "Real options",
+      trust2d: "We compare networks, doctors, and total cost.",
+      trust3t: "SEP guidance",
+      trust3d: "Lost coverage or income changed? We’ll guide you.",
+      h2: "How we help",
+      sub: "We keep it simple and practical—so you can choose confidently.",
+      f1t: "ACA (Marketplace)",
+      f1d: "Subsidies, enrollment, plan changes, and next steps.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, enrollment windows, and extra benefits (availability varies).",
+      f3t: "Dental & Life",
+      f3d: "Standalone options to complete your coverage.",
+      faqTitle: "FAQs",
+      faq: [
+        { q: "Do you charge for help?", a: "In most cases, there’s no extra cost for our assistance. We guide you step by step." },
+        { q: "Do I qualify for subsidies?", a: "It depends on household size, estimated annual income, and whether you have “affordable” employer coverage." },
+        { q: "Can I enroll outside open enrollment?", a: "Yes—if you qualify for a Special Enrollment Period (SEP) due to events like loss of coverage, move, marriage, baby, etc." },
+      ],
+      ctaTitle: "Ready to compare?",
+      ctaLead: "Send your ZIP, household size, and estimated income. We’ll reply with clear options.",
+      call: "Call / Text 877-458-2557",
+    };
+
+const waText = lang === "es"
+  ? "Hola, quiero ayuda con mi seguro médico."
+  : "Hi, I would like help with health insurance.";
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const categories = [
+  {
+    key: "aca",
+    href: `/${lang}/aca`,
+    label: lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)",
+    desc: lang === "es" ? "Subsidios y planes del Marketplace" : "Marketplace plans & subsidies",
+    icon: "shield",
+  },
+  {
+    key: "medicare",
+    href: `/${lang}/medicare`,
+    label: "Medicare",
+    desc: lang === "es" ? "MA/MAPD y ventanas de inscripción" : "MA/MAPD & enrollment windows",
+    icon: "plus",
+  },
+  {
+    key: "life",
+    href: `/${lang}/life`,
+    label: lang === "es" ? "Vida" : "Life",
+    desc: lang === "es" ? "Protege tu familia" : "Protect your family",
+    icon: "heart",
+  },
+  {
+    key: "dental",
+    href: `/${lang}/dental`,
+    label: lang === "es" ? "Dental" : "Dental",
+    desc: lang === "es" ? "Planes individuales" : "Standalone plans",
+    icon: "tooth",
+  },
+  {
+    key: "vision",
+    href: `/${lang}/compare`,
+    label: lang === "es" ? "Visión" : "Vision",
+    desc: lang === "es" ? "Opciones y descuentos" : "Options & savings",
+    icon: "eye",
+  },
+];
+---
+<SiteShell
+  lang={lang}
+  title={lang === "es" ? "Seguros Médicos | Ayuda en Español" : "Health Insurance | Bilingual Help"}
+  description={copy.lead}
+>
+  <!-- Proton-style hero: centered headline + floating product icons -->
+  <section class="p-hero" aria-label="Intro">
+    <div class="container">
+      <div class="p-hero-inner">
+        <div class="p-kicker">{copy.kicker}</div>
+        <h1 class="p-title">{copy.title}</h1>
+        <p class="p-lead">{copy.lead}</p>
+
+        <div class="p-cta">
+          <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+          <a class="btn btn-outline" href={`/${lang}/compare`}>{copy.secondary}</a>
+        </div>
+
+        <div class="p-cloud" aria-label="Categories">
+          <div class="p-cloud-bg" aria-hidden="true"></div>
+          <div class="p-cloud-grid">
+            {categories.map((c) => (
+              <a class="p-card" href={c.href} data-k={c.key}>
+                <span class="p-ic" aria-hidden="true"><Icon name={c.icon} /></span>
+                <span class="p-name">{c.label}</span>
+                <span class="p-desc">{c.desc}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="p-trust" aria-label="Trust">
+          <div class="p-trust-item"><strong>{copy.trust1t}</strong><span>{copy.trust1d}</span></div>
+          <div class="p-trust-item"><strong>{copy.trust2t}</strong><span>{copy.trust2d}</span></div>
+          <div class="p-trust-item"><strong>{copy.trust3t}</strong><span>{copy.trust3d}</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Quick links">
+    <div class="container">
+      <h2>{copy.h2}</h2>
+      <p class="sub">{copy.sub}</p>
+
+      <div class="pill-links">
+        <a href={`/${lang}/aca`}>{lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)"}</a>
+        <a href={`/${lang}/medicare`}>Medicare</a>
+        <a href={`/${lang}/dental`}>{lang === "es" ? "Dental" : "Dental"}</a>
+        <a href={`/${lang}/life`}>{lang === "es" ? "Vida" : "Life"}</a>
+        <a href={`/${lang}/compare`}>{lang === "es" ? "Visión" : "Vision"}</a>
+        <a href={`/${lang}/losing-medicaid`}>{lang === "es" ? "Perdí Medicaid" : "Losing Medicaid"}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.faqTitle}</h2>
+        <Faq items={copy.faq} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.ctaTitle}</h2>
+        <p class="sub">{copy.ctaLead}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+          <a class="btn btn-secondary" href={`/${lang}/compare`}>{copy.secondary}</a>
+          <a class="btn btn-ghost" href="tel:+18774582557">{copy.call}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteShell>
+
+<style>
+  /* Proton-like, but uses your palette (tokens.css) */
+  .p-hero{
+    position:relative;
+    overflow:hidden;
+    padding:96px 0 56px;
+    background:
+      radial-gradient(1100px 600px at 80% 12%, rgba(244,196,48,.28), rgba(244,196,48,0) 60%),
+      radial-gradient(900px 520px at 12% 18%, rgba(27,126,166,.35), rgba(27,126,166,0) 58%),
+      linear-gradient(180deg, rgba(11,79,108,.10), rgba(11,79,108,0));
+  }
+
+  .p-hero-inner{max-width:960px;margin:0 auto;text-align:center;}
+  .p-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(11,79,108,.10);
+    border:1px solid rgba(11,79,108,.16);
+    color:rgba(15,23,42,.82);
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.02em;
+  }
+  .p-title{margin-top:18px; letter-spacing:-0.02em; line-height:1.06; font-size:clamp(2.1rem, 4.8vw, 3.6rem);}
+  .p-lead{margin:0 auto;max-width:66ch;font-size:clamp(1.05rem, 1.7vw, 1.22rem);line-height:1.55;color:rgba(15,23,42,.78);}
+
+  .p-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+
+  /* Floating icon cloud */
+  .p-cloud{position:relative;margin-top:34px;}
+  .p-cloud-bg{
+    position:absolute;inset:-40px -60px;
+    background:
+      radial-gradient(520px 220px at 50% 0%, rgba(255,255,255,.90), rgba(255,255,255,0) 70%),
+      radial-gradient(650px 280px at 12% 70%, rgba(255,255,255,.70), rgba(255,255,255,0) 65%),
+      radial-gradient(650px 280px at 88% 70%, rgba(255,255,255,.70), rgba(255,255,255,0) 65%);
+    pointer-events:none;
+  }
+
+  .p-cloud-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+    justify-items:stretch;
+    align-items:stretch;
+  }
+  @media(min-width:860px){
+    .p-cloud-grid{grid-template-columns:repeat(5, minmax(0, 1fr));}
+  }
+
+  .p-card{
+    --ty: 0px;
+    --rot: 0deg;
+    --float: 0px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-decoration:none;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:18px;
+    padding:18px 14px 16px;
+    box-shadow:0 14px 40px rgba(2,8,23,.08);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    min-height:126px;
+
+    transform: translateY(calc(var(--ty) + var(--float))) rotate(var(--rot));
+    will-change: transform;
+  }
+  .p-card:hover{
+    transform: translateY(calc(var(--ty) - 6px)) rotate(var(--rot)) scale(1.01);
+    box-shadow:0 22px 70px rgba(2,8,23,.14);
+    border-color: rgba(11,79,108,.18);
+  }
+
+  .p-ic{
+    width:56px;height:56px;border-radius:16px;
+    display:grid;place-items:center;
+    background:linear-gradient(180deg, rgba(11,79,108,.10), rgba(27,126,166,.06));
+    border:1px solid rgba(11,79,108,.14);
+    color:var(--brand);
+  }
+  .p-name{margin-top:10px;font-weight:700;color:#0f172a;font-size:14px;}
+  .p-desc{margin-top:3px;color:rgba(15,23,42,.68);font-size:12.5px;line-height:1.35;max-width:20ch;}
+
+  /* Gentle “floating” like Proton (offsets + slow drift) */
+  @keyframes p-float {
+    0% { --float: 0px; }
+    50% { --float: -8px; }
+    100% { --float: 0px; }
+  }
+
+  @media(min-width:860px){
+    .p-card{ animation: p-float 7.5s ease-in-out infinite; }
+    .p-card[data-k="aca"]{--ty:10px; --rot:-.35deg; animation-delay:.1s}
+    .p-card[data-k="medicare"]{--ty:-6px; --rot:.25deg; animation-delay:.25s}
+    .p-card[data-k="life"]{--ty:14px; --rot:.15deg; animation-delay:.4s}
+    .p-card[data-k="dental"]{--ty:-4px; --rot:-.15deg; animation-delay:.55s}
+    .p-card[data-k="vision"]{--ty:8px; --rot:.35deg; animation-delay:.7s}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .p-card{ animation: none !important; }
+  }
+
+  .p-trust{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin:34px auto 0;
+    max-width:980px;
+    text-align:left;
+  }
+  @media(min-width:860px){
+    .p-trust{grid-template-columns:repeat(3,1fr);}
+  }
+  .p-trust-item{
+    background:rgba(255,255,255,.70);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:18px;
+    padding:14px 16px;
+    box-shadow:0 10px 24px rgba(2,8,23,.06);
+  }
+  .p-trust-item strong{display:block;font-weight:700}
+  .p-trust-item span{display:block;color:rgba(15,23,42,.70);margin-top:4px;font-size:14px;line-height:1.45}
+
+  /* Existing homepage classes (used below) */
+  .section.slim{padding:60px 0}
+  .surface{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:22px;padding:32px;box-shadow:0 12px 34px rgba(0,0,0,.05)}
+  .btn.btn-outline{border-color:rgba(0,0,0,.18)}
+</style>
