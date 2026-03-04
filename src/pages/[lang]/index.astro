@@ -1,0 +1,268 @@
+---
+import SiteShell from "../../components/layout/SiteShell.astro";
+import Faq from "../../components/ui/Faq.astro";
+import Icon from "../../components/home/Icon.astro";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+
+const copy = lang === "es"
+  ? {
+      kicker: "Se habla español • Atención familiar y sin presión",
+      title: "Seguro médico, sin estrés",
+      lead: "Te ayudamos a comparar opciones de Obamacare (ACA) y Medicare. Respuestas claras, rápido por llamada, texto o WhatsApp.",
+      primary: "Hablar por WhatsApp",
+      secondary: "Llámanos 877-458-2557",
+      trust1t: "Elegibilidad rápida",
+      trust1d: "Te decimos si calificas y qué documentos necesitas.",
+      trust2t: "Opciones reales",
+      trust2d: "Comparamos redes, doctores y costo total.",
+      trust3t: "Ayuda con SEP",
+      trust3d: "Si perdiste cobertura o cambió tu ingreso, te guiamos.",
+      h2: "Cómo te ayudamos",
+      sub: "Enfocados en familias hispanas. Te explicamos sin tecnicismos y te damos opciones claras.",
+      f1t: "Obamacare (ACA)",
+      f1d: "Subsidios, planes con $0–bajo costo, inscripciones y cambios.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, períodos de inscripción y beneficios extra (según disponibilidad).",
+      f3t: "Dental y Vida",
+      f3d: "Opciones individuales para completar tu cobertura.",
+      faqTitle: "Preguntas frecuentes",
+      faq: [
+        { q: "¿Cuánto cuesta usar un agente?", a: "En la mayoría de los casos no pagas extra por nuestra ayuda. Te explicamos opciones y te guiamos paso a paso." },
+        { q: "¿Califico para subsidio?", a: "Depende del tamaño del hogar, ingreso anual estimado y si tienes cobertura de empleo “asequible”." },
+        { q: "¿Puedo inscribirme fuera del periodo abierto?", a: "Sí, si calificas para un Periodo Especial (SEP) por eventos como pérdida de cobertura, mudanza, matrimonio, bebé, etc." },
+      ],
+      ctaTitle: "Listo para comparar?",
+      ctaLead: "Envíanos tu ZIP, tamaño del hogar e ingreso estimado. Te respondemos con opciones claras.",
+      call: "Llamar / Texto 877-458-2557",
+    }
+  : {
+      kicker: "Bilingual • Family-first, no pressure",
+      title: "Health insurance, without the stress",
+      lead: "We help you compare ACA (Marketplace) and Medicare options. Clear answers, fast—by call, text, or WhatsApp.",
+      primary: "Chat on WhatsApp",
+      secondary: "Call 877-458-2557",
+      trust1t: "Fast eligibility",
+      trust1d: "We’ll tell you what you qualify for and what you need.",
+      trust2t: "Real options",
+      trust2d: "We compare networks, doctors, and total cost.",
+      trust3t: "SEP guidance",
+      trust3d: "Lost coverage or income changed? We’ll guide you.",
+      h2: "How we help",
+      sub: "We keep it simple and practical—so you can choose confidently.",
+      f1t: "ACA (Marketplace)",
+      f1d: "Subsidies, enrollment, plan changes, and next steps.",
+      f2t: "Medicare",
+      f2d: "MA / MAPD, enrollment windows, and extra benefits (availability varies).",
+      f3t: "Dental & Life",
+      f3d: "Standalone options to complete your coverage.",
+      faqTitle: "FAQs",
+      faq: [
+        { q: "Do you charge for help?", a: "In most cases, there’s no extra cost for our assistance. We guide you step by step." },
+        { q: "Do I qualify for subsidies?", a: "It depends on household size, estimated annual income, and whether you have “affordable” employer coverage." },
+        { q: "Can I enroll outside open enrollment?", a: "Yes—if you qualify for a Special Enrollment Period (SEP) due to events like loss of coverage, move, marriage, baby, etc." },
+      ],
+      ctaTitle: "Ready to compare?",
+      ctaLead: "Send your ZIP, household size, and estimated income. We’ll reply with clear options.",
+      call: "Call / Text 877-458-2557",
+    };
+
+const waText = lang === "es"
+  ? "Hola, quiero ayuda con mi seguro médico."
+  : "Hi, I would like help with health insurance.";
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const categories = [
+  {
+    key: "aca",
+    href: `/${lang}/aca`,
+    label: lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)",
+    desc: lang === "es" ? "Subsidios y planes\n del Marketplace" : "Marketplace plans\n& subsidies",
+    icon: "aca",
+  },
+  {
+    key: "medicare",
+    href: `/${lang}/medicare`,
+    label: "Medicare",
+    desc: lang === "es" ? "MA/MAPD y ventanas\n de inscripción" : "MA/MAPD\n& enrollment windows",
+    icon: "medicare",
+  },
+  {
+    key: "life",
+    href: `/${lang}/life`,
+    label: lang === "es" ? "Vida" : "Life",
+    desc: lang === "es" ? "Protege tu familia" : "Protect your family",
+    icon: "life",
+  },
+  {
+    key: "dental",
+    href: `/${lang}/dental`,
+    label: lang === "es" ? "Dental y Visión" : "Dental & Vision",
+    desc: lang === "es" ? "Planes combinados" : "Bundled plans",
+    icon: "dental",
+  },
+];
+---
+<SiteShell
+  lang={lang}
+  title={lang === "es" ? "Seguros Médicos | Ayuda en Español" : "Health Insurance | Bilingual Help"}
+  description={copy.lead}
+>
+  <!-- Reference-style hero (matches screenshot): centered headline + CTA pills + 4 tiles -->
+  <section class="hero" aria-label="Intro">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-kicker">• {copy.kicker} </div>
+        <h1 class="hero-title">{copy.title}</h1>
+        <p class="hero-lead">{copy.lead}</p>
+
+        <div class="hero-cta">
+          <a class="cta cta-wa" href={waHref}>{copy.primary}</a>
+          <a class="cta cta-call" href="tel:+18774582557">{copy.secondary}</a>
+        </div>
+
+        <div class="tiles" aria-label="Categories">
+          {categories.map((c) => (
+            <a class="tile" href={c.href}>
+              <div class="tile-ic" aria-hidden="true"><Icon name={c.icon} /></div>
+              <div class="tile-title">{c.label}</div>
+              <div class="tile-desc">{c.desc}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Quick links">
+    <div class="container">
+      <h2>{copy.h2}</h2>
+      <p class="sub">{copy.sub}</p>
+
+      <div class="pill-links">
+        <a href={`/${lang}/aca`}>{lang === "es" ? "Obamacare (ACA)" : "Obamacare (ACA)"}</a>
+        <a href={`/${lang}/medicare`}>Medicare</a>
+        <a href={`/${lang}/dental`}>{lang === "es" ? "Dental" : "Dental"}</a>
+        <a href={`/${lang}/life`}>{lang === "es" ? "Vida" : "Life"}</a>
+        <a href={`/${lang}/compare`}>{lang === "es" ? "Visión" : "Vision"}</a>
+        <a href={`/${lang}/losing-medicaid`}>{lang === "es" ? "Perdí Medicaid" : "Losing Medicaid"}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.faqTitle}</h2>
+        <Faq items={copy.faq} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section slim">
+    <div class="container">
+      <div class="surface">
+        <h2>{copy.ctaTitle}</h2>
+        <p class="sub">{copy.ctaLead}</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href={waHref}>{copy.primary}</a>
+          <a class="btn btn-secondary" href={`/${lang}/compare`}>{copy.secondary}</a>
+          <a class="btn btn-ghost" href="tel:+18774582557">{copy.call}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteShell>
+
+<style>
+  .hero{
+    position:relative;
+    padding:68px 0 56px;
+  }
+
+  .hero-inner{max-width:980px;margin:0 auto;text-align:center;}
+
+  .hero-kicker{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 18px;
+    border-radius:999px;
+    background: linear-gradient(180deg, rgba(31,79,147,.95), rgba(23,62,117,.95));
+    color:#fff;
+    font-weight:800;
+    font-size:14px;
+    box-shadow: 0 16px 30px rgba(9,31,61,.18);
+  }
+
+  .hero-title{
+    margin:26px 0 10px;
+    font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+    font-weight:800;
+    letter-spacing:-.02em;
+    line-height:1.05;
+    font-size: clamp(2.2rem, 4.8vw, 4.05rem);
+    color:#153a55;
+  }
+  .hero-lead{
+    margin:0 auto;
+    max-width:72ch;
+    font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+    line-height:1.6;
+    color: rgba(18,50,79,.72);
+  }
+
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px;}
+  .cta{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 26px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:18px;
+    box-shadow: 0 22px 48px rgba(9,31,61,.18);
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  .cta-wa{background: #22c55e; color:#fff; border-color: transparent;}
+  .cta-wa:hover{background:#1fb855;}
+  .cta-call{background: linear-gradient(180deg, rgba(31,79,147,1), rgba(23,62,117,1)); color:#fff; border-color: transparent;}
+  .cta-call:hover{filter: brightness(.98);}
+
+  .tiles{
+    margin-top:38px;
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:18px;
+  }
+  @media(min-width:900px){
+    .tiles{grid-template-columns:repeat(4, minmax(0,1fr));gap:22px;}
+  }
+
+  .tile{
+    text-decoration:none;
+    background: rgba(255,255,255,.94);
+    border: 1px solid rgba(11,79,108,.14);
+    border-radius: 22px;
+    padding: 18px 16px 20px;
+    box-shadow: 0 26px 70px rgba(9,31,61,.14);
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .tile:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 34px 90px rgba(9,31,61,.18);
+  }
+
+  .tile-ic{display:flex;justify-content:center;align-items:center;margin-top:2px;}
+  .tile-title{margin-top:14px;font-weight:900;font-size:18px;color:#153a55;}
+  .tile-desc{margin-top:6px;color:rgba(18,50,79,.62);font-size:15px;line-height:1.35;white-space:pre-line;}
+
+  /* Keep existing lower-page styling */
+  .section.slim{padding:60px 0}
+  .surface{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:22px;padding:32px;box-shadow:0 12px 34px rgba(0,0,0,.05)}
+  .btn.btn-outline{border-color:rgba(0,0,0,.18)}
+</style>

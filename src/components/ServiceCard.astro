@@ -1,0 +1,17 @@
+---
+const { title, subtitle, icon, href = "#" } = Astro.props;
+---
+<a class="svc" href={href}>
+  <div class="svc__icon"><img src={icon} alt="" /></div>
+  <div class="svc__title">{title}</div>
+  <div class="svc__sub">{subtitle}</div>
+</a>
+
+<style>
+.svc{display:block;background:rgba(255,255,255,.80);border-radius:28px;padding:26px 22px 20px;border:1px solid rgba(12,34,58,.08);box-shadow:0 22px 52px rgba(9,31,61,.16),0 2px 0 rgba(255,255,255,.70) inset;text-align:center;transition:transform .18s ease,box-shadow .18s ease;min-height:170px}
+.svc:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(9,31,61,.20),0 2px 0 rgba(255,255,255,.75) inset}
+.svc__icon{width:86px;height:86px;border-radius:22px;margin:0 auto 14px;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.98),rgba(210,232,255,.62));border:1px solid rgba(12,34,58,.08);box-shadow:0 14px 30px rgba(9,31,61,.10)}
+.svc__icon img{width:64px;height:64px}
+.svc__title{font-weight:900;letter-spacing:-.2px;color:#0f2a44}
+.svc__sub{margin-top:6px;font-size:13px;color:#5b6f84;line-height:1.25}
+</style>

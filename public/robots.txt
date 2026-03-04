@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap generated at build time
+Sitemap: https://obamacarelocal.com/sitemap-index.xml
