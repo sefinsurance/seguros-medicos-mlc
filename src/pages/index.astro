@@ -1,5 +1,11 @@
 ---
-// Root: send users to Spanish by default.
-// (No meta refresh — avoids infinite reload loops.)
-return Astro.redirect('/es/');
+import SiteShell from "../layouts/SiteShell.astro";
+import TopNav from "../components/TopNav.astro";
+import Hero from "../components/Hero.astro";
 ---
+<SiteShell title="MLC Insurance" description="Seguro médico, sin estrés">
+  <TopNav />
+  <main>
+    <Hero />
+  </main>
+</SiteShell>
