@@ -1,0 +1,40 @@
+---
+const { lang } = Astro.props;
+const other = lang === 'es' ? 'en' : 'es';
+
+const nav = lang === 'es'
+  ? { home:'Inicio', aca:'Obamacare', medicare:'Medicare', life:'Vida', dental:'Dental', compare:'Comparar', faq:'Preguntas', wa:'WhatsApp', call:'Llamar', lang:'EN' }
+  : { home:'Home', aca:'ACA', medicare:'Medicare', life:'Life', dental:'Dental', compare:'Compare', faq:'FAQs', wa:'WhatsApp', call:'Call', lang:'ES' };
+
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico.'
+  : 'Hi, I would like help with health insurance.';
+
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+---
+
+<header class="site-header">
+  <div class="container site-header-inner">
+    <a class="brand" href={`/${lang}/`}>
+      <img src="/images/logo.png" alt="MLC Insurance" width="40" height="40" />
+      <div>
+        <div class="name">MLC Insurance</div>
+        <div class="tag">{lang === 'es' ? 'Seguros de salud para tu familia' : 'Health insurance for your family'}</div>
+      </div>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href={`/${lang}/aca`}>{nav.aca}</a>
+      <a href={`/${lang}/medicare`}>{nav.medicare}</a>
+      <a href={`/${lang}/life`}>{nav.life}</a>
+      <a href={`/${lang}/dental`}>{nav.dental}</a>
+      <a href={`/${lang}/faq`}>{nav.faq}</a>
+
+      <a class="btn btn-secondary" href={`/${lang}/compare`}>{nav.compare}</a>
+      <a class="btn btn-primary" href={waHref}>{nav.wa}</a>
+      <a class="btn btn-ghost" href="tel:+18774582557">{nav.call}</a>
+
+      <a class="lang-pill" href={`/${other}/`}>{nav.lang}</a>
+    </nav>
+  </div>
+</header>
