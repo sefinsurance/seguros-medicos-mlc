@@ -1,0 +1,19 @@
+---
+// Visible breadcrumbs UI (in addition to JSON-LD)
+const { items = [] } = Astro.props;
+---
+
+{items?.length ? (
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    {items.map((it, idx) => (
+      <>
+        {idx > 0 && <span class="sep">/</span>}
+        {idx === items.length - 1 ? (
+          <span class="current">{it.label}</span>
+        ) : (
+          <a href={it.href}>{it.label}</a>
+        )}
+      </>
+    ))}
+  </nav>
+) : null}

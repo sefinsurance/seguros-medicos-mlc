@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 120 120">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="0.55" stop-color="#dcebff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#b9d4ff" stop-opacity="0.92"/>
+    </radialGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0b2a52" flood-opacity="0.16"/>
+    </filter>
+    <linearGradient id="staff" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2aa9ff"/>
+      <stop offset="1" stop-color="#0f4f7f"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#bfe6ff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#6fc2ee" stop-opacity="0.75"/>
+    </radialGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="60" cy="60" r="46" fill="url(#bg)"/>
+  <g filter="url(#softShadow)">
+    <circle cx="60" cy="60" r="38" fill="url(#orb)"/>
+    <path d="M60 28c-7 8-10 15-10 22 0 10 7 16 10 20 3-4 10-10 10-20 0-7-3-14-10-22z" fill="#1c6fa5" opacity="0.95"/>
+    <path d="M60 46v46" stroke="url(#staff)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M40 64h40" stroke="url(#staff)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M42 40c10-10 26-10 36 0" fill="none" stroke="url(#shine)" stroke-width="10" stroke-linecap="round" opacity="0.7"/>
+  </g>
+</svg>
