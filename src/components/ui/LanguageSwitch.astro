@@ -1,0 +1,9 @@
+---
+const { lang } = Astro.props;
+const other = lang === "en" ? "es" : "en";
+const path = Astro.url.pathname;
+const switched = path.replace(/^\/(es|en)\b/, `/${other}`);
+---
+<a class="btn ghost" href={switched} aria-label="Switch language">
+  {other === "es" ? "ES" : "EN"}
+</a>
