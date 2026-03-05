@@ -1,0 +1,323 @@
+---
+// NOTE: This file lives at src/pages/[lang]/[state]/[county].astro
+// so we go up 3 levels to reach src/ then import components/data.
+import SiteShell from '../../../components/layout/SiteShell.astro';
+import Breadcrumbs from '../../../components/ui/Breadcrumbs.astro';
+import FaqAccordion from '../../../components/ui/FaqAccordion.astro';
+import { coverage } from '../../../data/coverage';
+
+export async function getStaticPaths() {
+  const langs = ['es', 'en'];
+  const paths = [];
+
+  for (const lang of langs) {
+    for (const state of Object.keys(coverage)) {
+      for (const county of coverage[state]) {
+        paths.push({ params: { lang, state, county } });
+      }
+    }
+  }
+
+  return paths;
+}
+
+const { lang, state, county } = Astro.params;
+const isES = lang === 'es';
+
+function formatName(slug: string) {
+  return slug
+    .split('-')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+const siteUrl = 'https://obamacarelocal.com';
+const countyName = formatName(county);
+const stateName = formatName(state);
+
+const waText = isES
+  ? `Hola, quiero ayuda con seguro médico en ${countyName} County, ${stateName}.`
+  : `Hi, I need help with health insurance in ${countyName} County, ${stateName}.`;
+
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+
+const title = isES
+  ? `Seguros Médicos en ${countyName} County, ${stateName}`
+  : `Health Insurance in ${countyName} County, ${stateName}`;
+
+const description = isES
+  ? `Ayuda profesional y clara en ${countyName} County, ${stateName}. Obamacare (ACA), Medicare, pérdida de Medicaid y más.`
+  : `Professional, clear guidance in ${countyName} County, ${stateName}. ACA, Medicare, losing Medicaid and more.`;
+
+const canonical = `${siteUrl}/${lang}/${state}/${county}/`;
+const pageUrl = canonical;
+const stateUrl = `${siteUrl}/${lang}/${state}/`;
+
+const faqs = isES
+  ? [
+      {
+        q: `¿Atienden en ${countyName} County?`,
+        a: `Sí. Ayudamos clientes en ${countyName} County y en todo ${stateName}.`,
+      },
+      {
+        q: '¿Qué necesito para revisar opciones?',
+        a: 'Fecha de nacimiento, personas en el hogar, condado y un estimado de ingreso. Con eso arrancamos.',
+      },
+      {
+        q: '¿Qué pasa si perdí Medicaid?',
+        a: 'Podrías tener un periodo especial. Escríbenos y revisamos fechas para evitar quedarte sin cobertura.',
+      },
+    ]
+  : [
+      {
+        q: `Do you serve ${countyName} County?`,
+        a: `Yes. We serve ${countyName} County and all of ${stateName}.`,
+      },
+      {
+        q: 'What do you need to review options?',
+        a: 'Date of birth, household size, county, and an income estimate. That’s enough to start.',
+      },
+      {
+        q: 'What if I lost Medicaid?',
+        a: 'You may have a Special Enrollment Period. Message us and we’ll confirm dates to avoid a coverage gap.',
+      },
+    ];
+
+const orgName = 'Seguros Médicos';
+const phone = '+18774582557';
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": isES ? "Inicio" : "Home",
+          "item": `${siteUrl}/${lang}/`,
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": stateName,
+          "item": stateUrl,
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": `${countyName} County`,
+          "item": pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      "url": pageUrl,
+      "name": title,
+      "description": description,
+      "inLanguage": isES ? "es" : "en",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        "url": siteUrl,
+        "name": orgName,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#service`,
+      "name": orgName,
+      "url": siteUrl,
+      "telephone": phone,
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": stateName },
+        { "@type": "AdministrativeArea", "name": `${countyName} County` },
+      ],
+      "availableLanguage": ["en", "es"],
+      "serviceType": [
+        "Health Insurance",
+        "ACA Marketplace (Obamacare)",
+        "Medicare",
+        "Medicaid Transition Support",
+        "Life Insurance",
+        "Dental Insurance",
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": phone,
+          "contactType": "customer service",
+          "availableLanguage": ["en", "es"],
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a },
+      })),
+    },
+  ],
+};
+
+const breadcrumbItems = [
+  { href: `/${lang}/`, label: isES ? 'Inicio' : 'Home' },
+  { href: `/${lang}/${state}/`, label: stateName },
+  { href: `/${lang}/${state}/${county}/`, label: `${countyName} County` },
+];
+---
+
+
+<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+
+<SiteShell lang={lang} title={title} description={description} canonical={canonical}>
+  <section class="hero">
+    <div class="prose-container hero-inner">
+      <div class="kicker">{isES ? 'Ayuda local en español' : 'Local help, bilingual'}</div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px">
+        <span class="badge">{stateName}</span>
+        <span class="badge">{countyName} County</span>
+        <span class="badge">{isES ? 'Atención familiar y sin presión' : 'Family-first, no pressure'}</span>
+      </div>
+
+      <h1>{isES ? `Seguro médico en ${countyName} County, ${stateName}` : `Health insurance in ${countyName} County, ${stateName}`}</h1>
+      <p class="section-sub">
+        {isES
+          ? `Te ayudamos a comparar Obamacare (ACA/Marketplace), Medicare y opciones si perdiste Medicaid — con explicaciones claras y apoyo para familias hispanas en ${countyName} County.`
+          : `We help you compare ACA (Marketplace), Medicare, and options after losing Medicaid — with clear guidance for families in ${countyName} County.`}
+      </p>
+
+      <Breadcrumbs items={breadcrumbItems} />
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href={waHref} rel="noopener">{isES ? 'Cotizar por WhatsApp' : 'Quote on WhatsApp'}</a>
+        <a class="btn btn-outline" href="tel:+18774582557" rel="noopener">{isES ? 'Llamar 877‑458‑2557' : 'Call 877‑458‑2557'}</a>
+        <a class="btn btn-outline" href={`/${lang}/compare`}>{isES ? 'Comparar planes' : 'Compare plans'}</a>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:18px">
+        <div class="card tight">
+          <h3>{isES ? 'Rápido y por teléfono' : 'Fast, by phone'}</h3>
+          <p class="small">
+            {isES ? 'Te guiamos en minutos: elegibilidad, fechas y mejores opciones según tu presupuesto.' : 'In minutes: eligibility, timelines, and the best options for your budget.'}
+          </p>
+        </div>
+        <div class="card tight">
+          <h3>{isES ? 'En español, sin complicarte' : 'Bilingual, simple'}</h3>
+          <p class="small">
+            {isES ? 'Explicamos en simple: subsidios, redes de doctores y costos reales.' : 'We keep it simple: subsidies, doctor networks, and real costs.'}
+          </p>
+        </div>
+        <div class="card tight">
+          <h3>{isES ? 'Ayuda si perdiste Medicaid' : 'Help after Medicaid'}</h3>
+          <p class="small">
+            {isES ? 'Revisamos si tienes SEP para evitar quedarte sin cobertura.' : 'We check if you have an SEP to avoid a coverage gap.'}
+          </p>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:12px;color:rgba(255,255,255,.88)">
+        {isES
+          ? 'Tip: Si tu Medicaid se canceló recientemente, escríbenos hoy mismo para confirmar fechas y opciones.'
+          : 'Tip: If your Medicaid ended recently, message us today to confirm dates and options.'}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="prose-container">
+      <div class="grid" style="gap:18px">
+        <div class="card">
+          <h2>{isES ? 'En 2 minutos: lo que te pediremos' : 'In 2 minutes: what we’ll ask for'}</h2>
+          <p class="muted">
+            {isES
+              ? 'Para darte una recomendación real (no genérica), necesitamos solo lo básico:'
+              : 'To give you a real recommendation (not generic), we only need the basics:'}
+          </p>
+          <ul class="list">
+            <li><strong>{isES ? 'Código ZIP' : 'ZIP code'}</strong> — {isES ? 'para precios y redes locales' : 'for pricing & local networks'}</li>
+            <li><strong>{isES ? 'Personas en el hogar' : 'Household size'}</strong> — {isES ? 'quiénes necesitan cobertura' : 'who needs coverage'}</li>
+            <li><strong>{isES ? 'Ingreso anual estimado' : 'Estimated annual income'}</strong> — {isES ? 'para calcular subsidios ACA' : 'to estimate ACA subsidies'}</li>
+            <li><strong>{isES ? 'Doctores/medicinas' : 'Doctors/medications'}</strong> — {isES ? 'si deseas validar red' : 'if you want to check networks'}</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>{isES ? `Situaciones comunes en ${countyName} County` : `Common situations in ${countyName} County`}</h2>
+          <div class="feature-grid" style="margin-top:10px">
+            <div class="card tight">
+              <h3>{isES ? 'Sin seguro por el trabajo' : 'No employer coverage'}</h3>
+              <p class="small">{isES ? 'ACA puede ayudar con créditos según ingresos y hogar.' : 'ACA may help with credits based on income and household.'}</p>
+            </div>
+            <div class="card tight">
+              <h3>{isES ? 'Trabajo por cuenta propia / 1099' : 'Self-employed / 1099'}</h3>
+              <p class="small">{isES ? 'Te ayudamos a estimar ingreso y evitar sorpresas con el crédito fiscal.' : 'We help estimate income and avoid tax-credit surprises.'}</p>
+            </div>
+            <div class="card tight">
+              <h3>{isES ? 'Perdiste Medicaid' : 'Lost Medicaid'}</h3>
+              <p class="small">{isES ? 'Confirmamos SEP y fechas para que no tengas un “gap”.' : 'We confirm SEP windows to avoid a gap.'}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>{isES ? 'Opciones que comparamos contigo' : 'Options we compare with you'}</h2>
+          <p class="muted">
+            {isES
+              ? `En ${countyName} County te guiamos con enfoque práctico: costos, redes y fechas.`
+              : `In ${countyName} County we focus on the practical: costs, networks, and timelines.`}
+          </p>
+
+          <div class="pill-links" style="margin-top:12px">
+            <a href={`/${lang}/aca`}>{isES ? 'Obamacare (ACA)' : 'ACA (Marketplace)'}</a>
+            <a href={`/${lang}/medicare`}>{isES ? 'Medicare' : 'Medicare'}</a>
+            <a href={`/${lang}/losing-medicaid`}>{isES ? 'Perdí Medicaid' : 'Losing Medicaid'}</a>
+            <a href={`/${lang}/dental`}>{isES ? 'Dental' : 'Dental'}</a>
+            <a href={`/${lang}/life`}>{isES ? 'Vida' : 'Life'}</a>
+            <a href={`/${lang}/compare`}>{isES ? 'Comparar planes' : 'Compare plans'}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="prose-container">
+      <div class="card">
+        <h2>{isES ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
+        <p class="muted">
+          {isES
+            ? `Respuestas rápidas para personas en ${countyName} County. Si tu caso es diferente, escríbenos y lo revisamos.`
+            : `Quick answers for ${countyName} County. If your situation is different, message us and we’ll review it.`}
+        </p>
+        <FaqAccordion items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="prose-container">
+      <div class="cta-band">
+        <h2 style="margin:0 0 10px">{isES ? '¿Listo para revisarlo con un agente?' : 'Ready to review with an agent?'}</h2>
+        <p>
+          {isES
+            ? `Envíanos por WhatsApp: fecha de nacimiento, personas en el hogar e ingreso estimado. Te respondemos con opciones claras para ${countyName} County, ${stateName}.`
+            : `Send on WhatsApp: date of birth, household size, and income estimate. We’ll reply with clear options for ${countyName} County, ${stateName}.`}
+        </p>
+        <div class="cta-row" style="margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">{isES ? 'Hablar por WhatsApp' : 'Chat on WhatsApp'}</a>
+          <a class="btn btn-outline" href="tel:+18774582557">{isES ? 'Llamar ahora' : 'Call now'}</a>
+          <a class="btn btn-outline" href={stateUrl}>{isES ? `Ver ${stateName}` : `View ${stateName}`}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteShell>
