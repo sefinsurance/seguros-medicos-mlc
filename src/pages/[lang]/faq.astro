@@ -1,0 +1,101 @@
+---
+import SiteShell from "../../components/layout/SiteShell.astro";
+import FaqAccordion from "../../components/ui/FaqAccordion.astro";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+
+const copy = lang === "es"
+  ? {
+      badge: "Florida (Estado completo)",
+      title: "Preguntas frecuentes",
+      desc: "Respuestas claras sobre Obamacare (ACA), Medicare, Medicaid y opciones de cobertura en Florida.",
+      lead:
+        "Aquí tienes respuestas rápidas. Si tu situación es específica (y casi siempre lo es), escríbenos y la revisamos contigo.",
+      waText: "Hola, tengo preguntas sobre seguros de salud en Florida.",
+      waBtn: "Escríbenos por WhatsApp",
+      callBtn: "Llamar 1-877-458-2557",
+      h2: "Respuestas rápidas",
+      ctaTitle: "¿Prefieres una conversación real?",
+      ctaLead:
+        "Escríbenos por WhatsApp y describe tu situación en una frase. Te guiamos desde ahí.",
+      back: "Volver al inicio",
+      openWa: "Abrir WhatsApp",
+      faqs: [
+        { q: "¿Atienden todo Florida?", a: "Sí. Ayudamos a clientes en todo el estado. WhatsApp es la forma más rápida de contactarnos." },
+        { q: "¿Qué necesito para revisar elegibilidad de ACA?", a: "Tu condado, tamaño del hogar e ingreso anual estimado. Con eso podemos empezar." },
+        { q: "¿Puedo inscribirme fuera del periodo abierto?", a: "A veces. Perder cobertura, mudanza, matrimonio, bebé u otros eventos pueden activar un Periodo Especial (SEP)." },
+        { q: "¿Cuándo debo empezar a planificar Medicare?", a: "En muchos casos, hasta 3 meses antes del mes de tu cumpleaños 65." },
+        { q: "¿Qué pasa si perdí Medicaid?", a: "Puede haber un Periodo Especial. Lo importante es evitar un hueco de cobertura." },
+        { q: "¿Tiene costo recibir orientación?", a: "Escríbenos y te guiamos. Si calificas para ayuda o subsidios, te lo explicamos claro." },
+      ],
+    }
+  : {
+      badge: "Florida statewide",
+      title: "Frequently Asked Questions",
+      desc: "Clear answers about ACA, Medicare, Medicaid and coverage options in Florida.",
+      lead:
+        "Here are quick answers. If your situation is specific (and most are), message us and we’ll review it with you personally.",
+      waText: "Hi, I have questions about health insurance in Florida.",
+      waBtn: "Message us on WhatsApp",
+      callBtn: "Call 1-877-458-2557",
+      h2: "Quick Answers",
+      ctaTitle: "Prefer a real conversation?",
+      ctaLead:
+        "Message us on WhatsApp and describe your situation in one sentence. We’ll guide you from there.",
+      back: "Back to home",
+      openWa: "Open WhatsApp",
+      faqs: [
+        { q: "Do you serve all of Florida?", a: "Yes. We help clients statewide. WhatsApp is the fastest way to reach us." },
+        { q: "What do I need to check ACA eligibility?", a: "Your county, household size, and estimated household income. That’s enough to start." },
+        { q: "Can I enroll outside Open Enrollment?", a: "Sometimes. Losing coverage, moving, marriage, new baby and other life events can trigger Special Enrollment." },
+        { q: "When should I start planning for Medicare?", a: "In many cases, up to 3 months before your 65th birthday month." },
+        { q: "What if I lost Medicaid?", a: "There may be a Special Enrollment opportunity. The key is avoiding a coverage gap." },
+        { q: "Does it cost to get guidance?", a: "Message us and we’ll guide you. If you qualify for assistance or subsidies, we explain it clearly." },
+      ],
+    };
+
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(copy.waText)}`;
+const canonical = `https://obamacarelocal.com/${lang}/faq/`;
+---
+
+<SiteShell lang={lang} title={`${copy.title} | Seguros Médicos`} description={copy.desc} canonical={canonical}>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="badge">{copy.badge}</span>
+      <h1>{copy.title}</h1>
+      <p>{copy.lead}</p>
+      <div class="cta-inline">
+        <a class="btn btn-primary" href={waHref} rel="noopener">{copy.waBtn}</a>
+        <a class="btn btn-outline" href="tel:+18774582557">{copy.callBtn}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2>{copy.h2}</h2>
+        <FaqAccordion items={copy.faqs} />
+      </div>
+
+      <div style="height:16px"></div>
+
+      <div class="card" style="background:linear-gradient(180deg, rgba(27,126,166,.10), rgba(11,79,108,.04))">
+        <h2>{copy.ctaTitle}</h2>
+        <p class="small">{copy.ctaLead}</p>
+        <div class="cta-inline" style="margin-top:14px">
+          <a class="btn btn-primary" href={waHref} rel="noopener">{copy.openWa}</a>
+          <a class="btn btn-light" href={`/${lang}/`}>{copy.back}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteShell>
+
+<style>
+  .cta-inline{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+</style>
