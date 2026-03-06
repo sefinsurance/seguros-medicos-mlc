@@ -1,0 +1,45 @@
+---
+const { lang } = Astro.props;
+const text = lang === 'es'
+  ? {
+      blurb: 'Ayuda en español para comparar planes ACA/Marketplace y Medicare.',
+      hours: 'Lunes a Viernes · 9am–6pm',
+      cta: 'WhatsApp',
+      rights: 'Todos los derechos reservados.'
+    }
+  : {
+      blurb: 'Bilingual help comparing ACA (Marketplace) and Medicare options.',
+      hours: 'Mon–Fri · 9am–6pm',
+      cta: 'WhatsApp',
+      rights: 'All rights reserved.'
+    };
+
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico.'
+  : 'Hi, I would like help with health insurance.';
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+---
+
+<footer class="site-footer">
+  <div class="container" style="display:grid;gap:18px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="/images/logo.png" width="42" height="42" alt="MLC Insurance" />
+        <div>
+          <div style="font-weight:800">MLC Insurance</div>
+          <div style="color:rgba(15,23,42,.72);font-size:14px">{text.blurb}</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <a class="btn btn-primary" href={waHref}>{text.cta}</a>
+        <a class="btn btn-secondary" href="tel:+18774582557">877-458-2557</a>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <div style="color:rgba(15,23,42,.62)">{text.hours}</div>
+      <div style="color:rgba(15,23,42,.55)">© {new Date().getFullYear()} MLC Insurance · {text.rights}</div>
+    </div>
+  </div>
+</footer>
