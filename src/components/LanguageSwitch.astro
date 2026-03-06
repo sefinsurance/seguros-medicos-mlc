@@ -1,0 +1,23 @@
+---
+const { lang } = Astro.props;
+const other = lang === "en" ? "es" : "en";
+
+// Keep the same path while switching language.
+// Example: /es/medicare -> /en/medicare
+const path = Astro.url.pathname;
+const switched = path.replace(/^\/(es|en)\b/, `/${other}`);
+---
+
+<a href={switched} class="lang">
+  {other === "es" ? "ES" : "EN"}
+</a>
+
+<style>
+  .lang{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:.45rem .7rem; border-radius:10px;
+    background:rgba(255,255,255,.12); color:#fff; text-decoration:none;
+    font-weight:700;
+  }
+  .lang:hover{ background:rgba(255,255,255,.2); }
+</style>
