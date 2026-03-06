@@ -1,0 +1,45 @@
+---
+const { lang } = Astro.props;
+const other = lang === 'es' ? 'en' : 'es';
+
+const nav = lang === 'es'
+  ? { aca:'Obamacare', medicare:'Medicare', life:'Vida', dental:'Dental y Visión', wa:'877-458-2557', lang:'EN' }
+  : { aca:'Obamacare', medicare:'Medicare', life:'Life', dental:'Dental & Vision', wa:'877-458-2557', lang:'ES' };
+
+const waText = lang === 'es'
+  ? 'Hola, quiero ayuda con mi seguro médico.'
+  : 'Hi, I would like help with health insurance.';
+
+const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
+---
+
+<header class="site-header">
+  <div class="container site-header-inner">
+    <a class="brand" href={`/${lang}/`}>
+      <img src="/images/logo.png" alt="MLC Insurance" width="40" height="40" />
+      <div>
+        <div class="name">MLC Insurance</div>
+        <div class="tag">{lang === 'es' ? 'Seguros de salud para tu familia' : 'Health insurance for your family'}</div>
+      </div>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href={`/${lang}/aca`}>{nav.aca}</a>
+      <a href={`/${lang}/medicare`}>{nav.medicare}</a>
+      <a href={`/${lang}/life`}>{nav.life}</a>
+      <a href={`/${lang}/dental`}>{nav.dental}</a>
+
+      <a class="wa-pill" href={waHref} aria-label={lang === 'es' ? 'Hablar por WhatsApp' : 'Chat on WhatsApp'}>
+        <span class="wa-ic" aria-hidden="true">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M19.11 17.52c-.27-.13-1.59-.78-1.83-.87-.24-.09-.42-.13-.6.13-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.13-1.13-.42-2.15-1.33-.79-.71-1.33-1.59-1.48-1.86-.16-.27-.02-.41.12-.54.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.33-.02-.47-.07-.13-.6-1.45-.82-1.99-.22-.53-.44-.46-.6-.46h-.51c-.18 0-.47.07-.71.33-.24.27-.93.91-.93 2.22 0 1.31.96 2.58 1.09 2.76.13.18 1.89 2.89 4.58 4.05.64.28 1.14.45 1.53.58.64.2 1.22.17 1.68.1.51-.08 1.59-.65 1.81-1.27.22-.62.22-1.15.16-1.27-.06-.12-.24-.2-.51-.33Z"/>
+            <path fill="currentColor" d="M16.01 3C8.84 3 3 8.83 3 16c0 2.27.6 4.48 1.74 6.42L3 29l6.74-1.74A12.93 12.93 0 0 0 16 29c7.17 0 13-5.83 13-13S23.18 3 16.01 3Zm0 23.64c-2.02 0-3.99-.54-5.7-1.56l-.41-.24-4 .98.98-3.9-.26-.42A10.6 10.6 0 0 1 5.4 16c0-5.85 4.76-10.6 10.61-10.6 5.85 0 10.6 4.75 10.6 10.6 0 5.85-4.75 10.64-10.6 10.64Z"/>
+          </svg>
+        </span>
+        <span class="wa-num">{nav.wa}</span>
+      </a>
+
+      <a class="lang-pill" href={`/${other}/`} aria-label={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}>{nav.lang}</a>
+    </nav>
+  </div>
+</header>
