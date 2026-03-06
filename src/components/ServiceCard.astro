@@ -1,17 +1,52 @@
 ---
 const { title, subtitle, icon, href = "#" } = Astro.props;
 ---
-<a class="svc" href={href}>
-  <div class="svc__icon"><img src={icon} alt="" /></div>
-  <div class="svc__title">{title}</div>
-  <div class="svc__sub">{subtitle}</div>
+<a class="card" href={href}>
+  <div class="card__icon">
+    <img src={icon} alt="" />
+  </div>
+  <div class="card__title">{title}</div>
+  <div class="card__sub">{subtitle}</div>
 </a>
 
 <style>
-.svc{display:block;background:rgba(255,255,255,.80);border-radius:28px;padding:26px 22px 20px;border:1px solid rgba(12,34,58,.08);box-shadow:0 22px 52px rgba(9,31,61,.16),0 2px 0 rgba(255,255,255,.70) inset;text-align:center;transition:transform .18s ease,box-shadow .18s ease;min-height:170px}
-.svc:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(9,31,61,.20),0 2px 0 rgba(255,255,255,.75) inset}
-.svc__icon{width:86px;height:86px;border-radius:22px;margin:0 auto 14px;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.98),rgba(210,232,255,.62));border:1px solid rgba(12,34,58,.08);box-shadow:0 14px 30px rgba(9,31,61,.10)}
-.svc__icon img{width:64px;height:64px}
-.svc__title{font-weight:900;letter-spacing:-.2px;color:#0f2a44}
-.svc__sub{margin-top:6px;font-size:13px;color:#5b6f84;line-height:1.25}
+.card{
+  display:block;
+  /* Use the "inner tile" look as the full card */
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.98), rgba(220,236,255,0.72));
+  border-radius: 26px;
+  padding: 26px 22px 20px;
+  border: 1px solid rgba(12,34,58,0.10);
+  /* stronger border/edge shadow like the reference */
+  box-shadow:
+    0 18px 45px rgba(9,31,61,0.16),
+    0 0 0 1px rgba(255,255,255,0.38) inset,
+    0 14px 28px rgba(9,31,61,0.10) inset;
+  text-align:center;
+  min-height: 185px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover{
+  transform: translateY(-6px);
+  box-shadow:
+    0 26px 62px rgba(9,31,61,0.20),
+    0 0 0 1px rgba(255,255,255,0.42) inset,
+    0 16px 32px rgba(9,31,61,0.12) inset;
+}
+.card__icon{
+  width:92px;
+  height:92px;
+  border-radius: 999px;
+  margin: 0 auto 14px;
+  display:grid;
+  place-items:center;
+  /* keep a soft glow behind the icon without creating a second "tile" */
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.85), rgba(195,214,255,0.45));
+  border: 0;
+  box-shadow: none;
+}
+.card__icon img{ width:74px; height:74px; }
+.card__title{ font-weight:900; letter-spacing:-0.2px; }
+.card__sub{ margin-top:6px; font-size:13px; color: rgba(35,74,107,0.9); line-height:1.25; }
 </style>
