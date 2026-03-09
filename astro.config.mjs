@@ -1,16 +1,16 @@
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
+import react from '@astrojs/react';
+import tailwind from '@astrojs/tailwind';
+import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
-  site: 'https://obamacarelocal.com',
-  integrations: [
-    sitemap({
-      // Prefer clean trailing slashes to match your routes.
-      // (Astro will still include both in canonical/hreflang when relevant.)
-      filter: (page) => {
-  const path = typeof page === 'string' ? page : (page?.pathname ?? '');
-  return !path.includes('/images/');
-},
-    }),
-  ],
+  integrations: [react(), tailwind({ applyBaseStyles: false })],
+  vite: {
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        'react-router-dom': fileURLToPath(new URL('./src/shims/react-router-dom.js', import.meta.url))
+      }
+    }
+  }
 });
