@@ -1,0 +1,7 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Leads from '@/pages-react/Leads.jsx';
+---
+<BaseLayout title="Leads Dashboard | MLC Insurance" description="Internal dashboard for MLC Insurance." noindex={true}>
+  <Leads client:load />
+</BaseLayout>

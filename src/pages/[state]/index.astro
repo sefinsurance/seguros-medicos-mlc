@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LocationLandingPage from '@/components/LocationLandingPage.jsx';
+import { seoLocations, getStateBySlug } from '@/data/seoLocations.js';
+
+export function getStaticPaths() {
+  return seoLocations.map((entry) => ({ params: { state: entry.state }, props: { stateName: entry.stateName } }));
+}
+
+const { state } = Astro.params;
+const { stateName } = Astro.props;
+const record = getStateBySlug(state);
+if (!record) throw new Error(`Unknown state slug: ${state}`);
+---
+<BaseLayout title={`Health Insurance in ${stateName} | MLC Insurance`} description={`State landing page for insurance help in ${stateName}.`}>
+  <LocationLandingPage client:load stateName={stateName} />
+</BaseLayout>

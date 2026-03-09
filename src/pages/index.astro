@@ -1,13 +1,7 @@
 ---
-import SiteShell from "../layouts/SiteShell.astro";
-import TopNav from "../components/TopNav.astro";
-import Hero from "../components/Hero.astro";
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Home from '@/pages-react/Home.jsx';
 ---
-<SiteShell title="MLC Insurance" description="Seguro médico, sin estrés">
-    <div class="mlc-bg">
-<TopNav />
-  <main>
-    <Hero />
-  </main>  </div>
-
-</SiteShell>
+<BaseLayout title="MLC Insurance | Health Insurance for the Whole Family" description="Compare ACA, Medicare Advantage, Life Insurance, and Dental & Vision plans with MLC Insurance.">
+  <Home client:load />
+</BaseLayout>
