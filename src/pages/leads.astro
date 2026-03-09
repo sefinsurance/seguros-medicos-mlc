@@ -1,8 +1,8 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import Leads from '../pages-react/Leads.jsx';
-import MainLayout from '@/layouts/MainLayout.astro';
 ---
 
-<MainLayout title="Leads">
+<Layout title="Leads">
   <Leads client:only="react" />
-</MainLayout>
+</Layout>
