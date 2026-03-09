@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LocationLandingPage from '@/components/LocationLandingPage.jsx';
+import { seoLocations, getCountyBySlugs } from '@/data/seoLocations.js';
+
+export function getStaticPaths() {
+  return seoLocations.flatMap((state) =>
+    state.counties.map((county) => ({
+      params: { state: state.state, county: county.slug },
+      props: { stateName: state.stateName, countyName: county.name }
+    }))
+  );
+}
+
+const { state, county } = Astro.params;
+const record = getCountyBySlugs(state, county);
+if (!record) throw new Error(`Unknown location: ${state}/${county}`);
+const { state: stateInfo, county: countyInfo } = record;
+---
+<BaseLayout title={`Health Insurance in ${countyInfo.name}, ${stateInfo.stateName} | MLC Insurance`} description={`County landing page for insurance help in ${countyInfo.name}, ${stateInfo.stateName}.`}>
+  <LocationLandingPage client:load stateName={stateInfo.stateName} countyName={countyInfo.name} />
+</BaseLayout>
