@@ -1,0 +1,23 @@
+---
+import '@/styles/global.css';
+const {
+  title = 'MLC Insurance',
+  description = 'Health insurance for the whole family.',
+  noindex = false,
+  canonical,
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
