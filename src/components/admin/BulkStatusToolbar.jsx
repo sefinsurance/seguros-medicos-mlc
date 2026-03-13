@@ -20,7 +20,11 @@ export default function BulkStatusToolbar({ selectedIds, onComplete }) {
   const handleUpdate = async () => {
     if (!status) return;
     setUpdating(true);
-    await Promise.all([...selectedIds].map(id => base44.entities.Lead.update(id, { status })));
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    for (const id of selectedIds) {
+      await base44.functions.invoke("updateLeadDetails", { adminToken, leadId: id, updates: { status } });
+    }
     setUpdating(false);
     setStatus("");
     onComplete();

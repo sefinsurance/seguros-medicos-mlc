@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, RefreshCw, Loader2, Download, Trash2, ChevronDown } from "lucide-react";
+import { Search, RefreshCw, Loader2, Download, Trash2, ChevronDown, LogOut } from "lucide-react";
 import LeadDetailPanel from "@/components/admin/LeadDetailPanel";
 import StatsBar from "@/components/admin/StatsBar";
 import LeadsTable from "@/components/admin/LeadsTable";
@@ -10,15 +10,18 @@ import AdminLoginGate from "@/components/admin/AdminLoginGate";
 import SmsSubscribersTab from "@/components/admin/SmsSubscribersTab";
 import SmsCampaignsTab from "@/components/admin/SmsCampaignsTab";
 import EmailCampaignsTab from "@/components/admin/EmailCampaignsTab";
-import FaxTab from "@/components/admin/FaxTab";
+import FaxEventDashboard from "@/components/admin/FaxEventDashboard";
 import BulkStatusToolbar from "@/components/admin/BulkStatusToolbar";
 import BrokerApplicationsTab from "@/components/admin/BrokerApplicationsTab";
 import NotificationBell from "@/components/admin/NotificationBell";
+import SmsTagsTab from "@/components/admin/SmsTagsTab";
+import SmsTemplatesTab from "@/components/admin/SmsTemplatesTab";
+import ProspectsTab from "@/components/admin/ProspectsTab";
 
 export default function Leads() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem("mlc_admin_auth") === "1");
+  const [authed, setAuthed] = useState(() => localStorage.getItem("mlc_admin_auth") === "1" && !!localStorage.getItem("mlc_admin_token"));
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [productFilter, setProductFilter] = useState("all");
@@ -28,6 +31,44 @@ export default function Leads() {
   const [activeTab, setActiveTab] = useState("leads");
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+
+  // Auto-logout after 1 hour of inactivity
+  useEffect(() => {
+    if (!authed) return;
+
+    const checkInactivity = () => {
+      const lastActivity = parseInt(localStorage.getItem("mlc_last_activity") || "0");
+      const now = Date.now();
+      const TIMEOUT = 60 * 60 * 1000; // 1 hour
+
+      if (now - lastActivity > TIMEOUT) {
+        localStorage.removeItem("mlc_admin_auth");
+        localStorage.removeItem("mlc_admin_token");
+        localStorage.removeItem("mlc_last_activity");
+        setAuthed(false);
+        alert("Session expired due to inactivity. Please log in again.");
+      }
+    };
+
+    const updateActivity = () => {
+      localStorage.setItem("mlc_last_activity", Date.now().toString());
+    };
+
+    // Check every minute
+    const interval = setInterval(checkInactivity, 60000);
+
+    // Update activity on user interactions
+    const events = ["mousedown", "keydown", "scroll", "touchstart"];
+    events.forEach(e => window.addEventListener(e, updateActivity));
+
+    // Initial activity timestamp
+    updateActivity();
+
+    return () => {
+      clearInterval(interval);
+      events.forEach(e => window.removeEventListener(e, updateActivity));
+    };
+  }, [authed]);
 
   useEffect(() => {
     if (authed) loadLeads();
@@ -55,8 +96,22 @@ export default function Leads() {
 
   const loadLeads = async () => {
     setLoading(true);
-    const data = await base44.entities.Lead.list("-created_date", 200);
-    setLeads(data);
+    const adminToken = localStorage.getItem("mlc_admin_token") || "";
+    if (!adminToken) {
+      localStorage.removeItem("mlc_admin_auth");
+      setAuthed(false);
+      setLoading(false);
+      return;
+    }
+    const res = await base44.functions.invoke("adminGetLeads", { adminToken });
+    if (res.data?.error === 'Unauthorized' || !res.data?.leads) {
+      localStorage.removeItem("mlc_admin_auth");
+      localStorage.removeItem("mlc_admin_token");
+      setAuthed(false);
+      setLoading(false);
+      return;
+    }
+    setLeads(res.data.leads);
     setLoading(false);
   };
 
@@ -77,7 +132,12 @@ export default function Leads() {
   const handleBulkDelete = async () => {
     if (!window.confirm(`Delete ${selectedIds.size} lead(s)?`)) return;
     setBulkDeleting(true);
-    await Promise.all([...selectedIds].map(id => base44.entities.Lead.delete(id)));
+    const adminToken = localStorage.getItem("mlc_admin_token") || "";
+    if (!adminToken) {
+      setAuthed(false);
+      return;
+    }
+    await base44.functions.invoke("adminDeleteLeads", { adminToken, leadIds: Array.from(selectedIds) });
     setLeads(prev => prev.filter(l => !selectedIds.has(l.id)));
     setSelectedIds(new Set());
     setBulkDeleting(false);
@@ -96,9 +156,18 @@ export default function Leads() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-[#1e3a5f] text-white px-6 py-5 flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-xl font-bold">MLC Insurance — Leads Dashboard</h1>
-          <p className="text-blue-200 text-sm">{leads.length} total leads captured</p>
+        <div className="flex items-center gap-4">
+          <a href="/" className="flex-shrink-0 hover:opacity-80 transition-opacity">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69ab1578c293524eeeb25c69/34f395594_logo.png" 
+              alt="MLC Insurance" 
+              className="w-12 h-12 rounded-full object-cover"
+            />
+          </a>
+          <div>
+            <h1 className="text-xl font-bold">MLC Insurance — Leads Dashboard</h1>
+            <p className="text-blue-200 text-sm">{leads.length} total leads captured</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <NotificationBell onNavigate={(tab) => setActiveTab(tab)} />
@@ -116,13 +185,25 @@ export default function Leads() {
             <RefreshCw className="w-4 h-4" />
             Refresh
           </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("mlc_admin_auth");
+              localStorage.removeItem("mlc_admin_token");
+              localStorage.removeItem("mlc_last_activity");
+              setAuthed(false);
+            }}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Log Out
+          </button>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="border-b border-gray-200 bg-white px-6">
         <div className="flex gap-0">
-          {[{ id: "leads", label: "Leads" }, { id: "sms", label: "SMS Subscribers" }, { id: "campaigns", label: "SMS Campaigns" }, { id: "email", label: "Email Campaigns" }, { id: "fax", label: "Fax" }, { id: "brokers", label: "Broker Applications" }].map(tab => (
+          {[{ id: "leads", label: "Leads" }, { id: "prospects", label: "Prospects" }, { id: "sms", label: "SMS Subscribers" }, { id: "campaigns", label: "SMS Campaigns" }, { id: "templates", label: "SMS Templates" }, { id: "email", label: "Email Campaigns" }, { id: "fax", label: "Fax" }, { id: "brokers", label: "Broker Applications" }].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -134,14 +215,18 @@ export default function Leads() {
         </div>
       </div>
 
-      {activeTab === "sms" ? (
+      {activeTab === "prospects" ? (
+        <div className="p-4 md:p-6"><ProspectsTab /></div>
+      ) : activeTab === "sms" ? (
         <div className="p-4 md:p-6"><SmsSubscribersTab /></div>
       ) : activeTab === "campaigns" ? (
         <div className="p-4 md:p-6"><SmsCampaignsTab /></div>
+      ) : activeTab === "templates" ? (
+        <div className="p-4 md:p-6"><SmsTemplatesTab /></div>
       ) : activeTab === "email" ? (
         <div className="p-4 md:p-6"><EmailCampaignsTab /></div>
       ) : activeTab === "fax" ? (
-        <div className="p-4 md:p-6"><FaxTab /></div>
+        <div className="p-4 md:p-6"><FaxEventDashboard /></div>
       ) : activeTab === "brokers" ? (
         <div className="p-4 md:p-6"><BrokerApplicationsTab /></div>
       ) : (

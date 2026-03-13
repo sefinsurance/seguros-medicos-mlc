@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { Plus, Mail, Clock, CheckCircle2, Trash2, Users, RefreshCw, Pause, Play, Upload, Loader2, Copy } from "lucide-react";
+import { Plus, Mail, Clock, CheckCircle2, Trash2, Users, RefreshCw, Pause, Play, Upload, Loader2, Copy, Info } from "lucide-react";
 import EmailCampaignComposer from "./EmailCampaignComposer";
 import CsvImportModal from "./CsvImportModal";
+import EmailCampaignDetail from "./EmailCampaignDetail";
 
 const STATUS_STYLES = {
   draft: { color: "bg-gray-100 text-gray-600", label: "Draft" },
@@ -21,12 +22,20 @@ export default function EmailCampaignsTab() {
   const [expandedId, setExpandedId] = useState(null);
   const [launching, setLaunching] = useState({});
   const [pausing, setPausing] = useState({});
+  const [detailCampaign, setDetailCampaign] = useState(null);
   const pollRef = useRef(null);
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.EmailCampaign.list("-created_date", 100);
-    setCampaigns(data);
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    const res = await base44.functions.invoke("adminGetEmailCampaigns", { adminToken });
+    if (res.data?.error === 'Unauthorized' || !res.data?.campaigns) {
+      setCampaigns([]);
+      setLoading(false);
+      return;
+    }
+    setCampaigns(res.data.campaigns);
     setLoading(false);
   };
 
@@ -36,11 +45,15 @@ export default function EmailCampaignsTab() {
     const hasSending = campaigns.some(c => c.status === "sending");
     if (hasSending && !pollRef.current) {
       pollRef.current = setInterval(async () => {
-        const data = await base44.entities.EmailCampaign.list("-created_date", 100);
-        setCampaigns(data);
-        if (!data.some(c => c.status === "sending")) {
-          clearInterval(pollRef.current);
-          pollRef.current = null;
+        const { getAdminToken } = await import("./useAdminToken");
+        const adminToken = await getAdminToken();
+        const res = await base44.functions.invoke("adminGetEmailCampaigns", { adminToken });
+        if (res.data?.campaigns) {
+          setCampaigns(res.data.campaigns);
+          if (!res.data.campaigns.some(c => c.status === "sending")) {
+            clearInterval(pollRef.current);
+            pollRef.current = null;
+          }
         }
       }, 3000);
     }
@@ -53,23 +66,31 @@ export default function EmailCampaignsTab() {
   }, [campaigns]);
 
   const handleClone = async (campaign) => {
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
     const newName = `${campaign.name} (Copy)`;
-    const cloned = await base44.entities.EmailCampaign.create({
-      name: newName,
-      subject: campaign.subject,
-      message_body: campaign.message_body,
-      csv_recipients: campaign.csv_recipients,
-      attachment_urls: campaign.attachment_urls,
-      campaign_type: campaign.campaign_type,
-      status: "draft",
-      recipient_count: campaign.recipient_count,
+    await base44.functions.invoke("adminManageEmailCampaign", {
+      adminToken,
+      action: "create",
+      data: {
+        name: newName,
+        subject: campaign.subject,
+        message_body: campaign.message_body,
+        csv_recipients: campaign.csv_recipients,
+        attachment_urls: campaign.attachment_urls,
+        campaign_type: campaign.campaign_type,
+        status: "draft",
+        recipient_count: campaign.recipient_count,
+      }
     });
     load();
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this campaign?")) return;
-    await base44.entities.EmailCampaign.delete(id);
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    await base44.functions.invoke("adminManageEmailCampaign", { adminToken, action: "delete", campaignId: id });
     setCampaigns(cs => cs.filter(c => c.id !== id));
   };
 
@@ -116,6 +137,17 @@ export default function EmailCampaignsTab() {
         <EmailCampaignComposer
           onClose={() => setShowComposer(false)}
           onSaved={() => { setShowComposer(false); load(); }}
+        />
+      )}
+
+      {detailCampaign && (
+        <EmailCampaignDetail
+          campaign={detailCampaign}
+          onClose={() => setDetailCampaign(null)}
+          onUpdate={(updated) => {
+            setCampaigns(cs => cs.map(c => c.id === updated.id ? updated : c));
+            setDetailCampaign(updated);
+          }}
         />
       )}
 
@@ -204,6 +236,13 @@ export default function EmailCampaignsTab() {
                   </div>
 
                   <div className="flex items-center gap-1 ml-3 flex-shrink-0" onClick={e => e.stopPropagation()}>
+                    <button
+                      onClick={() => setDetailCampaign(c)}
+                      className="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                      title="View details / Add contacts"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
                     {(c.status === "draft" || c.status === "failed") && (
                       <>
                         <button

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Upload, Users, Mail, Clock, ChevronDown, Paperclip, Image, Loader2 } from "lucide-react";
+import { X, Upload, Users, Mail, Clock, ChevronDown, Paperclip, Image, Loader2, Download } from "lucide-react";
 
 export default function EmailCampaignComposer({ onClose, onSaved }) {
   const [name, setName] = useState("");
@@ -57,16 +57,22 @@ export default function EmailCampaignComposer({ onClose, onSaved }) {
   const handleSave = async (statusVal) => {
     if (!name.trim() || !subject.trim() || !body.trim() || csvRecipients.length === 0) return;
     setSaving(true);
-    await base44.entities.EmailCampaign.create({
-      name: name.trim(),
-      subject: subject.trim(),
-      message_body: body,
-      csv_recipients: JSON.stringify(csvRecipients),
-      attachment_urls: JSON.stringify(attachmentUrls),
-      status: statusVal,
-      scheduled_at: scheduleMode === "scheduled" ? scheduledAt : "",
-      recipient_count: csvRecipients.length,
-      campaign_type: campaignType,
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    await base44.functions.invoke("adminManageEmailCampaign", {
+      adminToken,
+      action: "create",
+      data: {
+        name: name.trim(),
+        subject: subject.trim(),
+        message_body: body,
+        csv_recipients: JSON.stringify(csvRecipients),
+        attachment_urls: JSON.stringify(attachmentUrls),
+        status: statusVal,
+        scheduled_at: scheduleMode === "scheduled" ? scheduledAt : "",
+        recipient_count: csvRecipients.length,
+        campaign_type: campaignType,
+      }
     });
     setSaving(false);
     onSaved();
@@ -134,14 +140,24 @@ export default function EmailCampaignComposer({ onClose, onSaved }) {
            <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 text-xs text-blue-800 mb-3 leading-relaxed">
              <strong>CSV Format:</strong> Name, Birthdate (MM/DD/YYYY), Phone, Email
            </div>
-           <button
-             type="button"
-             onClick={() => fileRef.current.click()}
-             className="flex items-center gap-2 border border-dashed border-blue-300 rounded-lg px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition-colors w-full justify-center"
-           >
-             <Upload className="w-4 h-4" />
-             {csvFileName || "Upload CSV"}
-           </button>
+           <div className="flex gap-2">
+             <a
+               href="data:text/csv;charset=utf-8,Name,Birthdate,Phone,Email%0AJohn Doe,01/15/1980,+1234567890,john@example.com%0AJane Smith,05/20/1975,+0987654321,jane@example.com"
+               download="sample-email.csv"
+               className="flex items-center gap-2 border border-gray-300 text-gray-700 rounded-lg px-3 py-2 text-xs font-semibold hover:bg-gray-50"
+             >
+               <Download className="w-3.5 h-3.5" />
+               Sample CSV
+             </a>
+             <button
+               type="button"
+               onClick={() => fileRef.current.click()}
+               className="flex-1 flex items-center gap-2 border border-dashed border-blue-300 rounded-lg px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition-colors justify-center"
+             >
+               <Upload className="w-4 h-4" />
+               {csvFileName || "Upload CSV"}
+             </button>
+           </div>
             <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCsvUpload} />
             {csvRecipients.length > 0 && (
               <div className="mt-2 flex items-center gap-2 text-xs text-green-600">

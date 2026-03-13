@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
+import Papa from "papaparse";
 import { base44 } from "@/api/base44Client";
 import { X, Upload, Users, MessageSquare, Clock, ChevronDown, Paperclip, Image, Loader2, Library, Eraser, Download } from "lucide-react";
 import SmsTemplateLibrary from "./SmsTemplateLibrary";
-import { normalizePhone, parseCsvText } from "@/utils/csv";
 
 const AUDIENCE_OPTIONS = [
   { value: "all_leads", label: "All Leads" },
@@ -58,38 +58,28 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setCsvFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const rows = parseCsvText(String(ev.target?.result || ""));
-        const parsed = rows
-          .map((row) => {
-            const lowered = Object.fromEntries(Object.entries(row).map(([key, value]) => [String(key).toLowerCase().trim(), value]));
-            return {
-              name: lowered.name || lowered.full_name || lowered.fullname || "",
-              phone: lowered.phone || lowered.mobile || lowered.cell || "",
-              birthday: lowered.birthday || lowered.dob || lowered.date_of_birth || "",
-            };
-          })
-          .filter((recipient) => recipient.phone)
-          .filter((recipient, index, list) => {
-            const key = normalizePhone(recipient.phone);
-            return key && list.findIndex((candidate) => normalizePhone(candidate.phone) === key) === index;
-          });
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (header) => header.trim().replace(/^\ufeff/, ""),
+      complete: (results) => {
+        const parsed = (results.data || []).map((row) => ({
+          name: String(row.Name || row.name || "").trim(),
+          phone: String(row.Phone || row.phone || "").trim(),
+          birthday: String(row.Birthday || row.birthdate || row.birth_day || row.birthday || "").trim(),
+        })).filter((r) => r.phone);
         setCsvRecipients(parsed);
-      } catch (error) {
-        console.error("CSV parse error:", error);
+      },
+      error: () => {
         setCsvRecipients([]);
-        alert(`CSV error: ${error.message}`);
       }
-    };
-    reader.readAsText(file);
+    });
   };
 
   const removeDuplicates = () => {
     const seen = new Set();
     const unique = csvRecipients.filter(r => {
-      const normalized = normalizePhone(r.phone);
+      const normalized = r.phone.replace(/\D/g, "");
       if (seen.has(normalized)) return false;
       seen.add(normalized);
       return true;

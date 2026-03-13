@@ -136,20 +136,44 @@ export default function FaxTab() {
 
   const load = async () => {
     setLoading(true);
-    const [r, s] = await Promise.all([
-      base44.entities.ReceivedFax.list("-received_at", 100),
-      base44.entities.SentFax.list("-sent_at", 100),
-    ]);
-    setReceived(r);
-    setSent(s);
-    setLoading(false);
+    const adminToken = localStorage.getItem("mlc_admin_token") || "";
+    
+    if (!adminToken) {
+      setReceived([]);
+      setSent([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await base44.functions.invoke("adminGetFaxRecords", { adminToken });
+      if (res.data?.error === 'Unauthorized' || !res.data?.received || !res.data?.sent) {
+        setReceived([]);
+        setSent([]);
+        setLoading(false);
+        return;
+      }
+      setReceived(res.data.received);
+      setSent(res.data.sent);
+    } catch (error) {
+      console.error("Error loading fax records:", error);
+      setReceived([]);
+      setSent([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, []);
 
   const handleRetry = async (fax) => {
     setRetrying(fax.id);
-    await base44.entities.SentFax.update(fax.id, { status: "queued", error_message: "" });
+    const adminToken = localStorage.getItem("mlc_admin_token") || "";
+    await base44.functions.invoke("adminUpdateSentFax", { 
+      adminToken, 
+      faxId: fax.id, 
+      updates: { status: "queued", error_message: "" } 
+    });
     await load();
     setRetrying(null);
   };

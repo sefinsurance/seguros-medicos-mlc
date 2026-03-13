@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { Plus, MessageSquare, Clock, CheckCircle2, Trash2, Users, Play, RefreshCw, Cake, AlertCircle, Copy } from "lucide-react";
+import { Plus, MessageSquare, Clock, CheckCircle2, Trash2, Users, Play, RefreshCw, Cake, AlertCircle, Copy, Pause, Edit3, Info } from "lucide-react";
 import SmsCampaignComposer from "./SmsCampaignComposer";
+import SmsCampaignDetail from "./SmsCampaignDetail";
 
 const STATUS_STYLES = {
   draft: { color: "bg-gray-100 text-gray-600", label: "Draft" },
   scheduled: { color: "bg-blue-100 text-blue-700", label: "Scheduled" },
   sending: { color: "bg-yellow-100 text-yellow-700", label: "Sending..." },
+  paused: { color: "bg-orange-100 text-orange-700", label: "Paused" },
   sent: { color: "bg-green-100 text-green-700", label: "Sent" },
   failed: { color: "bg-red-100 text-red-700", label: "Failed" },
 };
@@ -27,13 +29,27 @@ export default function SmsCampaignsTab() {
   const [expandedId, setExpandedId] = useState(null);
   const [launching, setLaunching] = useState({});
   const [overrideHours, setOverrideHours] = useState({});
+  const [detailCampaign, setDetailCampaign] = useState(null);
   const pollRef = useRef(null);
 
   const load = async () => {
-    setLoading(true);
-    const data = await base44.entities.SmsCampaign.list("-created_date", 100);
-    setCampaigns(data);
-    setLoading(false);
+   setLoading(true);
+   try {
+     const { getAdminToken } = await import("./useAdminToken");
+     const adminToken = await getAdminToken();
+     const res = await base44.functions.invoke("adminGetSmsCampaigns", { adminToken });
+     if (res.data?.error === 'Unauthorized' || !res.data?.campaigns) {
+       setCampaigns([]);
+       setLoading(false);
+       return;
+     }
+     setCampaigns(res.data.campaigns);
+   } catch (err) {
+     console.error('Failed to load campaigns:', err);
+     setCampaigns([]);
+   } finally {
+     setLoading(false);
+   }
   };
 
   useEffect(() => { load(); }, []);
@@ -43,11 +59,19 @@ export default function SmsCampaignsTab() {
     const hasSending = campaigns.some(c => c.status === "sending");
     if (hasSending && !pollRef.current) {
       pollRef.current = setInterval(async () => {
-        const data = await base44.entities.SmsCampaign.list("-created_date", 100);
-        setCampaigns(data);
-        if (!data.some(c => c.status === "sending")) {
-          clearInterval(pollRef.current);
-          pollRef.current = null;
+        try {
+          const { getAdminToken } = await import("./useAdminToken");
+          const adminToken = await getAdminToken();
+          const res = await base44.functions.invoke("adminGetSmsCampaigns", { adminToken });
+          if (res.data?.campaigns) {
+            setCampaigns(res.data.campaigns);
+            if (!res.data.campaigns.some(c => c.status === "sending")) {
+              clearInterval(pollRef.current);
+              pollRef.current = null;
+            }
+          }
+        } catch (err) {
+          console.error('Polling error:', err);
         }
       }, 3000);
     }
@@ -60,24 +84,36 @@ export default function SmsCampaignsTab() {
   }, [campaigns]);
 
   const handleClone = async (campaign) => {
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
     const newName = `${campaign.name} (Copy)`;
-    const cloned = await base44.entities.SmsCampaign.create({
-      name: newName,
-      message_template: campaign.message_template,
-      audience: campaign.audience,
-      audience_filter: campaign.audience_filter,
-      csv_recipients: campaign.csv_recipients,
-      attachment_url: campaign.attachment_url,
-      status: "draft",
-      recipient_count: campaign.recipient_count,
+    await base44.functions.invoke("adminManageSmsCampaign", {
+      adminToken,
+      action: "create",
+      data: {
+        name: newName,
+        message_template: campaign.message_template,
+        audience: campaign.audience,
+        audience_filter: campaign.audience_filter,
+        csv_recipients: campaign.csv_recipients,
+        attachment_url: campaign.attachment_url,
+        status: "draft",
+        recipient_count: campaign.recipient_count,
+      }
     });
     load();
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this campaign?")) return;
-    await base44.entities.SmsCampaign.delete(id);
-    setCampaigns(cs => cs.filter(c => c.id !== id));
+    try {
+      const { getAdminToken } = await import("./useAdminToken");
+      const adminToken = await getAdminToken();
+      await base44.functions.invoke("adminManageSmsCampaign", { adminToken, action: "delete", campaignId: id });
+      setCampaigns(cs => cs.filter(c => c.id !== id));
+    } catch (error) {
+      alert("Failed to delete campaign: " + (error.response?.data?.error || error.message));
+    }
   };
 
   const handleLaunch = async (campaign) => {
@@ -89,6 +125,20 @@ export default function SmsCampaignsTab() {
       setLaunching(l => ({ ...l, [campaign.id]: false }));
       return;
     }
+    setTimeout(load, 1500);
+    setLaunching(l => ({ ...l, [campaign.id]: false }));
+  };
+
+  const handlePause = async (id) => {
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    await base44.functions.invoke("adminManageSmsCampaign", { adminToken, action: "update", campaignId: id, data: { status: "paused" } });
+    load();
+  };
+
+  const handleResume = async (campaign) => {
+    setLaunching(l => ({ ...l, [campaign.id]: true }));
+    await base44.functions.invoke("sendSmsCampaign", { campaign_id: campaign.id, override_hours: !!overrideHours[campaign.id], resume: true });
     setTimeout(load, 1500);
     setLaunching(l => ({ ...l, [campaign.id]: false }));
   };
@@ -109,6 +159,17 @@ export default function SmsCampaignsTab() {
         <SmsCampaignComposer
           onClose={() => setShowComposer(false)}
           onSaved={() => { setShowComposer(false); load(); }}
+        />
+      )}
+
+      {detailCampaign && (
+        <SmsCampaignDetail
+          campaign={detailCampaign}
+          onClose={() => setDetailCampaign(null)}
+          onUpdate={(updated) => {
+            setCampaigns(cs => cs.map(c => c.id === updated.id ? updated : c));
+            setDetailCampaign(updated);
+          }}
         />
       )}
 
@@ -210,6 +271,46 @@ export default function SmsCampaignsTab() {
                   </div>
 
                   <div className="flex items-center gap-1 ml-3 flex-shrink-0" onClick={e => e.stopPropagation()}>
+                    {/* Detail button */}
+                    <button
+                      onClick={() => setDetailCampaign(c)}
+                      className="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                      title="View details"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+                    {/* Pause button for sending campaigns */}
+                    {c.status === "sending" && (
+                      <button
+                        onClick={() => handlePause(c.id)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
+                      >
+                        <Pause className="w-3 h-3" />
+                        Pause
+                      </button>
+                    )}
+                    {/* Resume button for paused campaigns */}
+                    {c.status === "paused" && (
+                      <div className="flex flex-col items-end gap-1">
+                        <label className="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={!!overrideHours[c.id]}
+                            onChange={e => setOverrideHours(o => ({ ...o, [c.id]: e.target.checked }))}
+                            className="accent-amber-500 w-3.5 h-3.5"
+                          />
+                          Override hours
+                        </label>
+                        <button
+                          onClick={() => handleResume(c)}
+                          disabled={isLaunching}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-60"
+                        >
+                          <Play className="w-3 h-3" />
+                          {isLaunching ? "Resuming..." : "Resume"}
+                        </button>
+                      </div>
+                    )}
                     {/* Launch button — only for draft/failed, not birthday (auto) */}
                     {!isBirthday && (c.status === "draft" || c.status === "failed") && (
                       <div className="flex flex-col items-end gap-1">
@@ -255,6 +356,23 @@ export default function SmsCampaignsTab() {
                     <div className="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
                       {c.message_template}
                     </div>
+
+                    {/* Throttle Settings */}
+                    {c.throttle_mode && (
+                      <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-xs font-semibold text-blue-800 mb-1">Throttle Settings</p>
+                        {c.throttle_mode === "time" && (
+                          <p className="text-xs text-blue-700">Spread over {c.throttle_time_days} business days (Mon-Fri, 9am-5pm ET)</p>
+                        )}
+                        {c.throttle_mode === "speed" && (
+                          <p className="text-xs text-blue-700">Send at {c.throttle_speed_per_sec} SMS/sec (Mon-Fri, 9am-5pm ET)</p>
+                        )}
+                        {c.throttle_mode === "quantity" && (
+                          <p className="text-xs text-blue-700">Daily limit: {c.throttle_quantity_per_day} SMS/day (Mon-Fri, 9am-5pm ET)</p>
+                        )}
+                      </div>
+                    )}
+
                     {(c.audience === "csv_upload" || c.audience === "birthday_campaign") && c.csv_recipients && (
                       <div className="mt-3">
                         <p className="text-xs font-semibold text-gray-500 mb-1.5">Recipients (first 5)</p>
