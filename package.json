@@ -82,7 +82,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
     "papaparse": "^5.5.3"
   }
 }
