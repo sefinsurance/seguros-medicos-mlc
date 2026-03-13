@@ -19,12 +19,12 @@ export default function StatsBar({ leads }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
       {stats.map(({ key, label, icon: Icon, color, bg }) => (
-        <div key={key} className="bg-white rounded-xl p-4 shadow-sm border flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
-            <Icon className={`w-5 h-5 ${color}`} />
+        <div key={key} className="bg-white rounded-lg px-3 py-2 shadow-sm border flex items-center gap-2">
+          <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
+            <Icon className={`w-4 h-4 ${color}`} />
           </div>
-          <div>
-            <div className={`text-2xl font-extrabold ${color}`}>{counts[key]}</div>
+          <div className="flex items-center gap-1.5">
+            <div className={`text-lg font-bold ${color}`}>{counts[key]}</div>
             <div className="text-xs text-gray-400">{label}</div>
           </div>
         </div>

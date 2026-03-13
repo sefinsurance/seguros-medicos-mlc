@@ -27,10 +27,10 @@ Deno.serve(async (req) => {
     const passwordMatch = passwordHash === storedHash;
 
     if (usernameMatch && passwordMatch) {
-      return Response.json({ success: true });
-    } else {
-      return Response.json({ success: false, error: "Invalid credentials" }, { status: 401 });
+      return Response.json({ success: true, adminToken: storedHash });
     }
+
+    return Response.json({ success: false, error: "Invalid credentials" }, { status: 401 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

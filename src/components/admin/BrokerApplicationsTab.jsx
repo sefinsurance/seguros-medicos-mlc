@@ -18,17 +18,38 @@ export default function BrokerApplicationsTab() {
   useEffect(() => { load(); }, []);
 
   const load = async () => {
-    setLoading(true);
-    const data = await base44.entities.BrokerApplication.list("-created_date", 200);
-    setApps(data);
-    setLoading(false);
+   setLoading(true);
+   try {
+     const { getAdminToken } = await import("./useAdminToken");
+     const adminToken = await getAdminToken();
+     const res = await base44.functions.invoke("adminGetBrokerApplications", { adminToken });
+     if (res.data?.error === 'Unauthorized' || !res.data?.applications) {
+       setApps([]);
+       setLoading(false);
+       return;
+     }
+     setApps(res.data.applications);
+   } catch (err) {
+     console.error('Failed to load broker applications:', err);
+     setApps([]);
+   } finally {
+     setLoading(false);
+   }
   };
 
   const updateStatus = async (app, status) => {
     setSaving(true);
-    const updated = await base44.entities.BrokerApplication.update(app.id, { status });
-    setApps(prev => prev.map(a => a.id === updated.id ? updated : a));
-    setSelected(updated);
+    const { getAdminToken } = await import("./useAdminToken");
+    const adminToken = await getAdminToken();
+    const res = await base44.functions.invoke("adminUpdateBrokerApplication", { 
+      adminToken, 
+      applicationId: app.id, 
+      status 
+    });
+    if (res.data?.application) {
+      setApps(prev => prev.map(a => a.id === res.data.application.id ? res.data.application : a));
+      setSelected(res.data.application);
+    }
     setSaving(false);
   };
 

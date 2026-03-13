@@ -13,13 +13,21 @@ export default function AdminLoginGate({ onAuthenticated }) {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const res = await base44.functions.invoke("adminAuth", { username, password });
-    setLoading(false);
-    if (res.data?.success) {
-      sessionStorage.setItem("mlc_admin_auth", "1");
-      onAuthenticated();
-    } else {
-      setError("Invalid username or password.");
+
+    try {
+      const res = await base44.functions.invoke("adminAuth", { username, password });
+      setLoading(false);
+
+      if (res.data?.success && res.data?.adminToken) {
+        localStorage.setItem("mlc_admin_auth", "1");
+        localStorage.setItem("mlc_admin_token", res.data.adminToken);
+        onAuthenticated();
+      } else {
+        setError("Invalid username or password.");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err?.data?.error || err?.message || "An error occurred");
     }
   };
 

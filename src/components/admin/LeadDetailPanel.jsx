@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import LeadNotesSection from "./LeadNotesSection";
 import CampaignTags from "./CampaignTags";
 import CampaignEnrollmentModal from "./CampaignEnrollmentModal";
+import { getAdminToken } from "./useAdminToken";
 
 const statusColors = {
   partial_confirmed: "bg-yellow-100 text-yellow-800",
@@ -23,9 +24,21 @@ export default function LeadDetailPanel({ lead, onClose, onUpdate }) {
 
   const save = async () => {
     setSaving(true);
-    const updated = await base44.entities.Lead.update(lead.id, { status, internal_notes: notes });
-    setSaving(false);
-    onUpdate({ ...lead, status, internal_notes: notes });
+    try {
+      const adminToken = await getAdminToken();
+      await base44.functions.invoke("pgUpsertLead", {
+        adminToken,
+        id: lead.id,
+        status,
+        internal_notes: notes
+      });
+      onUpdate({ ...lead, status, internal_notes: notes });
+    } catch (err) {
+      alert("Session expired. Please log in again.");
+      window.location.reload();
+    } finally {
+      setSaving(false);
+    }
   };
 
   const row = (label, value) => value ? (
