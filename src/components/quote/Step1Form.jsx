@@ -1,224 +1,167 @@
 import React, { useState } from "react";
-import { ArrowRight, User, Phone, Mail, MapPin, Cake } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+import { submitQuoteStep1 } from "@/lib/publicIntakeApi";
+import { Loader2 } from "lucide-react";
 
-export default function Step1Form({ lang = "en", ctaSource = "website", onDone }) {
-  const [formData, setFormData] = useState({
-    full_name: "",
-    date_of_birth: "",
-    phone: "",
-    email: "",
-    zip_code: "",
-    product_type: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
+const PRODUCT_OPTIONS = [
+  { value: "ACA",          label_en: "Affordable Care Act (Obamacare)", label_es: "Ley de Cuidado de Salud Asequible (Obamacare)" },
+  { value: "Medicare",     label_en: "Medicare",                        label_es: "Medicare" },
+  { value: "Dental",       label_en: "Dental",                          label_es: "Dental" },
+  { value: "Vision",       label_en: "Vision",                          label_es: "Visión" },
+  { value: "Life",         label_en: "Life Insurance",                  label_es: "Seguro de Vida" },
+  { value: "Supplemental", label_en: "Supplemental / Hospital",         label_es: "Suplementario / Hospital" },
+];
 
-  const t = {
-    en: {
-      title: "Let's get started",
-      subtitle: "Tell us a little about yourself",
-      name: "Full Name",
-      dob: "Date of Birth",
-      phone: "Phone Number",
-      email: "Email Address",
-      zip: "ZIP Code",
-      product: "What are you looking for?",
-      aca: "ACA / Obamacare",
-      medicare: "Medicare Advantage",
-      life: "Life Insurance",
-      dental: "Dental & Vision",
-      next: "Continue",
-      required: "Please fill in all required fields.",
-      failed: "Could not submit Step 1. Please try again.",
-    },
-    es: {
-      title: "Comencemos",
-      subtitle: "Cuéntanos un poco sobre ti",
-      name: "Nombre completo",
-      dob: "Fecha de nacimiento",
-      phone: "Número de teléfono",
-      email: "Correo electrónico",
-      zip: "Código postal",
-      product: "¿Qué estás buscando?",
-      aca: "ACA / Obamacare",
-      medicare: "Medicare Advantage",
-      life: "Seguro de Vida",
-      dental: "Dental y Visión",
-      next: "Continuar",
-      required: "Por favor completa todos los campos requeridos.",
-      failed: "No se pudo enviar el Paso 1. Inténtalo otra vez.",
-    },
-  };
+const copy = {
+  en: {
+    title: "Get Your Free Quote",
+    sub: "Quick and easy — no obligation",
+    fullName: "Full Name",
+    dob: "Date of Birth",
+    phone: "Phone Number",
+    email: "Email Address",
+    zip: "ZIP Code",
+    productType: "What type of insurance are you looking for?",
+    productPlaceholder: "Select Insurance Type",
+    btn: "Confirm & Continue →",
+    consent: "By submitting this form, you agree to be contacted by phone, text, or email regarding your insurance inquiry.",
+    errors: {
+      fullName: "Please enter your full name",
+      dob: "Please enter a valid date of birth",
+      phone: "Please enter a valid phone number",
+      email: "Please enter a valid email",
+      zip: "Please enter a 5-digit ZIP code",
+      product_type: "Please select an insurance type",
+    }
+  },
+  es: {
+    title: "Obtén tu Cotización Gratis",
+    sub: "Rápido y fácil — sin compromiso",
+    fullName: "Nombre Completo",
+    dob: "Fecha de Nacimiento",
+    phone: "Número de Teléfono",
+    email: "Correo Electrónico",
+    zip: "Código Postal",
+    productType: "¿Qué tipo de seguro estás buscando?",
+    productPlaceholder: "Selecciona el Tipo de Seguro",
+    btn: "Confirmar y Continuar →",
+    consent: "Al enviar este formulario, aceptas ser contactado por teléfono, texto o correo electrónico sobre tu consulta de seguro.",
+    errors: {
+      fullName: "Por favor ingresa tu nombre completo",
+      dob: "Por favor ingresa una fecha de nacimiento válida",
+      phone: "Por favor ingresa un número de teléfono válido",
+      email: "Por favor ingresa un correo electrónico válido",
+      zip: "Por favor ingresa un código postal de 5 dígitos",
+      product_type: "Por favor selecciona un tipo de seguro",
+    }
+  }
+};
 
-  const copy = t[lang] || t.en;
+function generateLeadId() {
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10).replace(/-/g, "");
+  const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+  return `lead_${date}_${rand}`;
+}
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+export default function Step1Form({ lang, ctaSource, onDone }) {
+  const c = copy[lang] || copy.en;
+  const [form, setForm] = useState({ full_name: "", date_of_birth: "", phone: "", email: "", zip_code: "", product_type: "" });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const formatPhone = (value) => {
-    const digits = value.replace(/\D/g, "").slice(0, 10);
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  };
-
-  const handlePhoneChange = (e) => {
-    setFormData((prev) => ({ ...prev, phone: formatPhone(e.target.value) }));
+  const validate = () => {
+    const e = {};
+    if (!form.full_name.trim() || form.full_name.trim().length < 2) e.full_name = c.errors.fullName;
+    if (!form.date_of_birth) e.date_of_birth = c.errors.dob;
+    if (!form.phone.replace(/\D/g, "") || form.phone.replace(/\D/g, "").length < 10) e.phone = c.errors.phone;
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = c.errors.email;
+    if (!form.zip_code || !/^\d{5}$/.test(form.zip_code.trim())) e.zip_code = c.errors.zip;
+    if (!form.product_type) e.product_type = c.errors.product_type;
+    return e;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
-    if (
-      !formData.full_name ||
-      !formData.date_of_birth ||
-      !formData.phone ||
-      !formData.email ||
-      !formData.zip_code ||
-      !formData.product_type
-    ) {
-      setError(copy.required);
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    setLoading(true);
+    const lead_external_id = generateLeadId();
+    try {
+      await submitQuoteStep1({
+        lead_external_id,
+        status: "partial_confirmed",
+        cta_source: ctaSource || "",
+        source_page: window.location.pathname,
+        language_selected: lang,
+        full_name: form.full_name.trim(),
+        date_of_birth: form.date_of_birth,
+        phone: form.phone.trim(),
+        email: form.email.trim().toLowerCase(),
+        zip_code: form.zip_code.trim(),
+        product_type: form.product_type,
+      });
+    } catch (error) {
+      console.error("Error creating lead:", error);
+      setLoading(false);
       return;
     }
-
-    const leadId = uuidv4();
-    setSubmitting(true);
-
-    try {
-      const response = await fetch("https://mlcagency.base44.app/functions/webhookStep1", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          lead_id: leadId,
-          full_name: formData.full_name,
-          date_of_birth: formData.date_of_birth,
-          phone: formData.phone,
-          email: formData.email,
-          zip_code: formData.zip_code,
-          product_type: formData.product_type,
-          cta_source: ctaSource,
-          source_page: "astro_site",
-          language_selected: lang,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Step 1 failed: ${response.status}`);
-      }
-
-      await response.json();
-      onDone(leadId);
-    } catch (err) {
-      console.error("Step 1 webhook error:", err);
-      setError(copy.failed);
-    } finally {
-      setSubmitting(false);
-    }
+    setLoading(false);
+    onDone(lead_external_id);
   };
 
-  return (
+  const field = (key, label, type = "text", placeholder = "") => (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-[#1e3a5f] mb-2">{copy.title}</h2>
-        <p className="text-gray-600">{copy.subtitle}</p>
+      <label className="block text-sm font-semibold text-[#1e3a5f] mb-1">{label}</label>
+      <input
+        type={type}
+        value={form[key]}
+        onChange={e => { setForm(f => ({ ...f, [key]: e.target.value })); setErrors(er => ({ ...er, [key]: undefined })); }}
+        placeholder={placeholder}
+        className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#2563eb] ${errors[key] ? "border-red-400 bg-red-50" : "border-gray-300 bg-gray-50"}`}
+      />
+      {errors[key] && <p className="text-red-500 text-xs mt-1">{errors[key]}</p>}
+    </div>
+  );
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="mb-2">
+        <h2 className="text-xl font-extrabold text-[#1e3a5f]">{c.title}</h2>
+        <p className="text-sm text-gray-500">{c.sub}</p>
+      </div>
+      {field("full_name", c.fullName, "text", "Maria Lopez")}
+      {field("date_of_birth", c.dob, "date")}
+      {field("phone", c.phone, "tel", "(239) 555-1212")}
+      {field("email", c.email, "email", "maria@example.com")}
+      {field("zip_code", c.zip, "text", "33971")}
+
+      {/* Product Type — required */}
+      <div>
+        <label className="block text-sm font-semibold text-[#1e3a5f] mb-1">{c.productType}</label>
+        <select
+          value={form.product_type}
+          onChange={e => { setForm(f => ({ ...f, product_type: e.target.value })); setErrors(er => ({ ...er, product_type: undefined })); }}
+          className={`w-full border rounded-xl px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[#2563eb] bg-gray-50 ${errors.product_type ? "border-red-400 bg-red-50" : "border-gray-300"}`}
+        >
+          <option value="">{c.productPlaceholder}</option>
+          {PRODUCT_OPTIONS.map(o => (
+            <option key={o.value} value={o.value}>
+              {lang === "es" ? o.label_es : o.label_en}
+            </option>
+          ))}
+        </select>
+        {errors.product_type && <p className="text-red-500 text-xs mt-1">{errors.product_type}</p>}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="relative">
-          <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            name="full_name"
-            value={formData.full_name}
-            onChange={handleChange}
-            placeholder={copy.name}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-            required
-          />
-        </div>
-
-        <div className="relative">
-          <Cake className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          <input
-            type="date"
-            name="date_of_birth"
-            value={formData.date_of_birth}
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-            required
-          />
-        </div>
-
-        <div className="relative">
-          <Phone className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handlePhoneChange}
-            placeholder={copy.phone}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-            required
-          />
-        </div>
-
-        <div className="relative">
-          <Mail className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder={copy.email}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-            required
-          />
-        </div>
-
-        <div className="relative">
-          <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            name="zip_code"
-            value={formData.zip_code}
-            onChange={handleChange}
-            placeholder={copy.zip}
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-            required
-          />
-        </div>
-
-        <select
-          name="product_type"
-          value={formData.product_type}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent outline-none"
-          required
-        >
-          <option value="">{copy.product}</option>
-          <option value="ACA / Obamacare">{copy.aca}</option>
-          <option value="Medicare Advantage">{copy.medicare}</option>
-          <option value="Life Insurance">{copy.life}</option>
-          <option value="Dental & Vision">{copy.dental}</option>
-        </select>
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full bg-gradient-to-r from-[#1e3a5f] to-[#2563eb] text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-60 flex items-center justify-center gap-2"
-        >
-          {submitting ? "..." : copy.next}
-          {!submitting && <ArrowRight className="w-4 h-4" />}
-        </button>
-      </form>
-    </div>
+      <p className="text-xs text-gray-400 leading-relaxed">{c.consent}</p>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold rounded-xl py-4 text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+        {c.btn}
+      </button>
+    </form>
   );
 }
