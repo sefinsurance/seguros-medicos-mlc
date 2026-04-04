@@ -1,77 +1,68 @@
 import React, { useState, useRef } from "react";
-import Papa from "papaparse";
-import { base44 } from "@/api/base44Client";
+import { adminApi } from "@/api/adminApi";
 import { X, Upload, Users, MessageSquare, Clock, ChevronDown, Paperclip, Image, Loader2, Library, Eraser, Download } from "lucide-react";
 import SmsTemplateLibrary from "./SmsTemplateLibrary";
+import Papa from "papaparse";
 
 const AUDIENCE_OPTIONS = [
-  { value: "all_leads", label: "All Leads" },
-  { value: "all_subscribers", label: "All SMS Subscribers" },
-  { value: "leads_by_product", label: "Leads by Product" },
-  { value: "leads_by_status", label: "Leads by Status" },
-  { value: "prospects_by_state", label: "Prospects by State" },
-  { value: "prospects_by_tag", label: "Prospects by Tag" },
-  { value: "csv_upload", label: "Upload CSV List" },
-  { value: "birthday_campaign", label: "🎂 Birthday Campaign (Auto-Daily)" },
+  { value: "all_leads",          label: "All Leads"                        },
+  { value: "all_subscribers",    label: "All SMS Subscribers"              },
+  { value: "leads_by_product",   label: "Leads by Product"                 },
+  { value: "leads_by_status",    label: "Leads by Status"                  },
+  { value: "prospects_by_state", label: "Prospects by State"               },
+  { value: "prospects_by_tag",   label: "Prospects by Tag"                 },
+  { value: "csv_upload",         label: "Upload CSV List"                  },
+  { value: "birthday_campaign",  label: "🎂 Birthday Campaign (Auto-Daily)" },
 ];
 
-const PRODUCT_OPTIONS = ["ACA / Obamacare", "Medicare Advantage", "Life Insurance", "Dental & Vision"];
-const STATUS_OPTIONS = ["partial_confirmed", "completed", "contacted", "closed", "archived"];
-const US_STATES = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"];
-const PROSPECT_TAG_OPTIONS = ["Active", "Inactive", "Not interested", "Wrong Number", "Disqualified", "Pending", "Future X-Date", "Follow-up"];
+const PRODUCT_OPTIONS   = ["ACA / Obamacare", "Medicare Advantage", "Life Insurance", "Dental & Vision"];
+const STATUS_OPTIONS    = ["partial_confirmed", "completed", "contacted", "closed", "archived"];
+const US_STATES         = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+const PROSPECT_TAG_OPTIONS = ["Active","Inactive","Not interested","Wrong Number","Disqualified","Pending","Future X-Date","Follow-up"];
 
 export default function SmsCampaignComposer({ onClose, onSaved }) {
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
-  const [audience, setAudience] = useState("all_leads");
+  const [name, setName]                   = useState("");
+  const [message, setMessage]             = useState("");
+  const [audience, setAudience]           = useState("all_leads");
   const [audienceFilter, setAudienceFilter] = useState("");
-  const [prospectCampaignFilter, setProspectCampaignFilter] = useState("all"); // "all" | "with_campaigns" | "without_campaigns"
-  const [prospectLanguageFilter, setProspectLanguageFilter] = useState("all"); // "all" | "English" | "Spanish" | "N/A"
-  const [scheduleMode, setScheduleMode] = useState("now"); // "now" | "scheduled"
-  const [scheduledAt, setScheduledAt] = useState("");
-  const [csvRecipients, setCsvRecipients] = useState([]); // [{name, phone}]
-  const [csvFileName, setCsvFileName] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [preview, setPreview] = useState(null);
+  const [prospectCampaignFilter, setProspectCampaignFilter] = useState("all");
+  const [prospectLanguageFilter, setProspectLanguageFilter] = useState("all");
+  const [scheduleMode, setScheduleMode]   = useState("now");
+  const [scheduledAt, setScheduledAt]     = useState("");
+  const [csvRecipients, setCsvRecipients] = useState([]);
+  const [csvFileName, setCsvFileName]     = useState("");
+  const [saving, setSaving]               = useState(false);
+  const [preview, setPreview]             = useState(null);
   const [attachmentUrl, setAttachmentUrl] = useState("");
   const [uploadingAttachment, setUploadingAttachment] = useState(false);
   const [showTemplateLibrary, setShowTemplateLibrary] = useState(false);
-  const [throttleMode, setThrottleMode] = useState("speed"); // "time" | "speed" | "quantity"
-  const [throttleTimeDays, setThrottleTimeDays] = useState(7);
-  const [throttleSpeedPerSec, setThrottleSpeedPerSec] = useState(4);
+  const [throttleMode, setThrottleMode]   = useState("speed");
+  const [throttleTimeDays, setThrottleTimeDays]         = useState(7);
+  const [throttleSpeedPerSec, setThrottleSpeedPerSec]   = useState(4);
   const [throttleQuantityPerDay, setThrottleQuantityPerDay] = useState(500);
-  const [manualPhones, setManualPhones] = useState([{ name: "", phone: "" }]);
-  const fileRef = useRef();
+  const [manualPhones, setManualPhones]   = useState([{ name: "", phone: "" }]);
+  const fileRef       = useRef();
   const attachmentRef = useRef();
 
   const charCount = message.length;
-  const smsCount = Math.ceil(charCount / 160) || 1;
-
-  const insertTag = () => {
-    setMessage(m => m + "{@name}");
-  };
+  const smsCount  = Math.ceil(charCount / 160) || 1;
 
   const previewMessage = (recipientName) =>
     message.replace(/\{@name\}/g, recipientName || "there").replace(/\{@birthday\}/g, "March 7");
 
   const handleCsvUpload = (e) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files[0];
     if (!file) return;
     setCsvFileName(file.name);
     Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      transformHeader: (header) => header.trim().replace(/^\ufeff/, ""),
+      header: true, skipEmptyLines: true, transformHeader: h => h.trim(),
       complete: (results) => {
-        const parsed = (results.data || []).map((row) => ({
-          name: String(row.Name || row.name || "").trim(),
-          phone: String(row.Phone || row.phone || "").trim(),
-          birthday: String(row.Birthday || row.birthdate || row.birth_day || row.birthday || "").trim(),
-        })).filter((r) => r.phone);
+        const parsed = results.data.map(row => ({
+          name:     row.Name     || row.name     || "",
+          phone:    row.Phone    || row.phone    || "",
+          birthday: row.Birthday || row.Birthdate || row.birthday || row.birthdate || "",
+        })).filter(r => r.phone);
         setCsvRecipients(parsed);
-      },
-      error: () => {
-        setCsvRecipients([]);
       }
     });
   };
@@ -81,8 +72,7 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
     const unique = csvRecipients.filter(r => {
       const normalized = r.phone.replace(/\D/g, "");
       if (seen.has(normalized)) return false;
-      seen.add(normalized);
-      return true;
+      seen.add(normalized); return true;
     });
     const removed = csvRecipients.length - unique.length;
     setCsvRecipients(unique);
@@ -92,62 +82,37 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
   const getRecipientCount = async () => {
     const manualCount = manualPhones.filter(p => p.phone.trim()).length;
     if (audience === "csv_upload" || audience === "birthday_campaign") return csvRecipients.length + manualCount;
-    const { getAdminToken } = await import("./useAdminToken");
-    const adminToken = await getAdminToken();
-    if (audience === "all_leads") {
-      const res = await base44.functions.invoke("adminGetLeads", { adminToken });
-      const data = res.data?.leads || [];
-      return data.filter(l => l.phone).length;
-    }
-    if (audience === "all_subscribers") {
-      const res = await base44.functions.invoke("adminGetSmsSubscribers", { adminToken });
-      const data = res.data?.subscribers || [];
-      return data.filter(s => s.status === "opted_in").length;
-    }
-    if (audience === "leads_by_product") {
-      const res = await base44.functions.invoke("adminGetLeads", { adminToken });
-      const data = res.data?.leads || [];
-      return data.filter(l => l.phone && l.product_type === audienceFilter).length;
-    }
-    if (audience === "leads_by_status") {
-      const res = await base44.functions.invoke("adminGetLeads", { adminToken });
-      const data = res.data?.leads || [];
-      return data.filter(l => l.phone && l.status === audienceFilter).length;
-    }
-    if (audience === "prospects_by_state") {
-      const res = await base44.functions.invoke("adminGetProspects", { adminToken });
-      const data = res.data?.prospects || [];
-      let filtered = data.filter(p => p.phone && p.state === audienceFilter);
-      if (prospectCampaignFilter === "with_campaigns") {
-        filtered = filtered.filter(p => p.campaign_tags);
-      } else if (prospectCampaignFilter === "without_campaigns") {
-        filtered = filtered.filter(p => !p.campaign_tags);
+
+    try {
+      if (audience === "all_leads") {
+        // TODO: server should expose GET /admin/contacts/count?segment=lead
+        const data = await adminApi.getPhoneBook({ segment: "lead", limit: 1 });
+        return (data.total || 0) + manualCount;
       }
-      return filtered.length;
-    }
-    if (audience === "prospects_by_tag") {
-      const res = await base44.functions.invoke("adminGetProspects", { adminToken });
-      const data = res.data?.prospects || [];
-      let filtered = data.filter(p => p.phone && p.tag === audienceFilter);
-      if (prospectLanguageFilter !== "all") {
-        if (prospectLanguageFilter === "N/A") {
-          filtered = filtered.filter(p => !p.language);
-        } else {
-          filtered = filtered.filter(p => p.language === prospectLanguageFilter);
-        }
+      if (audience === "all_subscribers") {
+        const data = await adminApi.getSmsSubscribers({ statusFilter: "opted_in", limit: 1 });
+        return (data.total || 0) + manualCount;
       }
-      return filtered.length;
+      // For filtered audiences, return 0 and let the server calculate on launch
+      return manualCount;
+    } catch {
+      return manualCount;
     }
-    return 0;
   };
 
   const handleAttachmentUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setUploadingAttachment(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setAttachmentUrl(file_url);
-    setUploadingAttachment(false);
+    try {
+      const result = await adminApi.uploadFile(file);
+      setAttachmentUrl(result.file_url);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Failed to upload file. Please try again.");
+    } finally {
+      setUploadingAttachment(false);
+    }
   };
 
   const handleSave = async (statusVal) => {
@@ -155,41 +120,33 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
     setSaving(true);
     try {
       const count = await getRecipientCount();
-      const { getAdminToken } = await import("./useAdminToken");
-      const adminToken = await getAdminToken();
-
-      // Merge CSV recipients with manual phones
       const validManualPhones = manualPhones.filter(p => p.phone.trim());
-      const allRecipients = (audience === "csv_upload" || audience === "birthday_campaign") 
+      const allRecipients = (audience === "csv_upload" || audience === "birthday_campaign")
         ? [...csvRecipients, ...validManualPhones]
         : validManualPhones;
 
-      await base44.functions.invoke("adminManageSmsCampaign", {
-        adminToken,
-        action: "create",
-        data: {
-          name: name.trim(),
-          message_template: message,
-          audience,
-          audience_filter: audienceFilter,
-          prospect_campaign_filter: audience === "prospects_by_state" ? prospectCampaignFilter : null,
-          prospect_language_filter: audience === "prospects_by_tag" ? prospectLanguageFilter : null,
-          csv_recipients: allRecipients.length > 0 ? JSON.stringify(allRecipients) : "",
-          status: statusVal,
-          scheduled_at: scheduleMode === "scheduled" ? scheduledAt : "",
-          recipient_count: count,
-          attachment_url: attachmentUrl || "",
-          throttle_mode: throttleMode,
-          throttle_time_days: throttleMode === "time" ? throttleTimeDays : null,
-          throttle_speed_per_sec: throttleMode === "speed" ? throttleSpeedPerSec : null,
-          throttle_quantity_per_day: throttleMode === "quantity" ? throttleQuantityPerDay : null,
-          last_sent_index: 0,
-          notes: "",
-        }
+      await adminApi.createSmsCampaign({
+        name:             name.trim(),
+        message_template: message,
+        audience,
+        audience_filter:  audienceFilter,
+        prospect_campaign_filter: audience === "prospects_by_state" ? prospectCampaignFilter : null,
+        prospect_language_filter: audience === "prospects_by_tag"   ? prospectLanguageFilter : null,
+        csv_recipients:   allRecipients.length > 0 ? JSON.stringify(allRecipients) : "",
+        status:           statusVal,
+        scheduled_at:     scheduleMode === "scheduled" ? scheduledAt : "",
+        recipient_count:  count,
+        attachment_url:   attachmentUrl || "",
+        throttle_mode:    throttleMode,
+        throttle_time_days:        throttleMode === "time"     ? throttleTimeDays     : null,
+        throttle_speed_per_sec:    throttleMode === "speed"    ? throttleSpeedPerSec   : null,
+        throttle_quantity_per_day: throttleMode === "quantity" ? throttleQuantityPerDay : null,
+        last_sent_index:  0,
+        notes:            "",
       });
       onSaved();
     } catch (err) {
-      console.error('Error saving campaign:', err);
+      console.error("Error saving campaign:", err);
       alert("Failed to save campaign: " + err.message);
     } finally {
       setSaving(false);
@@ -197,246 +154,104 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
   };
 
   const sampleName = csvRecipients[0]?.name || "Maria";
+  const handleLoadTemplate = (template) => { setMessage(template.message_template); setShowTemplateLibrary(false); };
 
-  const handleLoadTemplate = (template) => {
-    setMessage(template.message_template);
-    setShowTemplateLibrary(false);
-  };
+  const selectEl = (value, onChange, children, className = "") => (
+    <div className={`relative ${className}`}>
+      <select value={value} onChange={e => onChange(e.target.value)}
+        className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8">
+        {children}
+      </select>
+      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      {showTemplateLibrary && (
-        <SmsTemplateLibrary
-          onSelectTemplate={handleLoadTemplate}
-          onClose={() => setShowTemplateLibrary(false)}
-        />
-      )}
-      <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
-        onClick={e => e.stopPropagation()}
-      >
+      {showTemplateLibrary && <SmsTemplateLibrary onSelectTemplate={handleLoadTemplate} onClose={() => setShowTemplateLibrary(false)} />}
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-[#1e3a5f]" />
-            <h2 className="text-base font-bold text-[#1e3a5f]">New SMS Campaign</h2>
-          </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2"><MessageSquare className="w-5 h-5 text-[#1e3a5f]" /><h2 className="text-base font-bold text-[#1e3a5f]">New SMS Campaign</h2></div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
         </div>
 
         <div className="px-6 py-5 space-y-5">
           {/* Campaign Name */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">Campaign Name</label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="e.g. Open Enrollment Reminder March 2026"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-            />
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Open Enrollment Reminder March 2026"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
 
           {/* Audience */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">Send To</label>
-            <div className="relative">
-              <select
-                value={audience}
-                onChange={e => { setAudience(e.target.value); setAudienceFilter(""); setProspectCampaignFilter("all"); setProspectLanguageFilter("all"); setCsvRecipients([]); }}
-                className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-              >
-                {AUDIENCE_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-
-            {audience === "leads_by_product" && (
-              <div className="mt-2 relative">
-                <select
-                  value={audienceFilter}
-                  onChange={e => setAudienceFilter(e.target.value)}
-                  className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                >
-                  <option value="">Select product...</option>
-                  {PRODUCT_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
+            {selectEl(audience, v => { setAudience(v); setAudienceFilter(""); setProspectCampaignFilter("all"); setProspectLanguageFilter("all"); setCsvRecipients([]); },
+              AUDIENCE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)
             )}
 
-            {audience === "leads_by_status" && (
-              <div className="mt-2 relative">
-                <select
-                  value={audienceFilter}
-                  onChange={e => setAudienceFilter(e.target.value)}
-                  className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                >
-                  <option value="">Select status...</option>
-                  {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
-            )}
+            {audience === "leads_by_product" && selectEl(audienceFilter, setAudienceFilter, [<option key="" value="">Select product...</option>, ...PRODUCT_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)], "mt-2")}
+            {audience === "leads_by_status"  && selectEl(audienceFilter, setAudienceFilter, [<option key="" value="">Select status...</option>,  ...STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)],  "mt-2")}
 
             {audience === "prospects_by_state" && (
               <div className="mt-2 space-y-2">
-                <div className="relative">
-                  <select
-                    value={audienceFilter}
-                    onChange={e => setAudienceFilter(e.target.value)}
-                    className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                  >
-                    <option value="">Select state...</option>
-                    {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-                <div className="relative">
-                  <select
-                    value={prospectCampaignFilter}
-                    onChange={e => setProspectCampaignFilter(e.target.value)}
-                    className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                  >
-                    <option value="all">All Prospects</option>
-                    <option value="with_campaigns">With Campaign Assignment</option>
-                    <option value="without_campaigns">Without Campaign Assignment</option>
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
+                {selectEl(audienceFilter, setAudienceFilter, [<option key="" value="">Select state...</option>, ...US_STATES.map(s => <option key={s} value={s}>{s}</option>)])}
+                {selectEl(prospectCampaignFilter, setProspectCampaignFilter, [
+                  <option key="all" value="all">All Prospects</option>,
+                  <option key="with" value="with_campaigns">With Campaign Assignment</option>,
+                  <option key="without" value="without_campaigns">Without Campaign Assignment</option>,
+                ])}
               </div>
             )}
 
             {audience === "prospects_by_tag" && (
               <div className="mt-2 space-y-2">
-                <div className="relative">
-                  <select
-                    value={audienceFilter}
-                    onChange={e => setAudienceFilter(e.target.value)}
-                    className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                  >
-                    <option value="">Select tag...</option>
-                    {PROSPECT_TAG_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-                <div className="relative">
-                  <select
-                    value={prospectLanguageFilter}
-                    onChange={e => setProspectLanguageFilter(e.target.value)}
-                    className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 pr-8"
-                  >
-                    <option value="all">All Languages</option>
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <option value="N/A">N/A (Missing Language)</option>
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
+                {selectEl(audienceFilter, setAudienceFilter, [<option key="" value="">Select tag...</option>, ...PROSPECT_TAG_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)])}
+                {selectEl(prospectLanguageFilter, setProspectLanguageFilter, [
+                  <option key="all" value="all">All Languages</option>,
+                  <option key="en" value="English">English</option>,
+                  <option key="es" value="Spanish">Spanish</option>,
+                  <option key="na" value="N/A">N/A (Missing Language)</option>,
+                ])}
               </div>
             )}
 
-            {audience === "birthday_campaign" && (
+            {(audience === "birthday_campaign" || audience === "csv_upload") && (
               <div className="mt-2 space-y-2">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-800 leading-relaxed">
-                  <strong>🎂 Birthday Campaign</strong> — Runs automatically every day at 9 AM. Sends your message to everyone in the CSV whose birthday matches today's date (MM/DD). Use <code className="bg-amber-100 px-1 rounded">{"{@name}"}</code> for personalization. Make sure Column C has birthdays in <strong>MM/DD/YYYY</strong> or <strong>MM/DD</strong> format.
-                </div>
+                {audience === "birthday_campaign" && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-800 leading-relaxed">
+                    <strong>🎂 Birthday Campaign</strong> — Runs automatically every day at 9 AM. Sends your message to everyone in the CSV whose birthday matches today's date (MM/DD). Use <code className="bg-amber-100 px-1 rounded">{"{"}{@name}{"}"}</code> for personalization. Column C must have birthdays in <strong>MM/DD/YYYY</strong> or <strong>MM/DD</strong> format.
+                  </div>
+                )}
                 <div className="flex gap-2">
-                  <a
-                    href="data:text/csv;charset=utf-8,Name,Phone,Birthday%0AJohn Doe,+1234567890,01/15/1980%0AJane Smith,+0987654321,05/20/1975"
-                    download="sample-birthday-sms.csv"
-                    className="flex items-center gap-2 border border-gray-300 text-gray-700 rounded-lg px-3 py-2 text-xs font-semibold hover:bg-gray-50"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Sample CSV
+                  <a href="data:text/csv;charset=utf-8,Name,Phone,Birthday%0AJohn Doe,+1234567890,01/15/1980%0AJane Smith,+0987654321,05/20/1975"
+                    download="sample-sms.csv" className="flex items-center gap-2 border border-gray-300 text-gray-700 rounded-lg px-3 py-2 text-xs font-semibold hover:bg-gray-50">
+                    <Download className="w-3.5 h-3.5" />Sample CSV
                   </a>
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current.click()}
-                    className="flex-1 flex items-center gap-2 border border-dashed border-amber-400 rounded-lg px-4 py-3 text-sm text-amber-700 hover:bg-amber-50 transition-colors justify-center"
-                  >
-                    <Upload className="w-4 h-4" />
-                    {csvFileName || "Upload Birthday CSV (A: Name, B: Phone, C: Birthday)"}
+                  <button type="button" onClick={() => fileRef.current.click()}
+                    className={`flex-1 flex items-center gap-2 border border-dashed rounded-lg px-4 py-3 text-sm hover:opacity-80 transition-colors justify-center ${audience === "birthday_campaign" ? "border-amber-400 text-amber-700 hover:bg-amber-50" : "border-blue-300 text-blue-600 hover:bg-blue-50"}`}>
+                    <Upload className="w-4 h-4" />{csvFileName || `Upload CSV (A: Name, B: Phone${audience === "birthday_campaign" ? ", C: Birthday" : ""})`}
                   </button>
                 </div>
                 <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCsvUpload} />
                 {csvRecipients.length > 0 && (
-                  <div className="mt-1 flex items-center gap-2 text-xs text-green-600 flex-wrap">
-                    <Users className="w-3.5 h-3.5" />
-                    {csvRecipients.length} contacts loaded · {csvRecipients.filter(r => r.birthday).length} with birthdays
-                    <button
-                      onClick={removeDuplicates}
-                      className="flex items-center gap-1 bg-orange-100 hover:bg-orange-200 text-orange-700 px-2 py-0.5 rounded font-medium transition-colors ml-auto"
-                    >
-                      <Eraser className="w-3 h-3" />
-                      Remove Duplicates
+                  <div className="flex items-center gap-2 text-xs text-green-600 flex-wrap">
+                    <Users className="w-3.5 h-3.5" />{csvRecipients.length} contacts loaded{audience === "birthday_campaign" && ` · ${csvRecipients.filter(r => r.birthday).length} with birthdays`}
+                    {audience === "csv_upload" && <button onClick={() => setPreview(p => p ? null : "csv")} className="text-blue-500 underline">{preview === "csv" ? "Hide" : "Preview"}</button>}
+                    <button onClick={removeDuplicates} className="flex items-center gap-1 bg-orange-100 hover:bg-orange-200 text-orange-700 px-2 py-0.5 rounded font-medium transition-colors ml-auto">
+                      <Eraser className="w-3 h-3" />Remove Duplicates
                     </button>
                   </div>
                 )}
-              </div>
-            )}
-
-            {audience === "csv_upload" && (
-              <div className="mt-2">
-                <div className="flex gap-2 mb-2">
-                  <a
-                    href="data:text/csv;charset=utf-8,Name,Phone,Birthday%0AJohn Doe,+1234567890,01/15/1980%0AJane Smith,+0987654321,05/20/1975"
-                    download="sample-sms.csv"
-                    className="flex items-center gap-2 border border-gray-300 text-gray-700 rounded-lg px-3 py-2 text-xs font-semibold hover:bg-gray-50"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Sample CSV
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current.click()}
-                    className="flex-1 flex items-center gap-2 border border-dashed border-blue-300 rounded-lg px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition-colors justify-center"
-                  >
-                    <Upload className="w-4 h-4" />
-                    {csvFileName || "Upload CSV (A: Name, B: Phone, C: Birthday MM/DD/YYYY)"}
-                  </button>
-                </div>
-                <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCsvUpload} />
-                {csvRecipients.length > 0 && (
-                  <div className="mt-2 flex items-center gap-2 text-xs text-green-600 flex-wrap">
-                    <Users className="w-3.5 h-3.5" />
-                    {csvRecipients.length} recipients loaded
-                    <button onClick={() => setPreview(prev => prev ? null : "csv")} className="text-blue-500 underline">
-                      {preview === "csv" ? "Hide" : "Preview"}
-                    </button>
-                    <button
-                      onClick={removeDuplicates}
-                      className="flex items-center gap-1 bg-orange-100 hover:bg-orange-200 text-orange-700 px-2 py-0.5 rounded font-medium transition-colors"
-                    >
-                      <Eraser className="w-3 h-3" />
-                      Remove Duplicates
-                    </button>
-                  </div>
-                )}
-                {preview === "csv" && (
+                {preview === "csv" && csvRecipients.length > 0 && (
                   <div className="mt-2 border rounded-lg overflow-auto max-h-36 text-xs">
                     <table className="w-full">
-                      <thead className="bg-gray-50 sticky top-0">
-                        <tr>
-                          <th className="px-3 py-1.5 text-left text-gray-500 font-medium">Name</th>
-                          <th className="px-3 py-1.5 text-left text-gray-500 font-medium">Phone</th>
-                          <th className="px-3 py-1.5 text-left text-gray-500 font-medium">Birthday</th>
-                        </tr>
-                      </thead>
+                      <thead className="bg-gray-50 sticky top-0"><tr>{["Name","Phone","Birthday"].map(h => <th key={h} className="px-3 py-1.5 text-left text-gray-500 font-medium">{h}</th>)}</tr></thead>
                       <tbody>
-                        {csvRecipients.slice(0, 20).map((r, i) => (
-                          <tr key={i} className="border-t border-gray-100">
-                            <td className="px-3 py-1.5 text-gray-700">{r.name}</td>
-                            <td className="px-3 py-1.5 text-gray-700">{r.phone}</td>
-                            <td className="px-3 py-1.5 text-gray-400">{r.birthday || "—"}</td>
-                          </tr>
-                        ))}
-                        {csvRecipients.length > 20 && (
-                          <tr><td colSpan={3} className="px-3 py-1.5 text-gray-400 text-center">...and {csvRecipients.length - 20} more</td></tr>
-                        )}
+                        {csvRecipients.slice(0, 20).map((r, i) => <tr key={i} className="border-t border-gray-100"><td className="px-3 py-1.5 text-gray-700">{r.name}</td><td className="px-3 py-1.5 text-gray-700">{r.phone}</td><td className="px-3 py-1.5 text-gray-400">{r.birthday || "—"}</td></tr>)}
+                        {csvRecipients.length > 20 && <tr><td colSpan={3} className="px-3 py-1.5 text-gray-400 text-center">...and {csvRecipients.length - 20} more</td></tr>}
                       </tbody>
                     </table>
                   </div>
@@ -451,40 +266,17 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
             <div className="space-y-2">
               {manualPhones.map((entry, i) => (
                 <div key={i} className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Name (optional)"
-                    value={entry.name}
+                  <input type="text" placeholder="Name (optional)" value={entry.name}
+                    onChange={e => { const updated = [...manualPhones]; updated[i].name = e.target.value; setManualPhones(updated); }}
+                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
+                  <input type="tel" placeholder="Phone number" value={entry.phone}
                     onChange={e => {
-                      const updated = [...manualPhones];
-                      updated[i].name = e.target.value;
-                      setManualPhones(updated);
+                      const updated = [...manualPhones]; updated[i].phone = e.target.value; setManualPhones(updated);
+                      if (i === manualPhones.length - 1 && e.target.value.trim()) setManualPhones([...updated, { name: "", phone: "" }]);
                     }}
-                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone number"
-                    value={entry.phone}
-                    onChange={e => {
-                      const updated = [...manualPhones];
-                      updated[i].phone = e.target.value;
-                      setManualPhones(updated);
-                      // Auto-add new row if last one is filled
-                      if (i === manualPhones.length - 1 && e.target.value.trim()) {
-                        setManualPhones([...updated, { name: "", phone: "" }]);
-                      }
-                    }}
-                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                    className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
                   {manualPhones.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setManualPhones(manualPhones.filter((_, idx) => idx !== i))}
-                      className="text-gray-400 hover:text-red-500 px-2"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                    <button type="button" onClick={() => setManualPhones(manualPhones.filter((_, idx) => idx !== i))} className="text-gray-400 hover:text-red-500 px-2"><X className="w-4 h-4" /></button>
                   )}
                 </div>
               ))}
@@ -500,22 +292,16 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
               <label className="text-xs font-semibold text-gray-600">Message</label>
               <div className="flex gap-1">
                 <button type="button" onClick={() => setShowTemplateLibrary(true)} className="text-xs text-purple-600 hover:text-purple-800 bg-purple-50 px-2 py-0.5 rounded font-medium flex items-center gap-1"><Library className="w-3 h-3" /> Templates</button>
-                <button type="button" onClick={() => setMessage(m => m + "{@name}")} className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded font-medium">+ &#123;@name&#125;</button>
+                <button type="button" onClick={() => setMessage(m => m + "{@name}")}     className="text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded font-medium">+ &#123;@name&#125;</button>
                 <button type="button" onClick={() => setMessage(m => m + "{@birthday}")} className="text-xs text-amber-600 hover:text-amber-800 bg-amber-50 px-2 py-0.5 rounded font-medium">+ &#123;@birthday&#125;</button>
               </div>
             </div>
-            <textarea
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              rows={5}
+            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={5}
               placeholder="Hi {@name}, this is MLC Insurance reminding you that open enrollment is now open! Call us at 877-458-2557."
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-            />
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400 resize-none" />
             <div className="flex items-center justify-between mt-1 text-xs text-gray-400">
               <span>{charCount} characters · {smsCount} SMS segment{smsCount > 1 ? "s" : ""}</span>
-              {(message.includes("{@name}") || message.includes("{@birthday}")) && (
-                <span className="text-blue-500">✓ Personalized</span>
-              )}
+              {(message.includes("{@name}") || message.includes("{@birthday}")) && <span className="text-blue-500">✓ Personalized</span>}
             </div>
           </div>
 
@@ -526,18 +312,12 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
               <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-3 py-2 bg-gray-50">
                 <Image className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 <img src={attachmentUrl} alt="attachment" className="w-14 h-14 object-cover rounded-md border border-gray-200" />
-                <span className="text-xs text-gray-500 flex-1 truncate">{attachmentUrl.split('/').pop()}</span>
-                <button type="button" onClick={() => setAttachmentUrl("")} className="text-gray-400 hover:text-red-500 ml-auto">
-                  <X className="w-4 h-4" />
-                </button>
+                <span className="text-xs text-gray-500 flex-1 truncate">{attachmentUrl.split("/").pop()}</span>
+                <button type="button" onClick={() => setAttachmentUrl("")} className="text-gray-400 hover:text-red-500 ml-auto"><X className="w-4 h-4" /></button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => attachmentRef.current.click()}
-                disabled={uploadingAttachment}
-                className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-500 hover:bg-gray-50 transition-colors w-full justify-center disabled:opacity-60"
-              >
+              <button type="button" onClick={() => attachmentRef.current.click()} disabled={uploadingAttachment}
+                className="flex items-center gap-2 border border-dashed border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-500 hover:bg-gray-50 transition-colors w-full justify-center disabled:opacity-60">
                 {uploadingAttachment ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
                 {uploadingAttachment ? "Uploading..." : "Attach image or file"}
               </button>
@@ -550,9 +330,7 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
             <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
               <p className="text-xs font-semibold text-gray-500 mb-2">Preview (as "{sampleName}")</p>
               <div className="bg-[#1e3a5f] text-white text-sm rounded-2xl rounded-tl-none px-4 py-2.5 inline-block max-w-xs leading-relaxed">
-                {attachmentUrl && (
-                  <img src={attachmentUrl} alt="attachment preview" className="rounded-xl mb-2 max-w-full max-h-40 object-cover" />
-                )}
+                {attachmentUrl && <img src={attachmentUrl} alt="attachment preview" className="rounded-xl mb-2 max-w-full max-h-40 object-cover" />}
                 {previewMessage(sampleName)}
               </div>
             </div>
@@ -562,68 +340,30 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
           <div className="border-t border-gray-200 pt-5">
             <label className="block text-xs font-semibold text-gray-600 mb-2">Campaign Throttling</label>
             <div className="space-y-3">
-              {[
-                { value: "time", label: "Time-Based", desc: "Spread over N days" },
-                { value: "speed", label: "Speed-Based", desc: "SMS per second" },
-                { value: "quantity", label: "Quantity-Based", desc: "SMS per day" }
-              ].map(opt => (
+              {[{ value: "time", label: "Time-Based", desc: "Spread over N days" }, { value: "speed", label: "Speed-Based", desc: "SMS per second" }, { value: "quantity", label: "Quantity-Based", desc: "SMS per day" }].map(opt => (
                 <label key={opt.value} className={`flex items-start gap-3 cursor-pointer p-3 rounded-lg border text-sm transition-colors ${throttleMode === opt.value ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}>
-                  <input
-                    type="radio"
-                    name="throttleMode"
-                    value={opt.value}
-                    checked={throttleMode === opt.value}
-                    onChange={() => setThrottleMode(opt.value)}
-                    className="accent-blue-600 mt-0.5"
-                  />
-                  <div className="flex-1">
-                    <div className="font-semibold text-gray-800">{opt.label}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{opt.desc}</div>
-                  </div>
+                  <input type="radio" name="throttleMode" value={opt.value} checked={throttleMode === opt.value} onChange={() => setThrottleMode(opt.value)} className="accent-blue-600 mt-0.5" />
+                  <div className="flex-1"><div className="font-semibold text-gray-800">{opt.label}</div><div className="text-xs text-gray-500 mt-0.5">{opt.desc}</div></div>
                 </label>
               ))}
-
               {throttleMode === "time" && (
                 <div className="ml-6 flex items-center gap-2">
                   <label className="text-xs text-gray-600">Spread over:</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="30"
-                    value={throttleTimeDays}
-                    onChange={e => setThrottleTimeDays(parseInt(e.target.value) || 1)}
-                    className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <input type="number" min="1" max="30" value={throttleTimeDays} onChange={e => setThrottleTimeDays(parseInt(e.target.value) || 1)} className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
                   <span className="text-xs text-gray-600">business days (Mon-Fri, 9am-5pm ET)</span>
                 </div>
               )}
-
               {throttleMode === "speed" && (
                 <div className="ml-6 flex items-center gap-2">
                   <label className="text-xs text-gray-600">Send at:</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={throttleSpeedPerSec}
-                    onChange={e => setThrottleSpeedPerSec(parseInt(e.target.value) || 1)}
-                    className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <input type="number" min="1" max="10" value={throttleSpeedPerSec} onChange={e => setThrottleSpeedPerSec(parseInt(e.target.value) || 1)} className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
                   <span className="text-xs text-gray-600">SMS per second (9am-5pm ET, Mon-Fri)</span>
                 </div>
               )}
-
               {throttleMode === "quantity" && (
                 <div className="ml-6 flex items-center gap-2">
                   <label className="text-xs text-gray-600">Daily limit:</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="1000"
-                    value={throttleQuantityPerDay}
-                    onChange={e => setThrottleQuantityPerDay(parseInt(e.target.value) || 1)}
-                    className="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                  />
+                  <input type="number" min="1" max="1000" value={throttleQuantityPerDay} onChange={e => setThrottleQuantityPerDay(parseInt(e.target.value) || 1)} className="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
                   <span className="text-xs text-gray-600">SMS per day (spread 9am-5pm ET, Mon-Fri)</span>
                 </div>
               )}
@@ -636,14 +376,7 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
             <div className="flex gap-3">
               {[{ value: "now", label: "Send Now (Save as Draft)" }, { value: "scheduled", label: "Schedule for Later" }].map(opt => (
                 <label key={opt.value} className={`flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg border text-sm transition-colors ${scheduleMode === opt.value ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-600"}`}>
-                  <input
-                    type="radio"
-                    name="scheduleMode"
-                    value={opt.value}
-                    checked={scheduleMode === opt.value}
-                    onChange={() => setScheduleMode(opt.value)}
-                    className="accent-blue-600"
-                  />
+                  <input type="radio" name="scheduleMode" value={opt.value} checked={scheduleMode === opt.value} onChange={() => setScheduleMode(opt.value)} className="accent-blue-600" />
                   {opt.label}
                 </label>
               ))}
@@ -651,12 +384,8 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
             {scheduleMode === "scheduled" && (
               <div className="mt-3 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                <input
-                  type="datetime-local"
-                  value={scheduledAt}
-                  onChange={e => setScheduledAt(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                />
+                <input type="datetime-local" value={scheduledAt} onChange={e => setScheduledAt(e.target.value)}
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-400" />
               </div>
             )}
           </div>
@@ -666,18 +395,11 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
         <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between gap-3">
           <button onClick={onClose} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
           <div className="flex gap-2">
-            <button
-              onClick={() => handleSave("draft")}
-              disabled={saving || !name || !message}
-              className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-            >
-              Save Draft
-            </button>
-            <button
-              onClick={() => handleSave(scheduleMode === "scheduled" ? "scheduled" : "draft")}
+            <button onClick={() => handleSave("draft")} disabled={saving || !name || !message}
+              className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors">Save Draft</button>
+            <button onClick={() => handleSave(scheduleMode === "scheduled" ? "scheduled" : "draft")}
               disabled={saving || !name || !message || (audience === "csv_upload" && csvRecipients.length === 0)}
-              className="px-5 py-2 text-sm bg-[#1e3a5f] text-white rounded-lg font-semibold hover:bg-[#163059] disabled:opacity-50 transition-colors"
-            >
+              className="px-5 py-2 text-sm bg-[#1e3a5f] text-white rounded-lg font-semibold hover:bg-[#163059] disabled:opacity-50 transition-colors">
               {saving ? "Saving..." : scheduleMode === "scheduled" ? "Schedule Campaign" : "Save Campaign"}
             </button>
           </div>
