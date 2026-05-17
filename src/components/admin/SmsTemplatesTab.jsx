@@ -122,8 +122,8 @@ function TemplateModal({ template, onClose, onSaved }) {
             <div className="flex items-center justify-between mb-1">
               <label className="block text-sm font-medium text-gray-700">Message</label>
               <div className="flex gap-1">
-                <button type="button" onClick={() => insertVariable("{@name}")}  className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100">+ {"{"@name{"}"}</button>
-                <button type="button" onClick={() => insertVariable("{@phone}")} className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100">+ {"{"@phone{"}"}</button>
+                <button type="button" onClick={() => insertVariable("{@name}")}  className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100">+ {"{@name}"}</button>
+                <button type="button" onClick={() => insertVariable("{@phone}")} className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100">+ {"{@phone}"}</button>
               </div>
             </div>
             <Textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Hi {@name}, this is a reminder about..." rows={6} required />

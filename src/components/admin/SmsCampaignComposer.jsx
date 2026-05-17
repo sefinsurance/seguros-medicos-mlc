@@ -222,7 +222,7 @@ export default function SmsCampaignComposer({ onClose, onSaved }) {
               <div className="mt-2 space-y-2">
                 {audience === "birthday_campaign" && (
                   <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-800 leading-relaxed">
-                    <strong>🎂 Birthday Campaign</strong> — Runs automatically every day at 9 AM. Sends your message to everyone in the CSV whose birthday matches today's date (MM/DD). Use <code className="bg-amber-100 px-1 rounded">{"{"}{@name}{"}"}</code> for personalization. Column C must have birthdays in <strong>MM/DD/YYYY</strong> or <strong>MM/DD</strong> format.
+                    <strong>🎂 Birthday Campaign</strong> — Runs automatically every day at 9 AM. Sends your message to everyone in the CSV whose birthday matches today's date (MM/DD). Use <code className="bg-amber-100 px-1 rounded">{"{@name}"}</code> for personalization. Column C must have birthdays in <strong>MM/DD/YYYY</strong> or <strong>MM/DD</strong> format.
                   </div>
                 )}
                 <div className="flex gap-2">
