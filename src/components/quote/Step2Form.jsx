@@ -60,7 +60,7 @@ export default function Step2Form({ lang, leadId, onDone }) {
     setLoading(true);
     try {
       const payload = {
-        lead_external_id: leadId,
+        lead_id: leadId,
         status: "completed",
       };
 
