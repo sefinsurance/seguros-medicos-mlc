@@ -3,7 +3,7 @@ import { submitQuoteStep1 } from "@/lib/publicIntakeApi";
 import { Loader2 } from "lucide-react";
 
 const PRODUCT_OPTIONS = [
-  { value: "ACA",          label_en: "Affordable Care Act (Obamacare)", label_es: "Ley de Cuidado de Salud Asequible (Obamacare)" },
+  { value: "ACA",          label_en: "Healthcare",                      label_es: "Seguro de Salud" },
   { value: "Medicare",     label_en: "Medicare",                        label_es: "Medicare" },
   { value: "Dental",       label_en: "Dental",                          label_es: "Dental" },
   { value: "Vision",       label_en: "Vision",                          label_es: "Visión" },
@@ -88,7 +88,7 @@ export default function Step1Form({ lang, ctaSource, onDone }) {
     const lead_external_id = generateLeadId();
     try {
       await submitQuoteStep1({
-        lead_external_id,
+        lead_id: lead_external_id,
         status: "partial_confirmed",
         cta_source: ctaSource || "",
         source_page: window.location.pathname,
