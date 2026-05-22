@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Phone, Lock } from "lucide-react";
 import { createPageUrl } from "@/utils";
@@ -8,7 +8,27 @@ const t = {
   es: { tagline: "• Se habla español • Atención familiar y sin presión", slogan: "Seguro de salud para toda la familia." }
 };
 
+const LANG_STORAGE_KEY = "mlc_lang";
+
 export default function ContactBar({ lang, setLang }) {
+  // Sync the language choice to localStorage so standalone islands on the
+  // News pages (and the next-page Astro load) can read the same preference.
+  const hydrated = useRef(false);
+  useEffect(() => {
+    if (hydrated.current) return;
+    hydrated.current = true;
+    try {
+      const stored = localStorage.getItem(LANG_STORAGE_KEY);
+      if (stored && (stored === "en" || stored === "es") && stored !== lang && typeof setLang === "function") {
+        setLang(stored);
+      }
+    } catch {}
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch {}
+  }, [lang]);
+
   return (
     <header className="bg-[#035582] shadow-sm sticky top-0 z-50">
       <div className="bg-[#035582] text-slate-50 mx-auto px-4 py-3 max-w-6xl flex items-center justify-between flex-wrap gap-2">

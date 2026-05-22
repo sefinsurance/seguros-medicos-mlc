@@ -12,6 +12,10 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     heroImage: z.string().optional(),
+    // Bilingual fields (optional — older posts won't have these).
+    language: z.enum(["en", "es"]).optional(),
+    translationSlug: z.string().optional(),
+    translationLanguage: z.enum(["en", "es"]).optional(),
   }),
 });
 
