@@ -22,11 +22,8 @@ export default function ContactBar({ lang, setLang }) {
         </Link>
 
         {/* Nav */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-[#1e3a5f]">
-          
-          
-          
-          
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/90">
+          <a href="/News/" className="hover:text-white transition-colors">News</a>
         </nav>
 
         {/* Actions */}
