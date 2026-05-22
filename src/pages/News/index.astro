@@ -27,9 +27,14 @@ const posts = (await getCollection('blog'))
           No articles published yet. Check back soon.
         </div>
       ) : (
-        <ul class="grid gap-5 md:grid-cols-2">
+        <ul class="grid gap-5 md:grid-cols-2" id="news-grid">
           {posts.map((post) => (
-            <li class="bg-white rounded-xl border border-slate-200 hover:border-[#035582] hover:shadow-md transition-all overflow-hidden">
+            <li
+              class="bg-white rounded-xl border border-slate-200 hover:border-[#035582] hover:shadow-md transition-all overflow-hidden"
+              data-slug={post.id}
+              data-lang={post.data.language || 'en'}
+              data-translation-slug={post.data.translationSlug || ''}
+            >
               <a href={`/News/${post.id}/`} class="block p-5 h-full">
                 {post.data.heroImage && (
                   <img src={post.data.heroImage} alt="" class="w-full h-44 object-cover rounded-lg mb-4" />
@@ -41,7 +46,9 @@ const posts = (await getCollection('blog'))
                 {post.data.description && (
                   <p class="text-sm text-slate-600 mt-3 leading-relaxed line-clamp-3">{post.data.description}</p>
                 )}
-                <span class="inline-block mt-4 text-sm font-medium text-[#035582]">Read more →</span>
+                <span class="inline-block mt-4 text-sm font-medium text-[#035582]">
+                  {(post.data.language || 'en') === 'es' ? 'Leer más →' : 'Read more →'}
+                </span>
               </a>
             </li>
           ))}
@@ -52,3 +59,26 @@ const posts = (await getCollection('blog'))
 
   <Footer client:load lang="en" />
 </BaseLayout>
+
+<script is:inline>
+  // Language-aware filtering: hide the version of each post that doesn't
+  // match the user's stored preference, but only when both versions exist
+  // in this listing. Monolingual posts are always visible.
+  (function () {
+    try {
+      var pref = localStorage.getItem("mlc_lang");
+      if (pref !== "en" && pref !== "es") return;
+      var grid = document.getElementById("news-grid");
+      if (!grid) return;
+      var cards = Array.from(grid.querySelectorAll("li[data-slug]"));
+      var slugs = new Set(cards.map(function (c) { return c.getAttribute("data-slug"); }));
+      cards.forEach(function (c) {
+        var lang = c.getAttribute("data-lang");
+        var pair = c.getAttribute("data-translation-slug");
+        if (lang === pref) return;                  // matches preference — show
+        if (!pair) return;                          // no translation — show as fallback
+        if (slugs.has(pair)) c.style.display = "none"; // hide; the matching one is in the grid
+      });
+    } catch (e) {}
+  })();
+</script>

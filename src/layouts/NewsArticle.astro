@@ -4,18 +4,47 @@ import NewsTopBar from '@/components/news/NewsTopBar.jsx';
 import Footer from '@/components/home/Footer.jsx';
 import FormattedDate from '@/components/FormattedDate.astro';
 
-const { title, description, pubDate, updatedDate, heroImage, slug } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, slug, language, translationSlug, translationLanguage } = Astro.props;
 const canonical = slug ? `https://obamacarelocal.com/News/${slug}/` : undefined;
+const postLang = language || 'en';
+const otherLang = postLang === 'en' ? 'es' : 'en';
+const otherLabel = otherLang === 'es' ? 'Leer en Español' : 'Read in English';
 ---
+{translationSlug && (
+  <script is:inline define:vars={{ postLang, translationSlug, translationLanguage }}>
+    // Auto-redirect to the matching-language version on first paint if the
+    // user has a stored language preference. Wrapped in try/catch so the
+    // page still renders if localStorage is blocked.
+    try {
+      var pref = localStorage.getItem("mlc_lang");
+      if (pref && pref !== postLang && translationSlug
+          && (translationLanguage ? pref === translationLanguage : (pref === "en" || pref === "es"))) {
+        location.replace("/News/" + translationSlug + "/");
+      }
+    } catch (e) {}
+  </script>
+)}
 <BaseLayout title={`${title} — MLC Insurance`} description={description} canonical={canonical}>
   <NewsTopBar client:load />
 
   <main class="bg-slate-50 min-h-[60vh]">
     <article class="max-w-3xl mx-auto px-4 py-10">
-      <nav class="text-xs text-slate-500 mb-4">
-        <a href="/News/" class="hover:underline">News</a>
-        <span class="mx-1">/</span>
-        <span class="text-slate-400">Article</span>
+      <nav class="flex items-center justify-between text-xs text-slate-500 mb-4">
+        <div>
+          <a href="/News/" class="hover:underline">News</a>
+          <span class="mx-1">/</span>
+          <span class="text-slate-400">{postLang === 'es' ? 'Artículo' : 'Article'}</span>
+        </div>
+        {translationSlug && (
+          <a
+            href={`/News/${translationSlug}/`}
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-medium"
+            data-lang-toggle={otherLang}
+          >
+            <span class="font-mono text-[10px] uppercase">{otherLang}</span>
+            <span>{otherLabel}</span>
+          </a>
+        )}
       </nav>
 
       <header class="mb-6">
@@ -29,7 +58,7 @@ const canonical = slug ? `https://obamacarelocal.com/News/${slug}/` : undefined;
       </header>
 
       {heroImage && (
-        <img src={heroImage} alt="" class="w-full h-72 object-cover rounded-xl mb-8" />
+        <img src={heroImage} alt="" class="w-full h-72 md:h-96 object-cover rounded-xl mb-8 shadow-sm" />
       )}
 
       <div class="news-prose bg-white rounded-xl border border-slate-200 p-6 md:p-8">
@@ -38,14 +67,25 @@ const canonical = slug ? `https://obamacarelocal.com/News/${slug}/` : undefined;
 
       <div class="mt-8 text-center">
         <a href="/News/" class="inline-flex items-center text-sm font-medium text-[#035582] hover:underline">
-          ← Back to News
+          ← {postLang === 'es' ? 'Volver a noticias' : 'Back to News'}
         </a>
       </div>
     </article>
   </main>
 
-  <Footer client:load lang="en" />
+  <Footer client:load lang={postLang} />
 </BaseLayout>
+
+<script is:inline>
+  // When the user clicks the in-article language toggle, remember the choice
+  // so the next article they open auto-lands in that language.
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("a[data-lang-toggle]");
+    if (a) {
+      try { localStorage.setItem("mlc_lang", a.getAttribute("data-lang-toggle")); } catch (_) {}
+    }
+  });
+</script>
 
 <style is:global>
   .news-prose {
