@@ -1,5 +1,4 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
-
-export const SITE_TITLE = "Astro Blog";
-export const SITE_DESCRIPTION = "Welcome to my website!";
+export const SITE_TITLE       = "MLC Insurance";
+export const SITE_DESCRIPTION = "ACA, Medicare, Life, and Dental coverage for Florida families.";
+export const NEWS_TITLE       = "News — MLC Insurance";
+export const NEWS_DESCRIPTION = "Updates on ACA Open Enrollment, Medicare changes, and other health-coverage news for Florida families.";

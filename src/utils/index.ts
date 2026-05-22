@@ -8,7 +8,8 @@ const pageMap: Record<string, string> = {
   PrivacyPolicy: '/privacy-policy',
   TermsAndConditions: '/terms-and-conditions',
   HipaaNotice: '/hipaa-notice',
-  Leads: '/leads'
+  Leads: '/leads',
+  News: '/News'
 };
 
 export function createPageUrl(pageName: string) {
