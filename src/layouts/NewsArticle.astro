@@ -1,0 +1,116 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import NewsTopBar from '@/components/news/NewsTopBar.jsx';
+import Footer from '@/components/home/Footer.jsx';
+import FormattedDate from '@/components/FormattedDate.astro';
+
+const { title, description, pubDate, updatedDate, heroImage, slug } = Astro.props;
+const canonical = slug ? `https://obamacarelocal.com/News/${slug}/` : undefined;
+---
+<BaseLayout title={`${title} — MLC Insurance`} description={description} canonical={canonical}>
+  <NewsTopBar client:load />
+
+  <main class="bg-slate-50 min-h-[60vh]">
+    <article class="max-w-3xl mx-auto px-4 py-10">
+      <nav class="text-xs text-slate-500 mb-4">
+        <a href="/News/" class="hover:underline">News</a>
+        <span class="mx-1">/</span>
+        <span class="text-slate-400">Article</span>
+      </nav>
+
+      <header class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-bold text-[#1e3a5f] leading-tight">{title}</h1>
+        <p class="text-sm text-slate-500 mt-3">
+          <FormattedDate date={pubDate} />
+          {updatedDate && (
+            <span class="ml-2 italic">· updated <FormattedDate date={updatedDate} /></span>
+          )}
+        </p>
+      </header>
+
+      {heroImage && (
+        <img src={heroImage} alt="" class="w-full h-72 object-cover rounded-xl mb-8" />
+      )}
+
+      <div class="news-prose bg-white rounded-xl border border-slate-200 p-6 md:p-8">
+        <slot />
+      </div>
+
+      <div class="mt-8 text-center">
+        <a href="/News/" class="inline-flex items-center text-sm font-medium text-[#035582] hover:underline">
+          ← Back to News
+        </a>
+      </div>
+    </article>
+  </main>
+
+  <Footer client:load lang="en" />
+</BaseLayout>
+
+<style is:global>
+  .news-prose {
+    color: #1e293b;
+    line-height: 1.7;
+  }
+  .news-prose h2 {
+    color: #1e3a5f;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .news-prose h3 {
+    color: #1e3a5f;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .news-prose p {
+    margin: 0.75rem 0;
+  }
+  .news-prose a {
+    color: #035582;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .news-prose a:hover { color: #1e3a5f; }
+  .news-prose ul, .news-prose ol {
+    margin: 0.75rem 0 0.75rem 1.5rem;
+  }
+  .news-prose ul { list-style: disc; }
+  .news-prose ol { list-style: decimal; }
+  .news-prose li { margin: 0.25rem 0; }
+  .news-prose blockquote {
+    border-left: 4px solid #035582;
+    background: #f1f5f9;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    color: #475569;
+    font-style: italic;
+  }
+  .news-prose code {
+    background: #f1f5f9;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .news-prose pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+  }
+  .news-prose hr {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 2rem 0;
+  }
+  .news-prose img {
+    border-radius: 8px;
+    margin: 1rem 0;
+    max-width: 100%;
+  }
+</style>
