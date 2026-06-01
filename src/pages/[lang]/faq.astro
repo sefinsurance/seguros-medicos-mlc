@@ -60,9 +60,23 @@ const copy = lang === "es"
 
 const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(copy.waText)}`;
 const canonical = `https://obamacarelocal.com/${lang}/faq/`;
+
+// FAQPage structured data → eligible for FAQ rich results in Google.
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${canonical}#faqpage`,
+  inLanguage: lang,
+  mainEntity: copy.faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 ---
 
 <SiteShell lang={lang} title={`${copy.title} | Seguros Médicos`} description={copy.desc} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
   <section class="hero-shell compact">
     <div class="container"><div class="hero-panel">
       <span class="badge">{copy.badge}</span>

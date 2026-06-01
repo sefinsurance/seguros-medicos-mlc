@@ -1,21 +1,72 @@
 ---
 import '@/styles/global.css';
+const siteUrl = 'https://obamacarelocal.com';
 const {
   title = 'MLC Insurance',
   description = 'Health insurance for the whole family.',
   noindex = false,
+  lang = 'en',
+  image = `${siteUrl}/images/logo.png`,
   canonical,
 } = Astro.props;
+// Default the canonical to the current absolute URL (trailing slash) when the
+// page doesn't pass one — every page should have a self-referential canonical.
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = image?.startsWith('http') ? image : `${siteUrl}${image}`;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="MLC Insurance" />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Local-business / Organization NAP (same @id as SiteShell pages) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "InsuranceAgency",
+      "@id": `${siteUrl}/#organization`,
+      "name": "MLC Insurance",
+      "alternateName": "Seguros Médicos",
+      "url": `${siteUrl}/`,
+      "logo": `${siteUrl}/images/logo.png`,
+      "image": `${siteUrl}/images/logo.png`,
+      "telephone": "+1-877-458-2557",
+      "priceRange": "Free consultation",
+      "availableLanguage": ["English", "Spanish"],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1840 W 49th St, Suite 517c",
+        "addressLocality": "Hialeah",
+        "addressRegion": "FL",
+        "postalCode": "33012",
+        "addressCountry": "US"
+      },
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }],
+      "sameAs": ["https://wa.me/18774582557"]
+    })} />
   </head>
   <body>
     <slot />
