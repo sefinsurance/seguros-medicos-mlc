@@ -1,9 +1,7 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Home from '@/pages-react/Home.jsx';
+// Root homepage. Renders the rich English homepage (converted from React to Astro);
+// canonical points to /en/ so the language-specific URL is the indexed one
+// (the Spanish counterpart is /es/).
+import RichHome from "@/components/home/RichHome.astro";
 ---
-<BaseLayout
-  title="Health Insurance in Florida | ACA, Medicare, Dental & Life — MLC Insurance"
-  description="Compare ACA/Obamacare, Medicare Advantage, life, and dental & vision plans in Florida. Free bilingual (English/Spanish) help, no pressure. Call 877-458-2557.">
-  <Home client:load />
-</BaseLayout>
+<RichHome lang="en" canonical="https://obamacarelocal.com/en/" />
