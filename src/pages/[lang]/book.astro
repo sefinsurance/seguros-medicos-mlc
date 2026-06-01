@@ -1,0 +1,170 @@
+---
+import PageShell from "../../components/layout/PageShell.astro";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "es" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+const isEn = lang === "en";
+
+const copy = isEn
+  ? {
+      kicker: "Book a call",
+      title: "Book a call with a licensed agent",
+      desc: "Pick a time that works for you and a licensed bilingual agent will call. Free, no pressure.",
+      name: "Full name",
+      phone: "Phone number",
+      email: "Email (optional)",
+      when: "Preferred date & time",
+      language: "Preferred language",
+      en: "English",
+      es: "Spanish",
+      topic: "What's this about?",
+      topics: ["ACA / Obamacare", "Medicare", "Dental & Vision", "Life insurance", "Something else"],
+      notes: "Anything else? (optional)",
+      submit: "Request my call",
+      sending: "Sending…",
+      success: "Thank you! Your call request is in — a licensed agent will confirm your time shortly. If you need us sooner, call 877-458-2557.",
+      error: "Sorry, something went wrong sending your request. Please call us at 877-458-2557 or try again.",
+      callBtn: "Call 877-458-2557",
+    }
+  : {
+      kicker: "Agendar llamada",
+      title: "Agenda una llamada con un agente con licencia",
+      desc: "Elige el horario que te convenga y un agente bilingüe con licencia te llamará. Gratis y sin compromiso.",
+      name: "Nombre completo",
+      phone: "Número de teléfono",
+      email: "Correo electrónico (opcional)",
+      when: "Fecha y hora preferida",
+      language: "Idioma preferido",
+      en: "Inglés",
+      es: "Español",
+      topic: "¿Sobre qué tema?",
+      topics: ["ACA / Obamacare", "Medicare", "Dental y Visión", "Seguro de vida", "Otro tema"],
+      notes: "¿Algo más? (opcional)",
+      submit: "Solicitar mi llamada",
+      sending: "Enviando…",
+      success: "¡Gracias! Recibimos tu solicitud — un agente con licencia confirmará tu horario en breve. Si nos necesitas antes, llama al 877-458-2557.",
+      error: "Lo sentimos, hubo un problema al enviar tu solicitud. Llámanos al 877-458-2557 o intenta de nuevo.",
+      callBtn: "Llamar 877-458-2557",
+    };
+
+const canonical = `https://obamacarelocal.com/${lang}/book/`;
+---
+
+<PageShell lang={lang} kicker={copy.kicker} title={copy.title} desc={copy.desc} canonical={canonical}>
+  <div class="page-surface">
+    <form id="book-form" class="book-form" data-success={copy.success} data-error={copy.error} data-sending={copy.sending} data-submit={copy.submit} novalidate>
+      <div class="bf-grid">
+        <label class="bf-field">
+          <span>{copy.name}</span>
+          <input type="text" name="full_name" required autocomplete="name" />
+        </label>
+        <label class="bf-field">
+          <span>{copy.phone}</span>
+          <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" />
+        </label>
+        <label class="bf-field">
+          <span>{copy.email}</span>
+          <input type="email" name="email" autocomplete="email" />
+        </label>
+        <label class="bf-field">
+          <span>{copy.when}</span>
+          <input type="datetime-local" name="preferred_at" required />
+        </label>
+        <label class="bf-field">
+          <span>{copy.topic}</span>
+          <select name="topic">
+            {copy.topics.map((tp) => <option value={tp}>{tp}</option>)}
+          </select>
+        </label>
+        <label class="bf-field">
+          <span>{copy.language}</span>
+          <select name="language">
+            <option value={lang}>{isEn ? copy.en : copy.es}</option>
+            <option value={isEn ? "es" : "en"}>{isEn ? copy.es : copy.en}</option>
+          </select>
+        </label>
+        <label class="bf-field bf-full">
+          <span>{copy.notes}</span>
+          <textarea name="notes" rows="3"></textarea>
+        </label>
+      </div>
+      <div class="bf-actions">
+        <button type="submit" class="btn btn-primary">{copy.submit}</button>
+        <a class="btn btn-outline" href="tel:+18774582557">{copy.callBtn}</a>
+      </div>
+    </form>
+    <p id="book-status" role="status" aria-live="polite"></p>
+  </div>
+</PageShell>
+
+<script>
+  import { submitBookCall } from "@/lib/publicIntakeApi.js";
+  const form = document.getElementById("book-form");
+  const statusEl = document.getElementById("book-status");
+  if (form) {
+    // Require a time at least ~1 hour out.
+    const when = form.querySelector('input[name="preferred_at"]');
+    if (when) {
+      const min = new Date(Date.now() + 60 * 60 * 1000);
+      min.setSeconds(0, 0);
+      when.min = new Date(min.getTime() - min.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      const fd = new FormData(form);
+      if (!fd.get("full_name") || !fd.get("phone") || !fd.get("preferred_at")) {
+        statusEl.className = "book-err";
+        statusEl.textContent = form.dataset.error;
+        return;
+      }
+      btn.disabled = true;
+      const label = btn.textContent;
+      btn.textContent = form.dataset.sending;
+      statusEl.textContent = "";
+      statusEl.className = "";
+      try {
+        await submitBookCall({
+          full_name: fd.get("full_name"),
+          phone: fd.get("phone"),
+          email: fd.get("email") || "",
+          preferred_at: fd.get("preferred_at"),
+          language: fd.get("language") || document.documentElement.lang,
+          topic: fd.get("topic") || "",
+          notes: fd.get("notes") || "",
+          source_page: location.pathname,
+        });
+        form.style.display = "none";
+        statusEl.className = "book-ok";
+        statusEl.textContent = form.dataset.success;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = label;
+        statusEl.className = "book-err";
+        statusEl.textContent = form.dataset.error;
+      }
+    });
+  }
+</script>
+
+<style>
+  .book-form { display: block; }
+  .bf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .bf-field { display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; font-weight: 600; }
+  .bf-field.bf-full { grid-column: 1 / -1; }
+  .bf-field input, .bf-field select, .bf-field textarea {
+    font: inherit; font-weight: 400; padding: 10px 12px;
+    border: 1px solid var(--border, #d9dee5); border-radius: 10px; background: #fff; color: inherit;
+  }
+  .bf-field input:focus, .bf-field select:focus, .bf-field textarea:focus {
+    outline: none; border-color: #035582; box-shadow: 0 0 0 3px rgba(3,85,130,.15);
+  }
+  .bf-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+  #book-status { margin-top: 14px; font-weight: 600; }
+  #book-status.book-ok { color: #047857; }
+  #book-status.book-err { color: #b91c1c; }
+  @media (max-width: 640px) { .bf-grid { grid-template-columns: 1fr; } }
+</style>
