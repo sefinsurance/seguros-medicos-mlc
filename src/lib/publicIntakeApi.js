@@ -64,3 +64,14 @@ export async function submitBrokerApplication(payload) {
 export async function submitSmsSubscribe(payload) {
   return post("/public/intake/sms-subscribe", payload);
 }
+
+/**
+ * Book a call — request a phone call at a preferred time.
+ * Creates a CRM lead + a calendar event (type 'call').
+ * Maps to POST /public/intake/book-call
+ * payload: { full_name, phone, email?, preferred_at (ISO local datetime),
+ *            language?, topic?, notes?, source_page? }
+ */
+export async function submitBookCall(payload) {
+  return post("/public/intake/book-call", payload);
+}
