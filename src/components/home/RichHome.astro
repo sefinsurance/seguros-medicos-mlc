@@ -1,0 +1,44 @@
+---
+// The rich homepage, converted from the old full-page React island (Home.jsx)
+// to Astro. Presentational sections render as static HTML (zero JS); only the
+// genuinely interactive widgets hydrate, and lazily:
+//   - HeroQuote (hero CTAs + quote modal) → client:idle
+//   - FAQSection (accordion), Testimonials (carousel), Footer (SMS form) → client:visible
+// ContactBar is a static Astro port with a navigation-based EN/ES toggle.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactBar from "@/components/home/ContactBar.astro";
+import HeroQuote from "@/components/home/HeroQuote.jsx";
+import ProductCards from "@/components/home/ProductCards.jsx";
+import FAQSection from "@/components/home/FAQSection.jsx";
+import Testimonials from "@/components/home/Testimonials.jsx";
+import AgentBios from "@/components/home/AgentBios.jsx";
+import Footer from "@/components/home/Footer.jsx";
+
+const site = "https://obamacarelocal.com";
+const { lang = "en", canonical = `${site}/${lang}/` } = Astro.props;
+const isEn = lang === "en";
+
+const title = isEn
+  ? "Health Insurance in Florida from $0/mo | ACA, Medicare — MLC Insurance"
+  : "Seguro de Salud en Florida desde $0/mes | ACA, Medicare — MLC Insurance";
+const description = isEn
+  ? "You may qualify for ACA/Obamacare coverage starting at $0/month. Free bilingual help with ACA, Medicare, dental & life insurance in Florida. Call 877-458-2557 or WhatsApp."
+  : "Podrías calificar para cobertura ACA/Obamacare desde $0/mes. Ayuda bilingüe gratis con ACA, Medicare, dental y seguro de vida en Florida. Llama al 877-458-2557 o WhatsApp.";
+
+const alternates = [
+  { hreflang: "en", href: `${site}/en/` },
+  { hreflang: "es", href: `${site}/es/` },
+  { hreflang: "x-default", href: `${site}/en/` },
+];
+---
+<BaseLayout title={title} description={description} lang={lang} canonical={canonical} alternates={alternates}>
+  <div class="min-h-screen" style="background: linear-gradient(160deg, #ebf5ff 0%, #dae8f6 50%, #d4e3f4 100%)">
+    <ContactBar lang={lang} />
+    <HeroQuote client:idle lang={lang} />
+    <ProductCards lang={lang} />
+    <FAQSection client:visible lang={lang} />
+    <Testimonials client:visible lang={lang} />
+    <AgentBios lang={lang} />
+    <Footer client:visible lang={lang} />
+  </div>
+</BaseLayout>

@@ -8,6 +8,7 @@ const {
   lang = 'en',
   image = `${siteUrl}/images/logo.png`,
   canonical,
+  alternates = [],
 } = Astro.props;
 // Default the canonical to the current absolute URL (trailing slash) when the
 // page doesn't pass one — every page should have a self-referential canonical.
@@ -23,6 +24,9 @@ const ogImage = image?.startsWith('http') ? image : `${siteUrl}${image}`;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    {/* Hreflang alternates (passed by bilingual pages) */}
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
 
     <!-- OpenGraph -->
     <meta property="og:type" content="website" />
