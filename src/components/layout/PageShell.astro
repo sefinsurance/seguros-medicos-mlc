@@ -13,9 +13,22 @@ const {
   links = [],
   canonical,
 } = Astro.props;
+
+// BreadcrumbList structured data (mirrors the visual breadcrumb) → breadcrumb rich results
+// on every PageShell page (aca, medicare, dental, life, compare, losing-medicaid…).
+const homeUrl = `https://obamacarelocal.com/${lang}/`;
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: t?.nav?.home ?? (lang === "en" ? "Home" : "Inicio"), item: homeUrl },
+    ...(kicker && canonical ? [{ "@type": "ListItem", position: 2, name: kicker, item: canonical }] : []),
+  ],
+};
 ---
 
 <SiteShell lang={lang} title={title ?? "Obamacare Local | MLC Insurance"} description={desc ?? title} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
   <section class="page-hero">
     <div class="container">
       <div class="page-hero-panel surface">
