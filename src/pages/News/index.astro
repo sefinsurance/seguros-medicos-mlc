@@ -37,7 +37,7 @@ const posts = (await getCollection('blog'))
             >
               <a href={`/News/${post.id}/`} class="block p-5 h-full">
                 {post.data.heroImage && (
-                  <img src={post.data.heroImage} alt="" class="w-full h-44 object-cover rounded-lg mb-4" />
+                  <img src={post.data.heroImage} alt={post.data.title} width="600" height="176" loading="lazy" class="w-full h-44 object-cover rounded-lg mb-4" />
                 )}
                 <h2 class="text-lg font-semibold text-[#1e3a5f] leading-snug">{post.data.title}</h2>
                 <p class="text-xs text-slate-500 mt-1">

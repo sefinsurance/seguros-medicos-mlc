@@ -9,6 +9,24 @@ const canonical = slug ? `https://obamacarelocal.com/News/${slug}/` : undefined;
 const postLang = language || 'en';
 const otherLang = postLang === 'en' ? 'es' : 'en';
 const otherLabel = otherLang === 'es' ? 'Leer en Español' : 'Read in English';
+const heroAbs = heroImage ? (heroImage.startsWith('http') ? heroImage : `https://obamacarelocal.com${heroImage}`) : undefined;
+const toISO = (d) => { try { return d ? new Date(d).toISOString() : undefined; } catch { return undefined; } };
+
+// BlogPosting structured data → eligible for Article rich results in Google.
+const blogLd = slug ? {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${canonical}#article`,
+  headline: title,
+  description,
+  image: heroAbs,
+  datePublished: toISO(pubDate),
+  dateModified: toISO(updatedDate || pubDate),
+  inLanguage: postLang,
+  author: { "@type": "Organization", name: "MLC Insurance", url: "https://obamacarelocal.com/" },
+  publisher: { "@type": "Organization", name: "MLC Insurance", logo: { "@type": "ImageObject", url: "https://obamacarelocal.com/images/logo.png" } },
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+} : null;
 ---
 {translationSlug && (
   <script is:inline define:vars={{ postLang, translationSlug, translationLanguage }}>
@@ -24,7 +42,8 @@ const otherLabel = otherLang === 'es' ? 'Leer en Español' : 'Read in English';
     } catch (e) {}
   </script>
 )}
-<BaseLayout title={`${title} — MLC Insurance`} description={description} canonical={canonical}>
+<BaseLayout title={`${title} — MLC Insurance`} description={description} canonical={canonical} lang={postLang} image={heroAbs}>
+  {blogLd && <script type="application/ld+json" set:html={JSON.stringify(blogLd)} />}
   <NewsTopBar client:load />
 
   <main class="bg-slate-50 min-h-[60vh]">
@@ -58,7 +77,7 @@ const otherLabel = otherLang === 'es' ? 'Leer en Español' : 'Read in English';
       </header>
 
       {heroImage && (
-        <img src={heroImage} alt="" class="w-full h-72 md:h-96 object-cover rounded-xl mb-8 shadow-sm" />
+        <img src={heroImage} alt={title} width="1200" height="630" loading="eager" fetchpriority="high" class="w-full h-72 md:h-96 object-cover rounded-xl mb-8 shadow-sm" />
       )}
 
       <div class="news-prose bg-white rounded-xl border border-slate-200 p-6 md:p-8">
