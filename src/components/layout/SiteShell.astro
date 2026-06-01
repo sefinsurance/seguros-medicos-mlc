@@ -84,6 +84,21 @@ const altEn = isRoot ? `${siteUrl}/en/` : (lang === 'en' ? canonical : swapLang(
             "telephone": "+1-877-458-2557",
             "logo": `${siteUrl}/images/logo.png`,
             "image": `${siteUrl}/images/logo.png`,
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "1840 W 49th St, Suite 517c",
+              "addressLocality": "Hialeah",
+              "addressRegion": "FL",
+              "postalCode": "33012",
+              "addressCountry": "US"
+            },
+            "openingHoursSpecification": [{
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "09:00",
+              "closes": "18:00"
+            }],
+            "priceRange": "Free consultation",
             "areaServed": [
               "Florida",
               "Texas",

@@ -1,11 +1,14 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
   site: 'https://obamacarelocal.com/',
-  integrations: [react(), tailwind({ applyBaseStyles: false })],
+  // sitemap() generates /sitemap-index.xml + /sitemap-0.xml at build time
+  // (public/robots.txt already points crawlers there).
+  integrations: [react(), tailwind({ applyBaseStyles: false }), sitemap()],
   vite: {
     resolve: {
       alias: {
