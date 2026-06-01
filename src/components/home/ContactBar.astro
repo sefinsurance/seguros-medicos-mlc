@@ -2,12 +2,15 @@
 // Static Astro port of ContactBar.jsx. The language toggle now NAVIGATES between
 // /en and /es (the site's standard i18n pattern) instead of in-place React state,
 // so this section ships zero JS. Visuals/classes match the original exactly.
-const { lang = "en" } = Astro.props;
+// otherHref overrides where the language toggle points (e.g. a service page's
+// Spanish equivalent); defaults to the other-language home.
+const { lang = "en", otherHref } = Astro.props;
 const t = {
   en: { slogan: "Health Insurance for the whole family.", toggle: "ES", other: "/es/" },
   es: { slogan: "Seguro de salud para toda la familia.", toggle: "EN", other: "/en/" },
 };
 const c = t[lang] || t.en;
+const toggleHref = otherHref || c.other;
 ---
 <header class="bg-[#035582] shadow-sm sticky top-0 z-50">
   <div class="bg-[#035582] text-slate-50 mx-auto px-4 py-3 max-w-6xl flex items-center justify-between flex-wrap gap-2">
@@ -25,7 +28,7 @@ const c = t[lang] || t.en;
 
     <div class="flex items-center gap-2">
       <a
-        href={c.other}
+        href={toggleHref}
         class="bg-slate-50 text-[#1e3a5f] px-3 py-1 text-xs font-semibold rounded-full border border-[#1e3a5f] hover:bg-[#1e3a5f] hover:text-white transition-colors"
         aria-label={lang === "en" ? "Cambiar a Español" : "Switch to English"}
       >{c.toggle}</a>
