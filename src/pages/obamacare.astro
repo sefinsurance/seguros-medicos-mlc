@@ -1,7 +1,41 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Obamacare from '@/pages-react/Obamacare.jsx';
+// ACA / Obamacare service page — converted from a full-page React island to Astro.
+// Content renders as static HTML (zero JS); only the state map, footer, and quote
+// modal hydrate as islands.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactBar from "@/components/home/ContactBar.astro";
+import ObamacareContent from "@/components/service/ObamacareContent.jsx";
+import UsStateMap from "@/components/home/UsStateMap.jsx";
+import Footer from "@/components/home/Footer.jsx";
+import QuoteModalLauncher from "@/components/quote/QuoteModalLauncher.jsx";
+
+const lang = "en";
 ---
-<BaseLayout title="ACA / Obamacare Plans in Florida | MLC Insurance" description="Compare ACA / Obamacare Marketplace plans in Florida and see if you qualify for subsidies. Free bilingual (English/Spanish) help — call 877-458-2557 or WhatsApp.">
-  <Obamacare client:load />
+<BaseLayout
+  title="ACA / Obamacare Plans in Florida | MLC Insurance"
+  description="Compare ACA / Obamacare Marketplace plans in Florida and see if you qualify for subsidies. Free bilingual (English/Spanish) help — call 877-458-2557 or WhatsApp."
+  canonical="https://obamacarelocal.com/obamacare/">
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <ContactBar lang={lang} otherHref="/es/aca/" />
+    <div class="max-w-4xl mx-auto px-4 py-10">
+      <ObamacareContent lang={lang} />
+      <UsStateMap client:visible lang={lang} />
+      <div class="text-center mt-8">
+        <button data-scroll-top class="text-[#1e3a5f] text-sm font-semibold hover:underline">↑ Back to top</button>
+      </div>
+    </div>
+    <Footer client:visible lang={lang} />
+    <QuoteModalLauncher client:idle lang={lang} />
+  </div>
+  <script is:inline>
+    // Static CTA buttons open the quote modal via the launcher island; scroll-to-top.
+    document.addEventListener("click", function (e) {
+      if (e.target.closest("[data-open-quote]")) {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("mlc:open-quote", { detail: { source: "instant_quote" } }));
+      } else if (e.target.closest("[data-scroll-top]")) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  </script>
 </BaseLayout>
