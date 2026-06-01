@@ -3,8 +3,8 @@ const { lang } = Astro.props;
 const other = lang === 'es' ? 'en' : 'es';
 
 const nav = lang === 'es'
-  ? { aca:'Obamacare', medicare:'Medicare', life:'Vida', dental:'Dental y Visión', wa:'877-458-2557', lang:'EN' }
-  : { aca:'Obamacare', medicare:'Medicare', life:'Life', dental:'Dental & Vision', wa:'877-458-2557', lang:'ES' };
+  ? { aca:'Obamacare', medicare:'Medicare', life:'Vida', dental:'Dental y Visión', book:'Agendar llamada', wa:'877-458-2557', lang:'EN' }
+  : { aca:'Obamacare', medicare:'Medicare', life:'Life', dental:'Dental & Vision', book:'Book a call', wa:'877-458-2557', lang:'ES' };
 
 const waText = lang === 'es'
   ? 'Hola, quiero ayuda con mi seguro médico.'
@@ -28,6 +28,7 @@ const waHref = `https://wa.me/18774582557?text=${encodeURIComponent(waText)}`;
       <a href={`/${lang}/medicare`}>{nav.medicare}</a>
       <a href={`/${lang}/life`}>{nav.life}</a>
       <a href={`/${lang}/dental`}>{nav.dental}</a>
+      <a href={`/${lang}/book`}>{nav.book}</a>
 
       <a class="wa-pill" href={waHref} aria-label={lang === 'es' ? 'Hablar por WhatsApp' : 'Chat on WhatsApp'}>
         <span class="wa-ic" aria-hidden="true">
