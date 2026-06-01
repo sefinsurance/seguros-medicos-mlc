@@ -3,6 +3,19 @@ import React, { useEffect, useState } from "react";
 export default function UsStateMap(props) {
   const [MapComponent, setMapComponent] = useState(null);
 
+  // When rendered as a standalone Astro island, no onGetQuote function can be
+  // passed from Astro — fall back to dispatching the global quote event that
+  // QuoteModalLauncher listens for. (Existing React callers pass onGetQuote, so
+  // this is backward-compatible.)
+  const onGetQuote =
+    props.onGetQuote ||
+    (() => {
+      try {
+        window.dispatchEvent(new CustomEvent("mlc:open-quote", { detail: { source: "state_map" } }));
+      } catch {}
+    });
+  const mapProps = { ...props, onGetQuote };
+
   useEffect(() => {
     let mounted = true;
 
@@ -31,5 +44,5 @@ export default function UsStateMap(props) {
     );
   }
 
-  return <MapComponent {...props} />;
+  return <MapComponent {...mapProps} />;
 }
