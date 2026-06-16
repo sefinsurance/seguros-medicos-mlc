@@ -203,6 +203,7 @@ export default function Footer({ lang = "en" }) {
         <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-blue-300">
           <span>© {new Date().getFullYear()} MLC Insurance. {c.rights}</span>
           <span className="text-center md:text-right max-w-xl">{c.disclaimer}</span>
+          <span className="text-center md:text-right">Powered by <a href="https://chronoscodex.com" className="text-blue-200 hover:text-white underline underline-offset-2 transition-colors">ChronosCodex</a></span>
         </div>
       </div>
     </footer>
