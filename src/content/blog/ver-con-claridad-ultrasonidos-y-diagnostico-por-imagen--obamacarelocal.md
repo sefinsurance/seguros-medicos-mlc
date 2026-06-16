@@ -1,8 +1,8 @@
 ---
 title: "Ver con claridad: ultrasonidos y diagnóstico por imagen como parte de tu salud preventiva en Florida"
 description: "Descubre por qué los estudios de imagen y los ultrasonidos son esenciales para tu bienestar y cómo tu cobertura de salud puede ayudarte a accederlos."
-pubDate: 2026-06-06T04:00:00.000Z
-updatedDate: 2026-06-03T22:37:57.622Z
+pubDate: 2026-06-06T04:04:04.149Z
+updatedDate: 2026-06-06T04:04:04.149Z
 heroImage: "/news-images/clinic-obamacarelocal.png"
 language: "es"
 ---
@@ -32,3 +32,11 @@ Puedes encontrarlos en 1840 W 49th St, Suite 517, Hialeah, FL 33012, y contactar
 Tener acceso a estudios de ultrasonido y diagnóstico por imagen depende en gran parte de contar con un plan de salud adecuado. En Obamacare Local, nuestro equipo te ayuda a revisar tus opciones de cobertura, entender qué beneficios incluye tu plan y, si calificas, acceder a ayuda adicional para el costo mensual del seguro.
 
 No esperes a necesitar un estudio urgente para descubrir que tu cobertura no es la mejor para ti. Comunícate con nosotros hoy mismo al 877-458-2557, disponible también por WhatsApp, y con gusto te orientamos sin compromiso. Tu salud merece un plan a su altura.
+
+<div class="chronoscodex-attribution" style="margin:2.5rem 0 1rem;padding:1.1rem 1.25rem;border:1px solid #e2e8f0;border-left:4px solid #0fa3a3;border-radius:8px;background:#f8fafc">
+  <h3 style="margin:0 0 .45rem;font-size:1.05rem;line-height:1.3;color:#0f3d5e">Acerca de este artículo</h3>
+  <p style="margin:0;font-size:.95rem;line-height:1.6;color:#334155" itemscope itemtype="https://schema.org/Organization">
+    Este artículo fue investigado, analizado y publicado utilizando la <a href="https://chronoscodex.com" itemprop="url" target="_blank" rel="noopener" style="color:#0b8a8a;font-weight:600;text-decoration:underline"><span itemprop="name">Plataforma de Noticias del Sector de Chronoscodex</span></a>, una plataforma automatizada de contenido e inteligencia de mercado creada para profesionales de seguros, agencias, corredores y líderes del sector.
+  </p>
+</div>
+
